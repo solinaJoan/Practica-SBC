@@ -8,8 +8,14 @@ Per tant, els passos són:
 2. Resolució 
 3. Refinació
 
-Per fer l'abstracció del problema, creem una ontologia (vocabulari que farem servir) 
+Per fer l'abstracció del problema, creem una ontologia (vocabulari que farem servir).
 
+Exemple de trasllat:
+Hem d'identificar els inputs, els elements del problema i la solució concreta que volem retornar
 
-config --global user.email "you@example.com"
-git config --global user.name "Your Name"
+Ontologia:
+Tipo de mudanza:
+- Local, regional, larga distancia...
+Pressupuesto:
+- Bajo, medio...
+
