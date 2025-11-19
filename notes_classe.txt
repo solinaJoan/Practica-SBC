@@ -19,3 +19,14 @@ Tipo de mudanza:
 Pressupuesto:
 - Bajo, medio...
 
+La documentació final ens hauria d'ocupar un pèl més que l'anterior, però amb coses senzilles com 
+
+Adquisició d'informació
+Fase d'abstracció: Hem de descriure totes les classes de la ontologia
+Fase de resolució: Com hem estructurat el codi 
+
+Fase de test: N'hem de fer mínim 6 per un deu, i s'han d'explicar tots al annexe:
+    Cas 1: Una persona amb aquesta característiques... 
+    Hem d'incloure la solució concreta, les trazas, les regles que ha executat...
+
+
