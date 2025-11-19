@@ -1,0 +1,15 @@
+Teoria:
+Exemple de classificació heurística:
+
+No volem ser un metge que amb uns problemes concrets ens doni una solució. Volem fer 1. abstracte el problema, 2. resoldre el problema abstracte mitjançant regles de CLIPS i 
+3. donar una solució concreta
+Per tant, els passos són: 
+1. Abstracció
+2. Resolució 
+3. Refinació
+
+Per fer l'abstracció del problema, creem una ontologia (vocabulari que farem servir) 
+
+
+config --global user.email "you@example.com"
+git config --global user.name "Your Name"
