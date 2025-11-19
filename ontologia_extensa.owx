@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <Ontology xmlns="http://www.w3.org/2002/07/owl#"
-     xml:base="http://www.semanticweb.org/habitatge/barcelona"
+     xml:base="http://www.semanticweb.org/joan.solina/ontologies/2025/10/ontologia_practica"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:xml="http://www.w3.org/2001/XMLSchema#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-     ontologyIRI="http://www.semanticweb.org/habitatge/barcelona">
+     ontologyIRI="http://www.semanticweb.org/joan.solina/ontologies/2025/10/ontologia_practica">
     
-    <Prefix name="" IRI="http://www.semanticweb.org/habitatge/barcelona#"/>
+    <Prefix name="" IRI="http://www.semanticweb.org/joan.solina/ontologies/2025/10/ontologia_practica/"/>
     <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
     <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
-    <Prefix name="xml" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
     <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
     <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
     
@@ -866,3 +866,291 @@
         <DataProperty IRI="#direccio"/>
     </Declaration>
     <DataPropertyDomain>
+        <DataProperty IRI="#direccio"/>
+        <Class IRI="#Localitzacio"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#direccio"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#latitud"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#latitud"/>
+        <Class IRI="#Localitzacio"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#latitud"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#longitud"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#longitud"/>
+        <Class IRI="#Localitzacio"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#longitud"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#coordenadaX"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#coordenadaX"/>
+        <Class IRI="#Localitzacio"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#coordenadaX"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#coordenadaY"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#coordenadaY"/>
+        <Class IRI="#Localitzacio"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#coordenadaY"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#nomDistricte"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#nomDistricte"/>
+        <Class IRI="#Districte"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#nomDistricte"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    
+    <!-- Properties del Servei -->
+    <Declaration>
+        <DataProperty IRI="#nomServei"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#nomServei"/>
+        <Class IRI="#Servei"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#nomServei"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#distanciaMetres"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#distanciaMetres"/>
+        <Class IRI="#Servei"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#distanciaMetres"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    
+    <!-- Properties del Sol·licitant -->
+    <Declaration>
+        <DataProperty IRI="#preuMaxim"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#preuMaxim"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#preuMaxim"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#preuMinim"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#preuMinim"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#preuMinim"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#margeEstricte"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#margeEstricte"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#margeEstricte"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#edat"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#edat"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#edat"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#nombrePersones"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#nombrePersones"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#nombrePersones"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#nombreFills"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#nombreFills"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#nombreFills"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#nombreAncianos"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#nombreAncianos"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#nombreAncianos"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#teCotxe"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#teCotxe"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#teCotxe"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#prefereixTransportPublic"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#prefereixTransportPublic"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#prefereixTransportPublic"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#teMascota"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#teMascota"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#teMascota"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#superficieMinima"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#superficieMinima"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#superficieMinima"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#dormitorisMinims"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#dormitorisMinims"/>
+        <Class IRI="#Sollicitant"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#dormitorisMinims"/>
+        <Datatype abbreviatedIRI="xsd:integer"/>
+    </DataPropertyRange>
+    
+    <!-- Properties de Recomanació -->
+    <Declaration>
+        <DataProperty IRI="#grauRecomanacio"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#grauRecomanacio"/>
+        <Class IRI="#Recomanacio"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#grauRecomanacio"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#criteriNoComplert"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#criteriNoComplert"/>
+        <Class IRI="#ParcialmentAdequat"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#criteriNoComplert"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#avantatge"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#avantatge"/>
+        <Class IRI="#MoltRecomanable"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#avantatge"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    
+    <Declaration>
+        <DataProperty IRI="#puntuacio"/>
+    </Declaration>
+    <DataPropertyDomain>
+        <DataProperty IRI="#puntuacio"/>
+        <Class IRI="#Recomanacio"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#puntuacio"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+
+</Ontology>
