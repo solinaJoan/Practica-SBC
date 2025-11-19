@@ -13,8 +13,112 @@
     <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
     <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
     <Declaration>
-        <Class IRI="#Vivenda"/>
+        <Class IRI="#Centre_Salut"/>
     </Declaration>
+    <Declaration>
+        <Class IRI="#Compres"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Educacio"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Habitatge"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Localitzacio"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Oci"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Oferta"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Servei"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Solicitant"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Transport_Public"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Zona_Verda"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#LocX"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#LocY"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#Preu"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="#Centre_Salut"/>
+        <Class IRI="#Servei"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Compres"/>
+        <Class IRI="#Servei"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Educacio"/>
+        <Class IRI="#Servei"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Oci"/>
+        <Class IRI="#Servei"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Transport_Public"/>
+        <Class IRI="#Servei"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Zona_Verda"/>
+        <Class IRI="#Servei"/>
+    </SubClassOf>
+    <DisjointClasses>
+        <Class IRI="#Habitatge"/>
+        <Class IRI="#Localitzacio"/>
+        <Class IRI="#Oferta"/>
+        <Class IRI="#Servei"/>
+        <Class IRI="#Solicitant"/>
+    </DisjointClasses>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#LocX"/>
+        <DataProperty abbreviatedIRI="owl:topDataProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#LocY"/>
+        <DataProperty abbreviatedIRI="owl:topDataProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#Preu"/>
+        <DataProperty abbreviatedIRI="owl:topDataProperty"/>
+    </SubDataPropertyOf>
+    <FunctionalDataProperty>
+        <DataProperty IRI="#LocY"/>
+    </FunctionalDataProperty>
+    <FunctionalDataProperty>
+        <DataProperty IRI="#Preu"/>
+    </FunctionalDataProperty>
+    <DataPropertyDomain>
+        <DataProperty IRI="#LocX"/>
+        <Class IRI="#Localitzacio"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#LocY"/>
+        <Class IRI="#Localitzacio"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#LocX"/>
+        <Datatype abbreviatedIRI="owl:real"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#LocY"/>
+        <Datatype abbreviatedIRI="owl:real"/>
+    </DataPropertyRange>
 </Ontology>
 
 
