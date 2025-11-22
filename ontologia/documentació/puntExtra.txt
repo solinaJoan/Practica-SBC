@@ -1,0 +1,72 @@
+Context:
+
+"We are going to do a role playing exercise. You are going to help a knowledge engineer perform knowledge elicitation for building a rule-based expert system for the recommendation of home rentals. You are a real estate agent with wide experience in this problem who knows how to match different kinds of people according to the characteristics of the home and its neighborhood. Your answer should be direct and precise."
+
+
+- When a client gives you a maximum budget, is that a strict rule? How do you handle price limits?
+
+    It depends on the client's flexibility.
+
+    Strict Budget: If they say "strict," we discard anything even 1€ above.
+
+    Flexible Budget: If they are open to negotiation, I usually consider homes up to 15-20% above their limit ONLY IF the home offers something exceptional (like a terrace, or being very close to their work). If it's just an average flat, I respect the limit.
+
+
+- What about the size of the home? Is there a minimum viable size?
+
+    Absolutely. For a home to be livable:
+
+    Minimum per person: I generally calculate about 10-12 m
+    2
+    per person. Less than that feels overcrowded.
+
+    Bedrooms: A couple can share a bedroom. Two children can share a large bedroom, but teenagers usually need their own or a very large shared one.
+
+
+- What are the critical factors for a Family with young children?
+
+    For families, safety and logistics are key.
+
+    Proximity to Schools: This is the highest priority. If a school is within 500m, that's a huge plus (+10 points).
+
+    Green Zones: Parks or gardens nearby (within 500-1000m) are essential for playing.
+
+    Floor & Elevator: If they have a baby stroller, an elevator is mandatory unless it's a ground floor.
+
+    Negative services: They usually want to avoid nightlife areas (discos, loud bars) due to noise.
+
+
+- How does that differ from a Group of Students?
+
+    Completely different mindset.
+
+    Transport: They need to be close to the University or very close (<500m) to a Metro/Bus line connecting to it.
+
+    Nightlife: Unlike families, students often see proximity to bars or nightlife as a positive feature (or at least neutral), not a negative one.
+
+    Layout: They value having a similar size for all bedrooms (no one wants the tiny room).
+
+    Furniture: The flat must be furnished. They won't buy beds.
+
+- And what about an Elderly person living alone?
+
+    Accessibility: This is non-negotiable. Elevator is mandatory if not on the ground floor. No duplexes with internal stairs.
+
+    Health: Proximity to a Pharmacy or Health Center (<500m) is very highly recommended.
+
+    Neighborhood: They need a quiet area. Proximity to supermarkets is good for independence.
+
+
+-Finally, how do you decide if a recommendation is just "Suitable" or "Highly Recommended"?
+
+    Suitable: The home meets all the hard requirements (price, size, number of rooms) and meets the basic needs (e.g., a student has transport). It's a "correct" match.
+
+    Highly Recommended: The home meets all requirements AND has "Bonus Features":
+
+    It is significantly cheaper than the budget (e.g., >20% savings).
+
+    It has highly desirable features like a Terrace, is an Attic (penthouse), or has Air Conditioning.
+
+    For a specific profile, it hits the "perfect match" (e.g., a family with a school right across the street).
+
+    Partially Suitable: It fails on a soft preference. For example, it's perfect but 100€ over budget (for a flexible client), or it doesn't have an elevator but it's only a 1st floor. I would show it to the client but with a warning.

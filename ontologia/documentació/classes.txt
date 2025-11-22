@@ -1,0 +1,74 @@
+┌─────────────────────────────────────────────────────────────────┐
+│                        CLASSES PRINCIPALS                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  OFERTA ──────── representa cada anunci de lloguer disponible   │
+│     │                                                           │
+│     └──> té un HABITATGE                                        │
+│                │                                                │
+│                └──> té una LOCALITZACIÓ                         │
+│                           │                                     │
+│                           └──> està a prop de SERVEIS           │
+│                                                                 │
+│  SOL·LICITANT ── representa qui busca habitatge                 │
+│     │                                                           │
+│     ├──> té preferències i restriccions                         │
+│     └──> busca OFERTES adequades                                │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+HABITATGE
+    ├── Pis
+    ├── Dúplex
+    ├── Habitatge Unifamiliar
+    ├── Àtic
+    └── Estudi
+
+SOL·LICITANT
+    ├── Individu
+    ├── Parella
+    │     ├── Parella Sense Fills
+    │     ├── Parella Amb Fills
+    │     └── Parella Futurs Fills
+    ├── Família
+    │     ├── Família Monoparental
+    │     └── Família Biparental
+    ├── Grup Estudiants
+    └── Persona Gran
+
+SERVEI
+    ├── Transport Públic
+    │     ├── Estació Metro
+    │     ├── Parada Bus
+    │     └── Estació Tren
+    ├── Servei Salut
+    │     ├── Centre Salut
+    │     ├── Hospital
+    │     └── Farmàcia
+    ├── Servei Educatiu
+    │     ├── Llar Infants
+    │     ├── Escola
+    │     ├── Institut
+    │     └── Universitat
+    ├── Servei Comercial
+    │     ├── Supermercat
+    │     ├── Hipermercat
+    │     ├── Centre Comercial
+    │     └── Mercat
+    ├── Zona Verda
+    │     ├── Parc
+    │     ├── Jardí
+    │     └── Zona Esportiva
+    ├── Servei Oci
+    │     ├── Zona Nocturna
+    │     ├── Cinema
+    │     ├── Teatre
+    │     ├── Gimnàs
+    │     ├── Restaurant
+    │     └── Bar
+    └── Servei Molest
+          ├── Estadi
+          ├── Aeroport
+          ├── Zona Industrial
+          ├── Discoteca
+          └── Autopista

@@ -1,0 +1,87 @@
+Atributs (Data Properties)
+
+OFERTA
+Representa un anunci de lloguer amb el seu preu i disponibilitat.
+
+|      Atribut    | Tipus   |              Significat                     |
+|-----------------|---------|---------------------------------------------|
+| preuMensual     | float   | Preu del lloguer en €                       |
+| disponible      | boolean | Si està disponible o no                     |
+| dataPublicacio  | date    | Quan es va publicar                         |
+| grauRecomanacio | string  | "Parcialment", "Adequat", "MoltRecomanable" |
+
+
+
+HABITATGE
+Les característiques físiques de l'immoble.
+
+|           Atribut          | Tipus   |          Significat                 |
+|----------------------------|---------|-------------------------------------|
+| superficieHabitable        | float   | Metres quadrats                     |
+| numeroDormitoris           | int     | Total d'habitacions                 |
+| numeroDormitorisDobles     | int     | Habitacions grans                   |
+| numeroDormitorisSimples    | int     | Habitacions petites                 |
+| numeroBanys                | int     | Nombre de banys                     |
+| teTerrassaOBalco           | boolean | Si té terrassa/balcó                |
+| moblat                     | boolean | Si ve amb mobles                    |
+| ambElectrodomestics        | boolean | Si té electrodomèstics              |
+| plantaPis                  | int     | 0=entresol, 1=primer...             |
+| teAscensor                 | boolean | Si l'edifici té ascensor            |
+| permetMascotes             | boolean | Si accepten animals                 |
+| teCalefaccio               | boolean | Si té calefacció                    |
+| teAireCondicionat          | boolean | Si té A/C                           |
+| orientacioSolar            | string  | "Mati", "Tarda", "TotElDia", "Nord" |
+| teVistes                   | boolean | Si té bones vistes                  |
+| tipusVistes                | string  | "Mar", "Muntanya", "Ciutat", "Parc" |
+| tePiscinaComunitaria       | boolean | Accés a piscina                     |
+| tePlacaAparcament          | boolean | Si inclou pàrquing                  |
+| teArmariEncastat           | boolean | Armaris integrats                   |
+| teTraster                  | boolean | Si té traster                       |
+| consumEnergetic            | string  | Certificat: A, B, C, D, E, F, G     |
+| esExterior                 | boolean | Si dona al carrer                   |
+| nivellSoroll               | string  | "Baix", "Mitja", "Alt"              |
+| anyConstruccio             | int     | Any de construcció                  |
+| estatConservacio           | string  | "Nou", "BonEstat", "AReformar"      |
+
+
+
+LOCALITZACIÓ
+On està ubicat l'habitatge o servei.
+
+|    Atribut    | Tipus  |      Significat        |
+|---------------|--------|------------------------|
+| adreca        | string | Adreça completa        |
+| districte     | string | Districte de la ciutat |
+| barri         | string | Barri específic        |
+| codiPostal    | string | Codi postal            |
+| latitud       | float  | Coordenada GPS         |
+| longitud      | float  | Coordenada GPS         |
+| coordenadaX   | float  | Sistema propi (metres) |
+| coordenadaY   | float  | Sistema propi (metres) |
+
+
+
+SOL·LICITANT
+Qui busca habitatge i les seves necessitats.
+
+|           Atribut         | Tipus   |                  Significat                         |
+|---------------------------|---------|-----------------------------------------------------|
+| pressupostMaxim           | float   | Màxim que pot pagar                                 |
+| pressupostMinim           | float   | Mínim acceptable (desconfiança si és massa barat)   |
+| margeEstricte             | boolean | Si el màxim és negociable o no                      |
+| edatSollicitant           | int     | Edat                                                |
+| numeroPersones            | int     | Quantes persones viuran                             |
+| numeroFills               | int     | Nombre de fills                                     |
+| edatsFills                | string  | "3,7,12" (edats separades per comes)                |
+| teAvis                    | boolean | Si viuen amb avis                                   |
+| numeroAvis                | int     | Quants avis                                         |
+| teVehicle                 | boolean | Si té cotxe                                         |
+| treballaACiutat           | boolean | Si treballa a la ciutat                             |
+| estudiaACiutat            | boolean | Si estudia a la ciutat                              |
+| prefereixTransportPublic  | boolean | Si usa transport públic                             |
+| necessitaAccessibilitat   | boolean | Si necessita ascensor/planta baixa                  |
+| teMascotes                | boolean | Si té animals                                       |
+| numeroMascotes            | int     | Quantes mascotes                                    |
+| tipusMascota              | string  | "Gos", "Gat", "Altre"                               |
+
+
