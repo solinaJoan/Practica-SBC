@@ -1,4 +1,4 @@
-# Sistema Expert de Recomanació d'Habitatges (SBC - UPC)
+# Sistema Expert de Recomanació d'Habitatges
 
 Aquest projecte implementa un Sistema Basat en el Coneixement (SBC) utilitzant CLIPS per recomanar ofertes de lloguer a diferents perfils de sol·licitants, seguint la metodologia de Classificació Heurística.
 
