@@ -1,15 +1,14 @@
 RELACIONS (Object Properties)
 
 |          Relació          |              De → A               |           Significat              |
-|---------------------------|----------------------------------- |-----------------------------------|
+|---------------------------|-----------------------------------|-----------------------------------|
 | teHabitatge               | Oferta → Habitatge                | L'oferta conté aquest habitatge   |
 | teLocalitzacio            | Habitatge/Servei → Localització   | On està ubicat                    |
-| sollicitaOferta           | Sollicitant → Oferta              | El client demana aquesta oferta   |
 | treballaA                 | Sollicitant → Localització        | On treballa                       |
-| estudiaA                  | Sollicitant → Localització        | On estudia                        |
-| requereixServei           | Sollicitant → Servei              | Servei obligatori a prop          |
-| prefereixServei           | Sollicitant → Servei              | Servei desitjable                 |
-| evitaServei               | Sollicitant → ServeiMolest        | Servei que vol evitar             |
+| estudiaA                  | Solicitant → Localització         | On estudia                        |
+| requereixServei           | Solicitant → Servei               | Servei obligatori a prop          |
+| prefereixServei           | Solicitant → Servei               | Servei desitjable                 |
+| evitaServei               | Solicitant → ServeiMolest         | Servei que vol evitar             |
 | moltAPropDe               | Localització → Servei             | < 500m                            |
 | aDistanciaMitjana         | Localització → Servei             | 500-1000m                         |
 | llunyDe                   | Localització → Servei             | > 1000m                           |

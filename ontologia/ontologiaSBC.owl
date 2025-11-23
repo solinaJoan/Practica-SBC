@@ -7,101 +7,29 @@
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
     <owl:Ontology rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges">
-        <rdfs:comment>Ontologia per a sistema de recomanació de lloguer d'habitatges a Barcelona</rdfs:comment>
+        <rdfs:comment>Ontologia per a sistema de recomanació de lloguer d'habitatges a Barcelona (Synchronized with CLIPS)</rdfs:comment>
         <rdfs:label>Ontologia Lloguer Habitatges</rdfs:label>
     </owl:Ontology>
 
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Object Properties (Relacions)
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#aDistanciaMitjana">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#aPropDe"/>
-        <rdfs:comment>Servei a distància mitjana (500-1000m)</rdfs:comment>
         <rdfs:label>a distancia mitjana</rdfs:label>
     </owl:ObjectProperty>
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#aPropDe">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Localitzacio"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
-        <rdfs:comment>Relació de proximitat entre localització i servei</rdfs:comment>
         <rdfs:label>a prop de</rdfs:label>
-    </owl:ObjectProperty>
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#compleixRequisit">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Oferta"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
-        <rdfs:comment>Indica que una oferta compleix els requisits d'un sol·licitant</rdfs:comment>
-        <rdfs:label>compleix requisit</rdfs:label>
-    </owl:ObjectProperty>
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#esAdequatPer">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#compleixRequisit"/>
-        <rdfs:comment>Oferta adequada per al sol·licitant</rdfs:comment>
-        <rdfs:label>es adequat per</rdfs:label>
-    </owl:ObjectProperty>
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#esMoltRecomanablePer">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#esAdequatPer"/>
-        <rdfs:comment>Oferta molt recomanable per al sol·licitant</rdfs:comment>
-        <rdfs:label>es molt recomanable per</rdfs:label>
-    </owl:ObjectProperty>
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#esParcialment AdequatPer">
-        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#compleixRequisit"/>
-        <rdfs:comment>Oferta parcialment adequada per al sol·licitant</rdfs:comment>
-        <rdfs:label>es parcialment adequat per</rdfs:label>
-    </owl:ObjectProperty>
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#estudiaA">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Localitzacio"/>
-        <rdfs:comment>Lloc on estudia el sol·licitant</rdfs:comment>
-        <rdfs:label>estudia a</rdfs:label>
-    </owl:ObjectProperty>
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#evitaServei">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#ServeiMolest"/>
-        <rdfs:comment>Servei que el sol·licitant prefereix evitar</rdfs:comment>
-        <rdfs:label>evita servei</rdfs:label>
     </owl:ObjectProperty>
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#llunyde">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#aPropDe"/>
-        <rdfs:comment>Servei lluny (més de 1000m)</rdfs:comment>
         <rdfs:label>lluny de</rdfs:label>
     </owl:ObjectProperty>
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#moltAPropDe">
         <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#aPropDe"/>
-        <rdfs:comment>Servei molt a prop (menys de 500m)</rdfs:comment>
         <rdfs:label>molt a prop de</rdfs:label>
-    </owl:ObjectProperty>
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#prefereixServei">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
-        <rdfs:comment>Servei que el sol·licitant prefereix tenir a prop (desitjable però no obligatori)</rdfs:comment>
-        <rdfs:label>prefereix servei</rdfs:label>
-    </owl:ObjectProperty>
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#requereixServei">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
-        <rdfs:comment>Servei que el sol·licitant requereix a prop (obligatori)</rdfs:comment>
-        <rdfs:label>requereix servei</rdfs:label>
-    </owl:ObjectProperty>
-
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#sollicitaOferta">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
-        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Oferta"/>
-        <rdfs:comment>Oferta sol·licitada pel sol·licitant</rdfs:comment>
-        <rdfs:label>sollicita oferta</rdfs:label>
     </owl:ObjectProperty>
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#teLocalitzacio">
@@ -115,7 +43,6 @@
             </owl:Class>
         </rdfs:domain>
         <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Localitzacio"/>
-        <rdfs:comment>Localització de l'habitatge o servei</rdfs:comment>
         <rdfs:label>te localitzacio</rdfs:label>
     </owl:ObjectProperty>
 
@@ -123,91 +50,101 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Oferta"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
-        <rdfs:comment>Habitatge associat a l'oferta</rdfs:comment>
         <rdfs:label>te habitatge</rdfs:label>
     </owl:ObjectProperty>
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#treballaA">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#llocTreball">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Localitzacio"/>
-        <rdfs:comment>Lloc on treballa el sol·licitant</rdfs:comment>
-        <rdfs:label>treballa a</rdfs:label>
+        <rdfs:label>lloc treball</rdfs:label>
     </owl:ObjectProperty>
 
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Data Properties (Atributs)
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#llocEstudi">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Localitzacio"/>
+        <rdfs:label>lloc estudi</rdfs:label>
+    </owl:ObjectProperty>
 
-    <!-- OFERTA Data Properties -->
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#requereixServei">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
+        <rdfs:label>requereix servei</rdfs:label>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#prefereixServei">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
+        <rdfs:label>prefereix servei</rdfs:label>
+    </owl:ObjectProperty>
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#evitaServei">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#ServeiMolest"/>
+        <rdfs:label>evita servei</rdfs:label>
+    </owl:ObjectProperty>
+
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#preuMensual">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Oferta"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
-        <rdfs:comment>Preu mensual de lloguer en euros</rdfs:comment>
         <rdfs:label>preu mensual</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#disponible">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Oferta"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
-        <rdfs:comment>Indica si l'oferta està disponible</rdfs:comment>
         <rdfs:label>disponible</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#dataPublicacio">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Oferta"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
-        <rdfs:comment>Data de publicació de l'oferta</rdfs:comment>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:label>data publicacio</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#grauRecomanacio">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Oferta"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>Grau de recomanació: Parcialment, Adequat, MoltRecomanable</rdfs:comment>
+        <rdfs:comment>Valors: Parcialment, Adequat, MoltRecomanable, Cap</rdfs:comment>
         <rdfs:label>grau recomanacio</rdfs:label>
     </owl:DatatypeProperty>
 
-    <!-- HABITATGE Data Properties -->
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#motiusRecomanacio">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Oferta"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>motius recomanacio</rdfs:label>
+    </owl:DatatypeProperty>
+
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#superficieHabitable">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
-        <rdfs:comment>Superfície habitable en metres quadrats</rdfs:comment>
         <rdfs:label>superficie habitable</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#numeroDormitoris">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rdfs:comment>Nombre total de dormitoris</rdfs:comment>
         <rdfs:label>numero dormitoris</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#numeroDormitorisDobles">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rdfs:comment>Nombre de dormitoris dobles</rdfs:comment>
         <rdfs:label>numero dormitoris dobles</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#numeroDormitorisSimples">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rdfs:comment>Nombre de dormitoris simples</rdfs:comment>
         <rdfs:label>numero dormitoris simples</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#numeroBanys">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rdfs:comment>Nombre de banys</rdfs:comment>
         <rdfs:label>numero banys</rdfs:label>
     </owl:DatatypeProperty>
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#teTermssaOBalco">
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#teTerrassaOBalco">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:label>te terrassa o balco</rdfs:label>
@@ -234,7 +171,6 @@
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#plantaPis">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rdfs:comment>Planta del pis (0=entresol, 1=primer, etc.)</rdfs:comment>
         <rdfs:label>planta pis</rdfs:label>
     </owl:DatatypeProperty>
 
@@ -265,7 +201,6 @@
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#orientacioSolar">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>Valors: Mati, Tarda, TotElDia, Nord</rdfs:comment>
         <rdfs:label>orientacio solar</rdfs:label>
     </owl:DatatypeProperty>
 
@@ -278,7 +213,6 @@
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#tipusVistes">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>Valors: Mar, Muntanya, Ciutat, Parc</rdfs:comment>
         <rdfs:label>tipus vistes</rdfs:label>
     </owl:DatatypeProperty>
 
@@ -306,7 +240,7 @@
         <rdfs:label>te armari encastat</rdfs:label>
     </owl:DatatypeProperty>
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#teTrister">
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#teTraster">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:label>te traster</rdfs:label>
@@ -315,7 +249,6 @@
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#consumEnergetic">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>Certificat energètic: A, B, C, D, E, F, G</rdfs:comment>
         <rdfs:label>consum energetic</rdfs:label>
     </owl:DatatypeProperty>
 
@@ -328,7 +261,6 @@
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#nivellSoroll">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>Valors: Baix, Mitja, Alt</rdfs:comment>
         <rdfs:label>nivell soroll</rdfs:label>
     </owl:DatatypeProperty>
 
@@ -341,11 +273,9 @@
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#estatConservacio">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>Valors: Nou, BonEstat, AReformar</rdfs:comment>
         <rdfs:label>estat conservacio</rdfs:label>
     </owl:DatatypeProperty>
 
-    <!-- LOCALITZACIO Data Properties -->
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#adreca">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Localitzacio"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
@@ -370,18 +300,6 @@
         <rdfs:label>codi postal</rdfs:label>
     </owl:DatatypeProperty>
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#latitud">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Localitzacio"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
-        <rdfs:label>latitud</rdfs:label>
-    </owl:DatatypeProperty>
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#longitud">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Localitzacio"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
-        <rdfs:label>longitud</rdfs:label>
-    </owl:DatatypeProperty>
-
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#coordenadaX">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Localitzacio"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
@@ -394,7 +312,6 @@
         <rdfs:label>coordenada Y</rdfs:label>
     </owl:DatatypeProperty>
 
-    <!-- SERVEI Data Properties -->
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#nomServei">
         <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
@@ -413,133 +330,123 @@
         <rdfs:label>horari tancament</rdfs:label>
     </owl:DatatypeProperty>
 
-    <!-- SOLLICITANT Data Properties -->
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#nom">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>nom</rdfs:label>
+    </owl:DatatypeProperty>
+
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#pressupostMaxim">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
         <rdfs:label>pressupost maxim</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#pressupostMinim">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
         <rdfs:label>pressupost minim</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#margeEstricte">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
-        <rdfs:comment>Indica si el pressupost màxim és estricte</rdfs:comment>
         <rdfs:label>marge estricte</rdfs:label>
     </owl:DatatypeProperty>
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#edatSollicitant">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#edat">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <rdfs:label>edat sollicitant</rdfs:label>
+        <rdfs:label>edat</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#numeroPersones">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rdfs:label>numero persones</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#numeroFills">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rdfs:label>numero fills</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#edatsFills">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>Llista d'edats separades per comes</rdfs:comment>
+        <rdfs:comment>Llista d'edats (multislot en CLIPS)</rdfs:comment>
         <rdfs:label>edats fills</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#teAvis">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:label>te avis</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#numeroAvis">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rdfs:label>numero avis</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#teVehicle">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:label>te vehicle</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#treballaACiutat">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:label>treballa a ciutat</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#estudiaACiutat">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:label>estudia a ciutat</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#prefereixTransportPublic">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:label>prefereix transport public</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#necessitaAccessibilitat">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:label>necessita accessibilitat</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#teMascotes">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <rdfs:label>te mascotes</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#numeroMascotes">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
         <rdfs:label>numero mascotes</rdfs:label>
     </owl:DatatypeProperty>
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#tipusMascota">
-        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>Valors: Gos, Gat, Altre</rdfs:comment>
         <rdfs:label>tipus mascota</rdfs:label>
     </owl:DatatypeProperty>
 
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Classes
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    <!-- Classe principal: Oferta -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Oferta">
-        <rdfs:comment>Oferta de lloguer d'habitatge</rdfs:comment>
         <rdfs:label>Oferta</rdfs:label>
     </owl:Class>
 
-    <!-- Classe principal: Habitatge -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge">
-        <rdfs:comment>Habitatge disponible per llogar</rdfs:comment>
         <rdfs:label>Habitatge</rdfs:label>
     </owl:Class>
 
-    <!-- Subclasses d'Habitatge -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Pis">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Habitatge"/>
         <rdfs:label>Pis</rdfs:label>
@@ -565,7 +472,6 @@
         <rdfs:label>Estudi</rdfs:label>
     </owl:Class>
 
-    <!-- Classes disjuntes per tipus d'habitatge -->
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <owl:members rdf:parseType="Collection">
@@ -577,26 +483,21 @@
         </owl:members>
     </rdf:Description>
 
-    <!-- Classe principal: Localitzacio -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Localitzacio">
-        <rdfs:comment>Localització geogràfica</rdfs:comment>
         <rdfs:label>Localitzacio</rdfs:label>
     </owl:Class>
 
-    <!-- Classe principal: Sollicitant -->
-    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant">
-        <rdfs:comment>Persona o grup que busca habitatge de lloguer</rdfs:comment>
-        <rdfs:label>Sollicitant</rdfs:label>
+    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant">
+        <rdfs:label>Solicitant</rdfs:label>
     </owl:Class>
 
-    <!-- Subclasses de Sollicitant -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Individu">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:label>Individu</rdfs:label>
     </owl:Class>
 
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Parella">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:label>Parella</rdfs:label>
     </owl:Class>
 
@@ -616,7 +517,7 @@
     </owl:Class>
 
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Familia">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:label>Familia</rdfs:label>
     </owl:Class>
 
@@ -631,22 +532,19 @@
     </owl:Class>
 
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#GrupEstudiants">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:label>Grup Estudiants</rdfs:label>
     </owl:Class>
 
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#PersonaGran">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Sollicitant"/>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Solicitant"/>
         <rdfs:label>Persona Gran</rdfs:label>
     </owl:Class>
 
-    <!-- Classe principal: Servei -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei">
-        <rdfs:comment>Servei o equipament urbà</rdfs:comment>
         <rdfs:label>Servei</rdfs:label>
     </owl:Class>
 
-    <!-- Subclasses de Servei: Transport -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#TransportPublic">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
         <rdfs:label>Transport Public</rdfs:label>
@@ -667,7 +565,6 @@
         <rdfs:label>Estacio Tren</rdfs:label>
     </owl:Class>
 
-    <!-- Subclasses de Servei: Salut -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#ServeiSalut">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
         <rdfs:label>Servei Salut</rdfs:label>
@@ -688,7 +585,6 @@
         <rdfs:label>Farmacia</rdfs:label>
     </owl:Class>
 
-    <!-- Subclasses de Servei: Educatiu -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#ServeiEducatiu">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
         <rdfs:label>Servei Educatiu</rdfs:label>
@@ -714,7 +610,6 @@
         <rdfs:label>Universitat</rdfs:label>
     </owl:Class>
 
-    <!-- Subclasses de Servei: Comercial -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#ServeiComercial">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
         <rdfs:label>Servei Comercial</rdfs:label>
@@ -740,7 +635,6 @@
         <rdfs:label>Mercat</rdfs:label>
     </owl:Class>
 
-    <!-- Subclasses de Servei: Zona Verda -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#ZonaVerda">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
         <rdfs:label>Zona Verda</rdfs:label>
@@ -761,7 +655,6 @@
         <rdfs:label>Zona Esportiva</rdfs:label>
     </owl:Class>
 
-    <!-- Subclasses de Servei: Oci -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#ServeiOci">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
         <rdfs:label>Servei Oci</rdfs:label>
@@ -797,10 +690,8 @@
         <rdfs:label>Bar</rdfs:label>
     </owl:Class>
 
-    <!-- Subclasses de Servei: Molest -->
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#ServeiMolest">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Servei"/>
-        <rdfs:comment>Serveis que poden ser molestos per alguns sol·licitants</rdfs:comment>
         <rdfs:label>Servei Molest</rdfs:label>
     </owl:Class>
 
@@ -827,22 +718,6 @@
     <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Autopista">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#ServeiMolest"/>
         <rdfs:label>Autopista</rdfs:label>
-    </owl:Class>
-
-    <!-- Classe auxiliar: Dormitori -->
-    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Dormitori">
-        <rdfs:comment>Tipus de dormitori</rdfs:comment>
-        <rdfs:label>Dormitori</rdfs:label>
-    </owl:Class>
-
-    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#DormitoriDoble">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Dormitori"/>
-        <rdfs:label>Dormitori Doble</rdfs:label>
-    </owl:Class>
-
-    <owl:Class rdf:about="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#DormitoriSimple">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/ontologies/2025/lloguer-habitatges#Dormitori"/>
-        <rdfs:label>Dormitori Simple</rdfs:label>
     </owl:Class>
 
 </rdf:RDF>

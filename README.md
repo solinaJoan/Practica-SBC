@@ -17,11 +17,8 @@ El sistema està dividit en els següents fitxers CLIPS:
 
 ## Instruccions d'Ús
 
-Per executar el sistema expert i veure les recomanacions generades, segueix qualsevol de les dues opcions:
+Per executar el sistema expert i veure les recomanacions generades, segueix els següents passos:
 
-### Opció A: Càrrega Automàtica
-
-Aquesta opció carrega tots els components del sistema de cop utilitzant el fitxer de control `main.clp`.
 
 1.  **Obrir CLIPS:** Inicia la consola de CLIPS.
 2.  **Carregar el sistema:** Escriu l'ordre per carregar el fitxer principal:
@@ -30,21 +27,8 @@ Aquesta opció carrega tots els components del sistema de cop utilitzant el fitx
     ```
 3.  **Executar el procés:** Un cop carregat, inicialitza i executa el sistema:
     ```clips
+    (main)
     (reset)
     (run)
     ```
 
-### Opció B: Càrrega Manual Detallada
-
-Utilitza aquesta opció si vols carregar i provar els components individualment o en cas de rebre errors específics durant la càrrega.
-
-```clips
-;;; 1. Obrir CLIPS
-;;; 2. Carregar fitxers de coneixement (Ontologia, Instàncies, Regles):
-(load "ontologiaSBC.clp")
-(load "instancies.clp")
-(load "regles.clp")
-;;; 3. Inicialitzar la memòria de treball:
-(reset)
-;;; 4. Executar el motor d'inferència:
-(run)

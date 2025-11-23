@@ -1,0 +1,101 @@
+INSTÀNCIES (Instances / Individuals)
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│                     LOCALITZACIONS I SERVEIS                    │
+└─────────────────────────────────────────────────────────────────┘
+
+LOCALITZACIONS (Ubicacions geogràfiques)
+| ID Instància    | Districte/Barri       | Adreça                  |
+|-----------------|-----------------------|-------------------------|
+| loc-eixample-1  | Eixample (Dreta)      | C/ Aragó 250            |
+| loc-gracia-1    | Gràcia (Vila)         | C/ Verdi 45             |
+| loc-sants-1     | Sants-Montjuïc        | C/ Sants 120            |
+| loc-born-1      | Ciutat Vella (Born)   | Pg. del Born 15         |
+| loc-sarria-1    | Sarrià-St.Gervasi     | C/ Major de Sarrià 80   |
+| loc-eixample-2  | Eixample (Esquerra)   | C/ València 180         |
+
+SERVEIS URBANS (Punts d'interès)
+| ID Instància    | Tipus                 | Descripció              |
+|-----------------|-----------------------|-------------------------|
+| metro-pg        | Estació Metro         | Pg. de Gràcia (L2,L3,L4)|
+| metro-fontana   | Estació Metro         | Fontana (L3)            |
+| escola-eixample | Escola                | Escola Eixample         |
+| hospital-clinic | Hospital              | Hospital Clínic BCN     |
+| mercadona-eix   | Supermercat           | Mercadona               |
+| parc-ciutadella | Parc                  | Parc de la Ciutadella   |
+| discoteca-port  | Discoteca (Molest)    | Zona Oci Port Olímpic   |
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      PARC D'HABITATGES                          │
+└─────────────────────────────────────────────────────────────────┘
+
+Característiques físiques dels immobles disponibles.
+
+| ID    | Tipus         | Zona     | m²  | Hab.| Asc.| Masc.| Característiques Clau        |
+|-------|---------------|----------|-----|-----|-----|------|------------------------------|
+| hab-1 | Pis           | Eixample | 95  | 3   | SI  | SI   | Terrassa, Parking, Complet   |
+| hab-2 | Àtic          | Gràcia   | 120 | 3   | SI  | SI   | Luxe, Terrassa 40m², Nou (A) |
+| hab-3 | Estudi        | Sants    | 35  | 1   | NO  | NO   | Econòmic, Vell, Sense vistes |
+| hab-4 | Pis           | Born     | 70  | 2   | NO  | NO   | Sorollós, Antic, Cèntric     |
+| hab-5 | Unifamiliar   | Sarrià   | 200 | 5   | NO  | SI   | Jardí, Piscina, Molt gran    |
+| hab-6 | Pis           | Eixample | 80  | 2   | NO  | NO   | Planta Baixa (0), Accessible |
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│                      OFERTES COMERCIALS                         │
+└─────────────────────────────────────────────────────────────────┘
+
+Relació entre l'habitatge i el preu de lloguer.
+
+| ID Oferta  | Habitatge Ref. | Preu (€) | Disponibilitat |
+|------------|----------------|----------|----------------|
+| oferta-1   | hab-1          | 1.350 €  | Immediata      |
+| oferta-2   | hab-2          | 1.800 €  | Immediata      |
+| oferta-3   | hab-3          |   650 €  | Immediata      |
+| oferta-4   | hab-4          | 1.100 €  | Immediata      |
+| oferta-5   | hab-5          | 3.500 €  | Immediata      |
+| oferta-6   | hab-6          |   950 €  | Immediata      |
+
+
+┌─────────────────────────────────────────────────────────────────┐
+│                        SOL·LICITANTS                            │
+└─────────────────────────────────────────────────────────────────┘
+
+Perfils de prova per validar el sistema expert.
+
+FAMILIA GARCIA ([familia-garcia])
+---------------------------------------------------
+Tipus:      Família Biparental (2 fills: 6, 10 anys)
+Pressupost: 600 - 1.500 € (Flexible)
+Requisits:  Té Mascota (Gos), Té Vehicle.
+Necessita:  Escoles (per fills).
+
+GRUP ESTUDIANTS ([estudiant-marc])
+---------------------------------------------------
+Tipus:      Grup Estudiants (3 persones)
+Pressupost: 300 - 900 € (ESTRICTE)
+Requisits:  NO vehicle, Prefereix Transport Públic.
+Necessita:  Transport a prop, Oci (preferible).
+
+MARIA LOPEZ ([jubilada-maria])
+---------------------------------------------------
+Tipus:      Persona Gran (72 anys, viu sola)
+Pressupost: 400 - 1.000 € (Flexible)
+Requisits:  NECESSITA ACCESSIBILITAT (Ascensor/Baixos).
+Necessita:  Salut, Comerç, Transport.
+
+PARELLA MARTINEZ ([parella-martinez])
+---------------------------------------------------
+Tipus:      Parella Sense Fills
+Pressupost: 500 - 1.400 € (Flexible)
+Requisits:  Té Vehicle, Treballa a la ciutat.
+Necessita:  Parking (preferible).
+
+PARELLA LOPEZ ([parella-lopez])
+---------------------------------------------------
+Tipus:      Parella Futurs Fills (Plans de família)
+Pressupost: 700 - 1.600 € (Flexible)
+Requisits:  Té Mascota (Gat), Té Vehicle.
+Necessita:  Zones verdes/Escoles (visió de futur).

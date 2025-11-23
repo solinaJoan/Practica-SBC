@@ -24,7 +24,7 @@ HABITATGE
     ├── Àtic
     └── Estudi
 
-SOL·LICITANT
+SOLICITANT
     ├── Individu
     ├── Parella
     │     ├── Parella Sense Fills

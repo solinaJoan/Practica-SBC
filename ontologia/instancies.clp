@@ -351,9 +351,22 @@
         (preuMensual 950.0)
         (disponible si)
         (dataPublicacio "2024-11-12"))
+
+
+    ([oferta-flexible] of Oferta
+        (teHabitatge [hab-1])
+        (preuMensual 1650.0)
+        (disponible si)
+        (dataPublicacio "2024-11-20"))
+
+    ([oferta-zulo] of Oferta
+        (teHabitatge [hab-3])
+        (preuMensual 200.0)
+        (disponible si)
+        (dataPublicacio "2024-11-21"))
 )
 
-(definstances sollicitants
+(definstances solicitants
     ;;; FAMILIA BIPARENTAL amb fills i mascota
     ([familia-garcia] of FamiliaBiparental
         (nom "Familia Garcia")
@@ -439,4 +452,41 @@
         (numeroMascotes 1)
         (tipusMascota Gat)
         (treballaACiutat si))
+
+    ;;; Inversor Desconfiat
+    ([inversor-robert] of Individu
+        (nom "Robert De Niro")
+        (edat 50)
+        (pressupostMaxim 5000.0)
+        (pressupostMinim 1000.0)
+        (margeEstricte no)
+        (numeroFills 3)
+        (teAvis no)
+        (teVehicle si)
+        (prefereixTransportPublic no)
+        (necessitaAccessibilitat no)
+        (teMascotes si)
+        (numeroMascotes 1)
+        (tipusMascota Gos)
+        (treballaACiutat si))
+
+
+    ;;; 2. L'AVI EN FORMA
+    ([avi-joan] of PersonaGran
+        (nom "Joan Marxador")
+        (edat 68) ; > 60 anys
+        (pressupostMaxim 1200.0)
+        (necessitaAccessibilitat no)
+        (margeEstricte no)
+        (prefereixTransportPublic si))
+
+    ;;; 3. EL HATER DEL SOROLL
+    ([vei-tranquil] of Individu
+        (nom "Senyor Silenci")
+        (edat 40)
+        (pressupostMaxim 1500.0)
+        (evitaServei [discoteca-port])
+        (margeEstricte no))
+
 )
+

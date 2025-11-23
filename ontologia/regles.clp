@@ -17,33 +17,33 @@
 )
 
 (deftemplate requisit-inferit
-    (slot sollicitant (type INSTANCE))
+    (slot solicitant (type INSTANCE))
     (slot categoria-servei (type SYMBOL))
     (slot obligatori (type SYMBOL))
     (slot motiu (type STRING))
 )
 
 (deftemplate oferta-descartada
-    (slot sollicitant (type INSTANCE))
+    (slot solicitant (type INSTANCE))
     (slot oferta (type INSTANCE))
     (slot motiu (type STRING))
 )
 
 (deftemplate criteri-no-cumplit
-    (slot sollicitant (type INSTANCE))
+    (slot solicitant (type INSTANCE))
     (slot oferta (type INSTANCE))
     (slot criteri (type STRING))
     (slot gravetat (type SYMBOL))
 )
 
 (deftemplate punt-positiu
-    (slot sollicitant (type INSTANCE))
+    (slot solicitant (type INSTANCE))
     (slot oferta (type INSTANCE))
     (slot descripcio (type STRING))
 )
 
 (deftemplate recomanacio
-    (slot sollicitant (type INSTANCE))
+    (slot solicitant (type INSTANCE))
     (slot oferta (type INSTANCE))
     (slot grau (type SYMBOL))
     (slot puntuacio (type INTEGER))
@@ -62,8 +62,8 @@
 )
 
 (deffunction classificar-distancia (?metres)
-    (if (< ?metres 300.0) then MoltAProp
-    else (if (< ?metres 700.0) then DistanciaMitjana
+    (if (< ?metres 500.0) then MoltAProp
+    else (if (< ?metres 1000.0) then DistanciaMitjana
     else Lluny))
 )
 
@@ -90,13 +90,13 @@
 (defrule abstraccio-familia-amb-fills
     "Les families amb fills necessiten escoles i zones verdes"
     (declare (salience 95))
-    ?sol <- (object (is-a Sollicitant) (numeroFills ?fills))
+    ?sol <- (object (is-a Solicitant) (numeroFills ?fills))
     (test (> ?fills 0))
-    (not (requisit-inferit (sollicitant ?sol) (categoria-servei ServeiEducatiu)))
+    (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)))
     =>
-    (assert (requisit-inferit (sollicitant ?sol) (categoria-servei ServeiEducatiu)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)
             (obligatori si) (motiu "Familia amb fills necessita escoles")))
-    (assert (requisit-inferit (sollicitant ?sol) (categoria-servei ZonaVerda)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ZonaVerda)
             (obligatori no) (motiu "Familia amb fills prefereix zones verdes")))
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita escoles (te fills)" crlf)
 )
@@ -105,11 +105,11 @@
     "Les persones grans necessiten serveis de salut i comercos"
     (declare (salience 95))
     ?sol <- (object (is-a PersonaGran))
-    (not (requisit-inferit (sollicitant ?sol) (categoria-servei ServeiSalut)))
+    (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiSalut)))
     =>
-    (assert (requisit-inferit (sollicitant ?sol) (categoria-servei ServeiSalut)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiSalut)
             (obligatori si) (motiu "Persona gran necessita serveis de salut")))
-    (assert (requisit-inferit (sollicitant ?sol) (categoria-servei ServeiComercial)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiComercial)
             (obligatori si) (motiu "Persona gran necessita comercos a prop")))
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita salut i comerc" crlf)
 )
@@ -118,11 +118,11 @@
     "Els estudiants necessiten transport i prefereixen oci"
     (declare (salience 95))
     ?sol <- (object (is-a GrupEstudiants))
-    (not (requisit-inferit (sollicitant ?sol) (categoria-servei TransportPublic)))
+    (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
-    (assert (requisit-inferit (sollicitant ?sol) (categoria-servei TransportPublic)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)
             (obligatori si) (motiu "Estudiant necessita transport public")))
-    (assert (requisit-inferit (sollicitant ?sol) (categoria-servei ServeiOci)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiOci)
             (obligatori no) (motiu "Estudiant prefereix zones oci")))
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita transport" crlf)
 )
@@ -130,10 +130,10 @@
 (defrule abstraccio-prefereix-transport
     "Si prefereix transport public, el necessita a prop"
     (declare (salience 95))
-    ?sol <- (object (is-a Sollicitant) (prefereixTransportPublic si))
-    (not (requisit-inferit (sollicitant ?sol) (categoria-servei TransportPublic)))
+    ?sol <- (object (is-a Solicitant) (prefereixTransportPublic si))
+    (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
-    (assert (requisit-inferit (sollicitant ?sol) (categoria-servei TransportPublic)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)
             (obligatori si) (motiu "Prefereix transport public")))
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita transport public" crlf)
 )
@@ -142,11 +142,11 @@
     "Parelles que planegen tenir fills prefereixen zones adequades"
     (declare (salience 95))
     ?sol <- (object (is-a ParellaFutursFills))
-    (not (requisit-inferit (sollicitant ?sol) (categoria-servei ServeiEducatiu)))
+    (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)))
     =>
-    (assert (requisit-inferit (sollicitant ?sol) (categoria-servei ServeiEducatiu)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)
             (obligatori no) (motiu "Parella amb plans de fills prefereix escoles")))
-    (assert (requisit-inferit (sollicitant ?sol) (categoria-servei ZonaVerda)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ZonaVerda)
             (obligatori no) (motiu "Parella amb plans de fills prefereix parcs")))
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " prefereix zones per futurs fills" crlf)
 )
@@ -154,10 +154,10 @@
 (defrule abstraccio-te-vehicle
     "Si te vehicle, prefereix parking"
     (declare (salience 95))
-    ?sol <- (object (is-a Sollicitant) (teVehicle si))
-    (not (requisit-inferit (sollicitant ?sol) (categoria-servei Parking)))
+    ?sol <- (object (is-a Solicitant) (teVehicle si))
+    (not (requisit-inferit (solicitant ?sol) (categoria-servei Parking)))
     =>
-    (assert (requisit-inferit (sollicitant ?sol) (categoria-servei Parking)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei Parking)
             (obligatori no) (motiu "Te vehicle, prefereix parking")))
 )
 
@@ -171,8 +171,7 @@
 )
 
 ;;; ============================================================
-;;; FASE 2: RESOLUCIÓ (MATCHING)
-;;; Filtratge i avaluació d'ofertes
+;;; FASE 2: RESOLUCIÓ
 ;;; ============================================================
 
 ;;; --- REGLES DE DESCART ---
@@ -181,12 +180,12 @@
     "Descartar si preu supera maxim amb marge estricte"
     (declare (salience 40))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant) (pressupostMaxim ?max) (margeEstricte si))
+    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max) (margeEstricte si))
     ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
     (test (> ?preu ?max))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (sollicitant ?sol) (oferta ?of)
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu "Preu supera pressupost maxim (estricte)")))
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
               " - Preu " ?preu " > " ?max " EUR" crlf)
@@ -196,27 +195,27 @@
     "Descartar si preu supera maxim mes del 15% (marge flexible)"
     (declare (salience 40))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant) (pressupostMaxim ?max) (margeEstricte no))
+    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max) (margeEstricte no))
     ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
     (test (> ?preu (* ?max 1.15)))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (sollicitant ?sol) (oferta ?of)
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu "Preu supera pressupost maxim mes del 15%")))
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
               " - Preu massa alt" crlf)
 )
 
 (defrule resolucio-descartar-no-mascotes
-    "Descartar si no permet mascotes i el sollicitant en te"
+    "Descartar si no permet mascotes i el solicitant en te"
     (declare (salience 40))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant) (teMascotes si))
+    ?sol <- (object (is-a Solicitant) (teMascotes si))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (permetMascotes no))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (sollicitant ?sol) (oferta ?of)
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu "No permet mascotes")))
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
               " - No permet mascotes" crlf)
@@ -226,13 +225,13 @@
     "Descartar si necessita accessibilitat i no es accessible"
     (declare (salience 40))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant) (necessitaAccessibilitat si))
+    ?sol <- (object (is-a Solicitant) (necessitaAccessibilitat si))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (teAscensor no) (plantaPis ?planta))
     (test (> ?planta 0))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (sollicitant ?sol) (oferta ?of)
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu "No accessible: sense ascensor i planta alta")))
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
               " - No accessible" crlf)
@@ -242,16 +241,50 @@
     "Descartar si preu es sospitosament baix"
     (declare (salience 40))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant) (pressupostMinim ?min))
+    ?sol <- (object (is-a Solicitant) (pressupostMinim ?min))
     (test (> ?min 0))
     ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
     (test (< ?preu ?min))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (sollicitant ?sol) (oferta ?of)
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu "Preu sospitosament baix")))
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
               " - Preu sospitos" crlf)
+)
+
+(defrule resolucio-descartar-servei-evitat
+    "Descartar si un servei que es vol evitar està Molt A Prop"
+    (declare (salience 45))
+    (fase-completada (nom abstraccio))
+    ;; Busquem un sol·licitant que tingui un servei a la llista d'evitar
+    ?sol <- (object (is-a Solicitant) (evitaServei $? ?serveiEvitat $?))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ;; Comprovem si aquest habitatge té aquest servei concret Molt A Prop
+    (proximitat (habitatge ?hab) (servei ?serveiEvitat) (distancia MoltAProp))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
+            (motiu (str-cat "Està massa a prop d'un servei evitat: " (instance-name ?serveiEvitat)))))
+    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
+              " - A prop de servei evitat" crlf)
+)
+
+(defrule resolucio-descartar-falta-requisit-inferit
+    "Descartar si falta un servei que s'ha inferit com OBLIGATORI (i no n'hi ha cap a prop)"
+    (declare (salience 42))
+    (fase-completada (nom abstraccio))
+    ;; Recuperem el requisit inferit (ex: obligatori escola per tenir fills)
+    (requisit-inferit (solicitant ?sol) (categoria-servei ?cat) (obligatori si) (motiu ?motiuTxt))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ;; Comprovem que NO existeixi cap proximitat d'aquesta categoria (ni a prop ni mitjana)
+    (not (proximitat (habitatge ?hab) (categoria ?cat) (distancia MoltAProp|DistanciaMitjana)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
+            (motiu (str-cat "Falta servei obligatori (" ?cat "): " ?motiuTxt))))
+    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
+              " - Falta requisit inferit: " ?cat crlf)
 )
 
 ;;; --- REGLES DE CRITERIS NO COMPLERTS ---
@@ -260,13 +293,13 @@
     "Preu lleugerament superior (marge flexible)"
     (declare (salience 35))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant) (pressupostMaxim ?max) (margeEstricte no))
+    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max) (margeEstricte no))
     ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
     (test (and (> ?preu ?max) (<= ?preu (* ?max 1.15))))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (criteri-no-cumplit (sollicitant ?sol) (oferta ?of)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (criteri-no-cumplit (sollicitant ?sol) (oferta ?of)
+    (assert (criteri-no-cumplit (solicitant ?sol) (oferta ?of)
             (criteri "Preu lleugerament superior al pressupost") (gravetat Lleu)))
 )
 
@@ -274,13 +307,13 @@
     "Habitatge amb nivell de soroll alt"
     (declare (salience 35))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ?h <- (object (is-a Habitatge) (name ?hab) (nivellSoroll Alt))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (criteri-no-cumplit (sollicitant ?sol) (oferta ?of) (criteri "Nivell de soroll alt")))
+    ?h <- (object (is-a Habitatge) (name ?hab) (nivellSoroll "Alt"))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of) (criteri "Nivell de soroll alt")))
     =>
-    (assert (criteri-no-cumplit (sollicitant ?sol) (oferta ?of)
+    (assert (criteri-no-cumplit (solicitant ?sol) (oferta ?of)
             (criteri "Nivell de soroll alt") (gravetat Lleu)))
 )
 
@@ -288,15 +321,15 @@
     "Planta alta sense ascensor per persona gran"
     (declare (salience 35))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant) (edat ?edat))
+    ?sol <- (object (is-a Solicitant) (edat ?edat))
     (test (> ?edat 60))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (teAscensor no) (plantaPis ?planta))
     (test (> ?planta 1))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (criteri-no-cumplit (sollicitant ?sol) (oferta ?of) (criteri "Planta alta sense ascensor")))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of) (criteri "Planta alta sense ascensor")))
     =>
-    (assert (criteri-no-cumplit (sollicitant ?sol) (oferta ?of)
+    (assert (criteri-no-cumplit (solicitant ?sol) (oferta ?of)
             (criteri "Planta alta sense ascensor") (gravetat Moderat)))
 )
 
@@ -306,119 +339,136 @@
     "El preu es molt bo (menys del 80% del pressupost)"
     (declare (salience 30))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant) (pressupostMaxim ?max))
+    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max))
     ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
     (test (< ?preu (* ?max 0.8)))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Preu molt bo")))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Preu molt bo")))
     =>
-    (assert (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Preu molt bo")))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Preu molt bo")))
 )
 
 (defrule resolucio-punt-terrassa
     "L'habitatge te terrassa o balco"
     (declare (salience 30))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (teTerrassaOBalco si))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Te terrassa o balco")))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te terrassa o balco")))
     =>
-    (assert (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Te terrassa o balco")))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te terrassa o balco")))
 )
 
 (defrule resolucio-punt-assolellat
     "L'habitatge es molt assolellat"
     (declare (salience 30))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ?h <- (object (is-a Habitatge) (name ?hab) (orientacioSolar TotElDia))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Molt assolellat")))
+    ?h <- (object (is-a Habitatge) (name ?hab) (orientacioSolar "TotElDia"))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Molt assolellat")))
     =>
-    (assert (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Molt assolellat")))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Molt assolellat")))
 )
 
 (defrule resolucio-punt-eficiencia
     "Alta eficiencia energetica (A o B)"
     (declare (salience 30))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (consumEnergetic ?ce))
     (test (or (eq ?ce A) (eq ?ce B)))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Alta eficiencia energetica")))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Alta eficiencia energetica")))
     =>
-    (assert (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Alta eficiencia energetica")))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Alta eficiencia energetica")))
 )
 
 (defrule resolucio-punt-exterior-silenci
     "Exterior i silencios"
     (declare (salience 30))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ?h <- (object (is-a Habitatge) (name ?hab) (esExterior si) (nivellSoroll Baix))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Exterior i silencios")))
+    ?h <- (object (is-a Habitatge) (name ?hab) (esExterior si) (nivellSoroll "Baix"))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Exterior i silencios")))
     =>
-    (assert (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Exterior i silencios")))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Exterior i silencios")))
 )
 
 (defrule resolucio-punt-vistes
     "Te bones vistes"
     (declare (salience 30))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (teVistes si))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Te bones vistes")))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te bones vistes")))
     =>
-    (assert (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Te bones vistes")))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te bones vistes")))
 )
 
 (defrule resolucio-punt-parking
-    "Te parking i el sollicitant te vehicle"
+    "Te parking i el solicitant te vehicle"
     (declare (salience 30))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant) (teVehicle si))
+    ?sol <- (object (is-a Solicitant) (teVehicle si))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (tePlacaAparcament si))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Te parking")))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te parking")))
     =>
-    (assert (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Te parking")))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te parking")))
 )
 
 (defrule resolucio-punt-piscina
     "Te piscina comunitaria"
     (declare (salience 30))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (tePiscinaComunitaria si))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Te piscina comunitaria")))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te piscina comunitaria")))
     =>
-    (assert (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Te piscina comunitaria")))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te piscina comunitaria")))
 )
 
 (defrule resolucio-punt-transport-aprop
     "Transport public molt a prop"
     (declare (salience 30))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     (proximitat (habitatge ?hab) (categoria ?cat) (distancia MoltAProp))
     (test (or (eq ?cat EstacioMetro) (eq ?cat ParadaBus) (eq ?cat EstacioTren)))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Transport public molt a prop")))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Transport public molt a prop")))
     =>
-    (assert (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio "Transport public molt a prop")))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Transport public molt a prop")))
+)
+
+(defrule resolucio-punt-requisit-inferit-cat
+    "Dona punts si l'habitatge satisfà una necessitat inferida (ex: parc per nens)"
+    (declare (salience 32))
+    (fase-completada (nom abstraccio))
+    ;; Si tenim un requisit inferit (encara que no sigui obligatori)
+    (requisit-inferit (solicitant ?sol) (categoria-servei ?cat) (motiu ?motiuTxt))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ;; I tenim un servei d'aquesta categoria a prop
+    (proximitat (habitatge ?hab) (categoria ?cat) (distancia MoltAProp|DistanciaMitjana))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    ;; Evitem duplicar el mateix punt
+    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d&:(str-index ?motiuTxt ?d))))
+    =>
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of)
+            (descripcio (str-cat "Cobreix necessitat detectada: " ?cat " (" ?motiuTxt ")"))))
 )
 
 (defrule resolucio-fi
@@ -440,16 +490,16 @@
     "MOLT RECOMANABLE: sense negatius i 3+ positius"
     (declare (salience 5))
     (fase-completada (nom resolucio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (disponible si))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (criteri-no-cumplit (sollicitant ?sol) (oferta ?of)))
-    (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio ?d1))
-    (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio ?d2&~?d1))
-    (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio ?d3&~?d1&~?d2))
-    (not (recomanacio (sollicitant ?sol) (oferta ?of)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
+    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d1))
+    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d2&~?d1))
+    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d3&~?d1&~?d2))
+    (not (recomanacio (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (recomanacio (sollicitant ?sol) (oferta ?of) (grau MoltRecomanable) (puntuacio 100)))
+    (assert (recomanacio (solicitant ?sol) (oferta ?of) (grau MoltRecomanable) (puntuacio 100)))
     (printout t "[REFINACIO] " (instance-name ?of) " -> MOLT RECOMANABLE per " (instance-name ?sol) crlf)
 )
 
@@ -457,13 +507,13 @@
     "ADEQUAT: compleix tot sense destacar"
     (declare (salience 4))
     (fase-completada (nom resolucio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (disponible si))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (not (criteri-no-cumplit (sollicitant ?sol) (oferta ?of)))
-    (not (recomanacio (sollicitant ?sol) (oferta ?of)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
+    (not (recomanacio (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (recomanacio (sollicitant ?sol) (oferta ?of) (grau Adequat) (puntuacio 70)))
+    (assert (recomanacio (solicitant ?sol) (oferta ?of) (grau Adequat) (puntuacio 70)))
     (printout t "[REFINACIO] " (instance-name ?of) " -> ADEQUAT per " (instance-name ?sol) crlf)
 )
 
@@ -471,13 +521,13 @@
     "PARCIALMENT ADEQUAT: te algun criteri no complert"
     (declare (salience 3))
     (fase-completada (nom resolucio))
-    ?sol <- (object (is-a Sollicitant))
+    ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (disponible si))
-    (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
-    (criteri-no-cumplit (sollicitant ?sol) (oferta ?of))
-    (not (recomanacio (sollicitant ?sol) (oferta ?of)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (criteri-no-cumplit (solicitant ?sol) (oferta ?of))
+    (not (recomanacio (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (recomanacio (sollicitant ?sol) (oferta ?of) (grau Parcialment) (puntuacio 50)))
+    (assert (recomanacio (solicitant ?sol) (oferta ?of) (grau Parcialment) (puntuacio 50)))
     (printout t "[REFINACIO] " (instance-name ?of) " -> PARCIALMENT per " (instance-name ?sol) crlf)
 )
 
@@ -512,7 +562,7 @@
     "Mostra cada recomanacio amb detalls"
     (declare (salience -20))
     (fase-completada (nom presentacio))
-    (recomanacio (sollicitant ?sol) (oferta ?of) (grau ?grau) (puntuacio ?punt))
+    (recomanacio (solicitant ?sol) (oferta ?of) (grau ?grau) (puntuacio ?punt))
     ?oferta <- (object (is-a Oferta) (name ?of) (preuMensual ?preu) (teHabitatge ?hab))
     ?habitatge <- (object (is-a Habitatge) (name ?hab)
             (superficieHabitable ?sup)
@@ -541,8 +591,8 @@
     "Mostra els punts positius de cada recomanacio"
     (declare (salience -21))
     (fase-completada (nom presentacio))
-    (recomanacio (sollicitant ?sol) (oferta ?of))
-    (punt-positiu (sollicitant ?sol) (oferta ?of) (descripcio ?desc))
+    (recomanacio (solicitant ?sol) (oferta ?of))
+    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?desc))
     =>
     (printout t "  [+] " ?desc crlf)
 )
@@ -551,8 +601,8 @@
     "Mostra els criteris no complerts per ofertes parcials"
     (declare (salience -22))
     (fase-completada (nom presentacio))
-    (recomanacio (sollicitant ?sol) (oferta ?of) (grau Parcialment))
-    (criteri-no-cumplit (sollicitant ?sol) (oferta ?of) (criteri ?crit) (gravetat ?grav))
+    (recomanacio (solicitant ?sol) (oferta ?of) (grau Parcialment))
+    (criteri-no-cumplit (solicitant ?sol) (oferta ?of) (criteri ?crit) (gravetat ?grav))
     =>
     (printout t "  [-] " ?crit " (" ?grav ")" crlf)
 )
@@ -561,7 +611,7 @@
     "Mostra les ofertes descartades"
     (declare (salience -30))
     (fase-completada (nom presentacio))
-    (oferta-descartada (sollicitant ?sol) (oferta ?of) (motiu ?motiu))
+    (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu ?motiu))
     =>
     (printout t crlf "[DESCARTADA] " (instance-name ?of) " per " (instance-name ?sol) ": " ?motiu crlf)
 )

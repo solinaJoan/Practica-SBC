@@ -1,0 +1,103 @@
+1. Estructura Bàsica
+
+    - Tot en CLIPS està tancat entre parèntesis (...).
+    - Comentaris: Comencen amb ;
+    - Variables: Comencen amb un interrogant ?. Exemple: ?sol, ?preu.
+
+
+2. Estructures de Dades (deftemplate)
+
+    - Defineixen l'estructura d'un "fet" (fact), semblant a un struct.
+    - slot: Defineix un atribut únic.
+    - multislot: Defineix una llista de valors.
+
+        (deftemplate proximitat  ; Nom de la plantilla
+            (slot habitatge (type INSTANCE)) ; Camp 1: un objecte
+            (slot distancia (type SYMBOL))   ; Camp 2: un símbol (text curt)
+            (slot metres (type FLOAT))       ; Camp 3: un número decimal
+        )
+
+
+3. Funcions (deffunction)
+
+    - S'utilitzen per a càlculs o lògica procedimental, no per a regles d'inferència.
+    - Notació Prefixa.
+
+        (deffunction calcular-distancia (?x1 ?y1 ?x2 ?y2)
+            (sqrt (+ (** (- ?x2 ?x1) 2) (** (- ?y2 ?y1) 2)))
+        )
+
+
+4. Regles (defrule)
+
+    - Estructura: SI (condicions) => LLAVORS (accions).
+
+    - Exempe (resolucio-descartar-preu-excessiu):
+
+        (defrule resolucio-descartar-preu-excessiu
+            "Comentari opcional explicant la regla"
+            (declare (salience 40))  ; PRIORITAT: Més alt s'executa abans
+
+            ;; --- PART ESQUERRA (Condicions) ---
+            (fase-completada (nom abstraccio)) ; 1. Ha d'existir aquest fet
+
+            ; 2. Patró d'Objecte (Object Pattern Matching)
+            ; Busquem un objecte de la classe Sollicitant.
+            ; ?sol <- guardem el "punter" a l'objecte en la variable ?sol
+            ; Llegim els seus slots pressupostMaxim i margeEstricte en variables.
+            ?sol <- (object (is-a Sollicitant) (pressupostMaxim ?max) (margeEstricte si))
+
+            ; 3. Busquem una oferta
+            ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
+
+            ; 4. Test numèric (Comparació)
+            (test (> ?preu ?max)) ; Si preu és més gran que max
+
+            ; 5. Negació (NOT)
+            ; Assegura't que NO hem descartat aquesta oferta abans
+            (not (oferta-descartada (sollicitant ?sol) (oferta ?of)))
+
+            => ; --- LA FLETXA SEPARA CONDICIONS D'ACCIONS ---
+
+            ;; --- PART DRETA (Accions) ---
+
+            ; Afegir un nou fet a la memòria de treball
+            (assert (oferta-descartada (sollicitant ?sol) (oferta ?of)
+                    (motiu "Preu supera pressupost maxim (estricte)")))
+
+            ; Imprimir per pantalla
+            ; t = terminal, crlf = salt de línia
+            (printout t "[RESOLUCIO] DESCARTADA " ... crlf)
+        )
+
+    - Pattern Matching (object): CLIPS busca automàticament a la memòria qualsevol objecte que coincideixi amb el patró. Si hi ha 3 ofertes i 2 sol·licitants, la regla provarà totes les combinacions (6 en total).
+
+    - Assignació de variables al vol: Quan poses (preuMensual ?preu), li estàs dient: "Mira el valor de l'atribut preuMensual d'aquest objecte i posa'l dins la variable ?preu".
+
+    - ?variable <- (patró): Això captura l'adreça del fet o objecte sencer. És necessari si després vols modificar-lo o esborrar-lo, o per referenciar-lo en un assert.
+
+
+5. Operadors i Comandes Comunes
+
+    - A la part dreta (accions), sovint veuràs:
+
+    - assert: Crea un fet nou. És com dir al sistema "He descobert això, recorda-ho".
+
+        - Exemple: (assert (proximitat ...))
+
+    - retract: (No surt al teu codi, però és comú) Esborra un fet de la memòria.
+
+    - modify: (Pels objectes s'usa send ?obj put-atribut valor) Canvia un valor.
+
+    - bind: Assigna un valor a una variable temporal (com let o var en altres llenguatges).
+
+        - Exemple: (bind ?metres (calcular-distancia ...))
+
+    - printout: Escriu text. Pots concatenar text i variables.
+
+    - str-cat: Funció per enganxar cadenes de text (String Concatenation).
+
+    Resum visual de la lògica
+    Si haguessis de llegir el codi com una frase:
+
+    (defrule nom (declare (prioritat X)) SI existeix un fet A I existeix un objecte B amb valor ?v I el test (> ?v 10) és cert LLAVORS (=>) Crea un nou fet C Imprimeix un missatge )

@@ -1,0 +1,758 @@
+================================================================================
+                    DOCUMENTACIÓ DE LES REGLES DEL SISTEMA
+          Sistema Expert de Recomanació d'Habitatges de Lloguer
+================================================================================
+
+Salience és la prioritat de cada regla, la que tingui el salience més altre s'executarà primer.
+
+Salience        Fase                Acció
+100             Abstracció          Calcular distàncies (matemàtiques).
+95              Abstracció          Deduir necessitats (inferències).
+50              Control             Tancar fase 1 i obrir fase 2.
+40              Resolució           DESCARTAR (Filtratge dur).
+35              Resolució           Detectar problemes lleus (Warnings).
+30              Resolució           Trobar punts positius (Recompenses).
+5               Refinació           Etiquetar com "Molt Recomanable".
+-20             Presentació         printout (Escriure a la consola).
+
+
+
+================================================================================
+                           FASE 1: ABSTRACCIÓ
+                         (Salience: 100 - 50)
+================================================================================
+
+Objectiu: Inferir requisits del sol·licitant segons el seu perfil i calcular
+          proximitats entre habitatges i serveis.
+
+--------------------------------------------------------------------------------
+REGLA: abstraccio-calcular-proximitats
+--------------------------------------------------------------------------------
+Salience: 100
+Descripció: Calcula la distància entre cada habitatge i cada servei urbà
+
+Condicions:
+  - Existeix un habitatge amb una localització
+  - Existeix un servei amb una localització
+  - No s'ha calculat ja la proximitat entre aquest habitatge i servei
+
+Accions:
+  - Calcula la distància euclidiana entre les coordenades
+  - Classifica la distància:
+    * MoltAProp: <500m
+    * DistanciaMitjana: 500-1000m
+    * Lluny: > 1000m
+  - Crea un fet "proximitat" amb la informació calculada
+
+--------------------------------------------------------------------------------
+REGLA: abstraccio-familia-amb-fills
+--------------------------------------------------------------------------------
+Salience: 95
+Descripció: Infereix que les famílies amb fills necessiten escoles i parcs
+
+Condicions:
+  - El sol·licitant té fills (numeroFills > 0)
+  - No s'ha inferit ja aquest requisit
+
+Accions:
+  - Crea requisit OBLIGATORI: ServeiEducatiu (escoles)
+  - Crea requisit PREFERENT: ZonaVerda (parcs)
+  - Mostra missatge informatiu per pantalla
+
+Justificació:
+  Les famílies amb fills en edat escolar necessiten tenir escoles a prop.
+  Les zones verdes són importants per al joc i activitats dels nens.
+
+--------------------------------------------------------------------------------
+REGLA: abstraccio-persona-gran
+--------------------------------------------------------------------------------
+Salience: 95
+Descripció: Infereix que les persones grans necessiten salut i comerços
+
+Condicions:
+  - El sol·licitant és de tipus PersonaGran
+  - No s'ha inferit ja aquest requisit
+
+Accions:
+  - Crea requisit OBLIGATORI: ServeiSalut (centres de salut)
+  - Crea requisit OBLIGATORI: ServeiComercial (supermercats)
+  - Mostra missatge informatiu per pantalla
+
+Justificació:
+  Les persones grans necessiten accés proper a serveis de salut per controls
+  periòdics i a supermercats per compres diàries sense dependre de vehicle.
+
+--------------------------------------------------------------------------------
+REGLA: abstraccio-estudiants
+--------------------------------------------------------------------------------
+Salience: 95
+Descripció: Infereix que els estudiants necessiten transport i prefereixen oci
+
+Condicions:
+  - El sol·licitant és de tipus GrupEstudiants
+  - No s'ha inferit ja aquest requisit
+
+Accions:
+  - Crea requisit OBLIGATORI: TransportPublic (metro/bus)
+  - Crea requisit PREFERENT: ServeiOci (zones d'oci)
+  - Mostra missatge informatiu per pantalla
+
+Justificació:
+  Els estudiants depenen del transport públic per anar a la universitat.
+  Les zones d'oci són importants per la vida social estudiantil.
+
+--------------------------------------------------------------------------------
+REGLA: abstraccio-prefereix-transport
+--------------------------------------------------------------------------------
+Salience: 95
+Descripció: Si prefereix transport públic, el necessita obligatòriament
+
+Condicions:
+  - prefereixTransportPublic = si
+  - No s'ha inferit ja aquest requisit
+
+Accions:
+  - Crea requisit OBLIGATORI: TransportPublic
+  - Mostra missatge informatiu per pantalla
+
+Justificació:
+  Si el sol·licitant expressa preferència per transport públic, significa
+  que el necessita per la seva mobilitat diària.
+
+--------------------------------------------------------------------------------
+REGLA: abstraccio-parella-futurs-fills
+--------------------------------------------------------------------------------
+Salience: 95
+Descripció: Parelles que planegen tenir fills prefereixen zones adequades
+
+Condicions:
+  - El sol·licitant és de tipus ParellaFutursFills
+  - No s'ha inferit ja aquest requisit
+
+Accions:
+  - Crea requisit PREFERENT: ServeiEducatiu (escoles)
+  - Crea requisit PREFERENT: ZonaVerda (parcs)
+  - Mostra missatge informatiu per pantalla
+
+Justificació:
+  Busquen habitatge per establir-se a llarg termini amb vistes a tenir fills.
+  Prefereixen zones amb infraestructura familiar.
+
+--------------------------------------------------------------------------------
+REGLA: abstraccio-te-vehicle
+--------------------------------------------------------------------------------
+Salience: 95
+Descripció: Si té vehicle, prefereix parking
+
+Condicions:
+  - teVehicle = si
+  - No s'ha inferit ja aquest requisit
+
+Accions:
+  - Crea requisit PREFERENT: Parking
+
+Justificació:
+  Els propietaris de vehicles valoren tenir plaça d'aparcament inclosa.
+
+--------------------------------------------------------------------------------
+REGLA: abstraccio-fi
+--------------------------------------------------------------------------------
+Salience: 50
+Descripció: Marca el final de la fase d'abstracció
+
+Condicions:
+  - No existeix ja el fet "fase-completada" per abstracció
+
+Accions:
+  - Crea fet "fase-completada" amb nom=abstracció
+  - Mostra missatge de fase completada
+
+
+================================================================================
+                           FASE 2: RESOLUCIÓ
+                         (Salience: 40 - 10)
+================================================================================
+
+Objectiu: Filtrar ofertes incompatibles, identificar criteris no complerts
+          i detectar punts positius de cada oferta.
+
+********************************************************************************
+                          REGLES DE DESCART
+********************************************************************************
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-descartar-preu-excessiu
+--------------------------------------------------------------------------------
+Salience: 40
+Descripció: Descarta ofertes que superen el pressupost amb marge estricte
+
+Condicions:
+  - Fase abstracció completada
+  - margeEstricte = si
+  - preuMensual > pressupostMaxim
+  - Oferta disponible
+
+Accions:
+  - Crea fet "oferta-descartada" amb motiu
+  - Mostra missatge de descart amb detalls del preu
+
+Justificació:
+  Si el sol·licitant ha indicat marge estricte, no pot permetre's ofertes
+  que superin el seu pressupost màxim.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-descartar-preu-molt-alt
+--------------------------------------------------------------------------------
+Salience: 40
+Descripció: Descarta ofertes que superen el pressupost més del 15% (flexible)
+
+Condicions:
+  - Fase abstracció completada
+  - margeEstricte = no
+  - preuMensual > pressupostMaxim * 1.15
+  - Oferta disponible
+
+Accions:
+  - Crea fet "oferta-descartada" amb motiu
+  - Mostra missatge de descart
+
+Justificació:
+  Amb marge flexible es tolera fins un 15% extra, però més és excessiu.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-descartar-no-mascotes
+--------------------------------------------------------------------------------
+Salience: 40
+Descripció: Descarta habitatges que no permeten mascotes si en té
+
+Condicions:
+  - Fase abstracció completada
+  - Sol·licitant: teMascotes = si
+  - Habitatge: permetMascotes = no
+  - Oferta disponible
+
+Accions:
+  - Crea fet "oferta-descartada" amb motiu
+  - Mostra missatge de descart
+
+Justificació:
+  Requisit incompatible. El sol·licitant no pot deixar la seva mascota.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-descartar-no-accessible
+--------------------------------------------------------------------------------
+Salience: 40
+Descripció: Descarta habitatges no accessibles si es necessita accessibilitat
+
+Condicions:
+  - Fase abstracció completada
+  - necessitaAccessibilitat = si
+  - teAscensor = no
+  - plantaPis > 0 (no és planta baixa)
+  - Oferta disponible
+
+Accions:
+  - Crea fet "oferta-descartada" amb motiu
+  - Mostra missatge de descart
+
+Justificació:
+  Persones amb mobilitat reduïda no poden accedir a plantes altes sense
+  ascensor.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-descartar-preu-sospitos
+--------------------------------------------------------------------------------
+Salience: 40
+Descripció: Descarta ofertes amb preu sospitosament baix
+
+Condicions:
+  - Fase abstracció completada
+  - pressupostMinim > 0
+  - preuMensual < pressupostMinim
+  - Oferta disponible
+
+Accions:
+  - Crea fet "oferta-descartada" amb motiu
+  - Mostra missatge de descart
+
+Justificació:
+  Preus anormalment baixos poden indicar problemes amb l'habitatge o frau.
+
+
+********************************************************************************
+                    REGLES DE CRITERIS NO COMPLERTS
+                          (Ofertes Parcials)
+********************************************************************************
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-criteri-preu-alt
+--------------------------------------------------------------------------------
+Salience: 35
+Descripció: Marca ofertes amb preu lleugerament superior (marge flexible)
+
+Condicions:
+  - Fase abstracció completada
+  - margeEstricte = no
+  - pressupostMaxim < preuMensual <= pressupostMaxim * 1.15
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "criteri-no-cumplit" amb gravetat=Lleu
+
+Justificació:
+  El preu supera el màxim però dins del marge tolerable (fins 15%).
+  Es marca com a criteri no complert per classificar com Parcial.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-criteri-soroll-alt
+--------------------------------------------------------------------------------
+Salience: 35
+Descripció: Marca habitatges amb nivell de soroll alt
+
+Condicions:
+  - Fase abstracció completada
+  - nivellSoroll = Alt
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "criteri-no-cumplit" amb gravetat=Lleu
+
+Justificació:
+  El soroll alt és una molèstia però no sempre descarta l'oferta.
+  Depèn de les preferències individuals.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-criteri-sense-ascensor
+--------------------------------------------------------------------------------
+Salience: 35
+Descripció: Marca habitatges en planta alta sense ascensor per gent gran
+
+Condicions:
+  - Fase abstracció completada
+  - edat > 60 anys
+  - teAscensor = no
+  - plantaPis > 1 (segon pis o superior)
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "criteri-no-cumplit" amb gravetat=Moderat
+
+Justificació:
+  Per persones grans no és obligatori però pot ser incòmode pujar escales
+  diàriament a pisos alts.
+
+
+********************************************************************************
+                        REGLES DE PUNTS POSITIUS
+********************************************************************************
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-punt-bon-preu
+--------------------------------------------------------------------------------
+Salience: 30
+Descripció: Detecta ofertes amb preu molt bo (< 80% del pressupost)
+
+Condicions:
+  - Fase abstracció completada
+  - preuMensual < pressupostMaxim * 0.8
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "punt-positiu" amb descripció
+
+Justificació:
+  Ofertes per sota del 80% del pressupost representen un bon estalvi mensual.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-punt-terrassa
+--------------------------------------------------------------------------------
+Salience: 30
+Descripció: Detecta habitatges amb terrassa o balcó
+
+Condicions:
+  - Fase abstracció completada
+  - teTerrassaOBalco = si
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "punt-positiu" amb descripció
+
+Justificació:
+  Terrasses i balcons són molt valorats per espai exterior privat.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-punt-assolellat
+--------------------------------------------------------------------------------
+Salience: 30
+Descripció: Detecta habitatges molt assolellats
+
+Condicions:
+  - Fase abstracció completada
+  - orientacioSolar = TotElDia
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "punt-positiu" amb descripció
+
+Justificació:
+  Habitatges assolellats tot el dia són més agradables i saludables.
+  Estalvi energètic en calefacció.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-punt-eficiencia
+--------------------------------------------------------------------------------
+Salience: 30
+Descripció: Detecta habitatges amb alta eficiència energètica (A o B)
+
+Condicions:
+  - Fase abstracció completada
+  - consumEnergetic = A o B
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "punt-positiu" amb descripció
+
+Justificació:
+  Alta eficiència energètica significa menors costos de factures mensuals
+  i major confort tèrmic.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-punt-exterior-silenci
+--------------------------------------------------------------------------------
+Salience: 30
+Descripció: Detecta habitatges exteriors i silenciosos
+
+Condicions:
+  - Fase abstracció completada
+  - esExterior = si
+  - nivellSoroll = Baix
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "punt-positiu" amb descripció
+
+Justificació:
+  Combinació ideal: llum natural (exterior) + tranquil·litat (baix soroll).
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-punt-vistes
+--------------------------------------------------------------------------------
+Salience: 30
+Descripció: Detecta habitatges amb bones vistes
+
+Condicions:
+  - Fase abstracció completada
+  - teVistes = si
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "punt-positiu" amb descripció
+
+Justificació:
+  Les vistes milloren la qualitat de vida i el valor percebut de l'habitatge.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-punt-parking
+--------------------------------------------------------------------------------
+Salience: 30
+Descripció: Detecta habitatges amb parking si el sol·licitant té vehicle
+
+Condicions:
+  - Fase abstracció completada
+  - Sol·licitant: teVehicle = si
+  - Habitatge: tePlacaAparcament = si
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "punt-positiu" amb descripció
+
+Justificació:
+  Plaça d'aparcament inclosa estalvia costos i temps buscant pàrquing.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-punt-piscina
+--------------------------------------------------------------------------------
+Salience: 30
+Descripció: Detecta habitatges amb piscina comunitària
+
+Condicions:
+  - Fase abstracció completada
+  - tePiscinaComunitaria = si
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "punt-positiu" amb descripció
+
+Justificació:
+  Piscina comunitària és un valor afegit especialment per famílies i estiu.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-punt-transport-aprop
+--------------------------------------------------------------------------------
+Salience: 30
+Descripció: Detecta transport públic molt a prop
+
+Condicions:
+  - Fase abstracció completada
+  - Existeix proximitat MoltAProp amb EstacioMetro, ParadaBus o EstacioTren
+  - Oferta no descartada
+
+Accions:
+  - Crea fet "punt-positiu" amb descripció
+
+Justificació:
+  Transport públic proper facilita la mobilitat urbana diària.
+
+--------------------------------------------------------------------------------
+REGLA: resolucio-fi
+--------------------------------------------------------------------------------
+Salience: 10
+Descripció: Marca el final de la fase de resolució
+
+Condicions:
+  - Fase abstracció completada
+  - No existeix ja el fet "fase-completada" per resolució
+
+Accions:
+  - Crea fet "fase-completada" amb nom=resolucio
+  - Mostra missatge de fase completada
+
+
+================================================================================
+                           FASE 3: REFINACIÓ
+                         (Salience: 5 - 0)
+================================================================================
+
+Objectiu: Classificar cada oferta segons el grau de recomanació final.
+
+--------------------------------------------------------------------------------
+REGLA: refinacio-molt-recomanable
+--------------------------------------------------------------------------------
+Salience: 5
+Descripció: Classifica ofertes com MOLT RECOMANABLE
+
+Condicions:
+  - Fase resolució completada
+  - Oferta disponible
+  - NO està descartada
+  - NO té cap criteri no complert
+  - Té almenys 3 punts positius diferents
+
+Accions:
+  - Crea fet "recomanacio" amb grau=MoltRecomanable i puntuacio=100
+  - Mostra missatge de classificació
+
+Justificació:
+  Ofertes que compleixen tots els requisits i destaquen per múltiples
+  característiques positives mereixen la màxima recomanació.
+
+--------------------------------------------------------------------------------
+REGLA: refinacio-adequat
+--------------------------------------------------------------------------------
+Salience: 4
+Descripció: Classifica ofertes com ADEQUAT
+
+Condicions:
+  - Fase resolució completada
+  - Oferta disponible
+  - NO està descartada
+  - NO té cap criteri no complert
+  - NO s'ha classificat ja com MoltRecomanable
+
+Accions:
+  - Crea fet "recomanacio" amb grau=Adequat i puntuacio=70
+  - Mostra missatge de classificació
+
+Justificació:
+  Ofertes que compleixen tots els requisits sense destacar especialment.
+  Són bones opcions sòlides.
+
+--------------------------------------------------------------------------------
+REGLA: refinacio-parcialment
+--------------------------------------------------------------------------------
+Salience: 3
+Descripció: Classifica ofertes com PARCIALMENT ADEQUAT
+
+Condicions:
+  - Fase resolució completada
+  - Oferta disponible
+  - NO està descartada
+  - Té almenys un criteri no complert
+  - NO s'ha classificat ja
+
+Accions:
+  - Crea fet "recomanacio" amb grau=Parcialment i puntuacio=50
+  - Mostra missatge de classificació
+
+Justificació:
+  Ofertes que no compleixen completament tots els criteris però són
+  acceptables. El sol·licitant ha de valorar si els aspectes negatius
+  són tolerables.
+
+--------------------------------------------------------------------------------
+REGLA: refinacio-fi
+--------------------------------------------------------------------------------
+Salience: 0
+Descripció: Marca el final de la fase de refinació
+
+Condicions:
+  - Fase resolució completada
+  - No existeix ja el fet "fase-completada" per refinació
+
+Accions:
+  - Crea fet "fase-completada" amb nom=refinacio
+  - Mostra missatge de fase completada
+
+
+================================================================================
+                      FASE 4: PRESENTACIÓ DE RESULTATS
+                         (Salience: -10 a -100)
+================================================================================
+
+Objectiu: Mostrar els resultats de manera clara i ordenada.
+
+--------------------------------------------------------------------------------
+REGLA: presentacio-inici
+--------------------------------------------------------------------------------
+Salience: -10
+Descripció: Mostra l'encapçalament dels resultats
+
+Condicions:
+  - Fase refinació completada
+  - No s'ha iniciat ja la presentació
+
+Accions:
+  - Crea fet "fase-completada" amb nom=presentacio
+  - Mostra encapçalament visual
+
+--------------------------------------------------------------------------------
+REGLA: presentacio-recomanacio
+--------------------------------------------------------------------------------
+Salience: -20
+Descripció: Mostra cada recomanació amb detalls de l'habitatge
+
+Condicions:
+  - Fase presentació iniciada
+  - Existeix una recomanació
+
+Accions:
+  - Mostra de forma visual:
+    * Nom del sol·licitant
+    * ID de l'oferta
+    * Grau de recomanació i puntuació
+    * Tipus d'habitatge
+    * Superfície, dormitoris i banys
+    * Preu mensual
+    * Adreça i barri
+
+Format de sortida:
+----------------------------------------------------------------
+SOLLICITANT: [nom]
+OFERTA: [id]
+----------------------------------------------------------------
+*** GRAU: [grau] *** (Puntuacio: [punt])
+----------------------------------------------------------------
+Tipus: [tipus]
+Superficie: [m2] m2
+Dormitoris: [num] | Banys: [num]
+Preu: [preu] EUR/mes
+Adreca: [adreca]
+Barri: [barri]
+----------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+REGLA: presentacio-punts-positius
+--------------------------------------------------------------------------------
+Salience: -21
+Descripció: Mostra els punts positius de cada recomanació
+
+Condicions:
+  - Fase presentació iniciada
+  - Existeix una recomanació amb punts positius
+
+Accions:
+  - Per cada punt positiu, mostra:
+    [+] [descripció del punt positiu]
+
+--------------------------------------------------------------------------------
+REGLA: presentacio-criteris-negatius
+--------------------------------------------------------------------------------
+Salience: -22
+Descripció: Mostra els criteris no complerts per ofertes parcials
+
+Condicions:
+  - Fase presentació iniciada
+  - Recomanació amb grau=Parcialment
+  - Té criteris no complerts
+
+Accions:
+  - Per cada criteri no complert, mostra:
+    [-] [descripció del criteri] ([gravetat])
+
+--------------------------------------------------------------------------------
+REGLA: presentacio-descartades
+--------------------------------------------------------------------------------
+Salience: -30
+Descripció: Mostra les ofertes que han estat descartades
+
+Condicions:
+  - Fase presentació iniciada
+  - Existeix una oferta descartada
+
+Accions:
+  - Mostra:
+    [DESCARTADA] [id oferta] per [sol·licitant]: [motiu]
+
+--------------------------------------------------------------------------------
+REGLA: presentacio-fi
+--------------------------------------------------------------------------------
+Salience: -100
+Descripció: Mostra el final del procés
+
+Condicions:
+  - Fase presentació iniciada
+  - No s'ha marcat ja el final
+
+Accions:
+  - Crea fet "fase-completada" amb nom=fi
+  - Mostra missatge de finalització visual
+
+
+================================================================================
+                              RESUM DEL FLUX
+================================================================================
+
+1. ABSTRACCIÓ (salience 100-50):
+   - Calcular proximitats habitatge-servei
+   - Inferir requisits segons perfil del sol·licitant
+
+2. RESOLUCIÓ (salience 40-10):
+   - Descartar ofertes incompatibles
+   - Identificar criteris no complerts (parcials)
+   - Detectar punts positius
+
+3. REFINACIÓ (salience 5-0):
+   - Classificar ofertes segons grau de recomanació:
+     * MoltRecomanable: sense negatius + 3+ positius
+     * Adequat: compleix tot sense destacar
+     * Parcialment: té criteris no complerts
+
+4. PRESENTACIÓ (salience -10 a -100):
+   - Mostrar recomanacions ordenades
+   - Mostrar punts positius i negatius
+   - Mostrar ofertes descartades
+
+
+================================================================================
+                         TOTAL DE REGLES: 35
+================================================================================
+
+Abstracció:     7 regles
+Resolució:     17 regles (5 descart + 3 criteris + 9 positius + 1 fi)
+Refinació:      4 regles
+Presentació:    5 regles
+Control:        2 regles (abstraccio-fi, resolucio-fi)
+
+================================================================================
+                              FI DEL DOCUMENT
+================================================================================

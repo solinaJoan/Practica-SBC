@@ -54,8 +54,6 @@ On està ubicat l'habitatge o servei.
 | districte     | string | Districte de la ciutat |
 | barri         | string | Barri específic        |
 | codiPostal    | string | Codi postal            |
-| latitud       | float  | Coordenada GPS         |
-| longitud      | float  | Coordenada GPS         |
 | coordenadaX   | float  | Sistema propi (metres) |
 | coordenadaY   | float  | Sistema propi (metres) |
 
@@ -69,10 +67,10 @@ Qui busca habitatge i les seves necessitats.
 | pressupostMaxim           | float   | Màxim que pot pagar                                 |
 | pressupostMinim           | float   | Mínim acceptable (desconfiança si és massa barat)   |
 | margeEstricte             | boolean | Si el màxim és negociable o no                      |
-| edatSollicitant           | int     | Edat                                                |
+| edatSolicitant            | int     | Edat                                                |
 | numeroPersones            | int     | Quantes persones viuran                             |
 | numeroFills               | int     | Nombre de fills                                     |
-| edatsFills                | string  | "3,7,12" (edats separades per comes)                |
+| edatsFills                | int     | 3,7,12   (multislot)                                |
 | teAvis                    | boolean | Si viuen amb avis                                   |
 | numeroAvis                | int     | Quants avis                                         |
 | teVehicle                 | boolean | Si té cotxe                                         |
