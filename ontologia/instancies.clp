@@ -1,10 +1,10 @@
 ;;; ============================================================
 ;;; instancies.clp
-;;; Instàncies de prova per al sistema de recomanació
-;;; IMPORTANT: Carregar DESPRÉS de ontologiaSBC.clp
+;;; Instancies de prova per al sistema de recomanacio
 ;;; ============================================================
 
-(definstances instancies-localitzacions
+(definstances localitzacions
+    ;;; LOCALITZACIONS D'HABITATGES
     ([loc-eixample-1] of Localitzacio
         (adreca "Carrer Arago 250")
         (districte Eixample)
@@ -45,72 +45,109 @@
         (coordenadaX 80.0)
         (coordenadaY 500.0))
 
-    ([loc-metro-1] of Localitzacio
+    ([loc-eixample-2] of Localitzacio
+        (adreca "Carrer Valencia 180")
+        (districte Eixample)
+        (barri EsquerraEixample)
+        (codiPostal "08011")
+        (coordenadaX 90.0)
+        (coordenadaY 190.0))
+
+    ;;; LOCALITZACIONS DE SERVEIS
+    ([loc-metro-pg] of Localitzacio
         (adreca "Metro Passeig de Gracia")
         (districte Eixample)
         (coordenadaX 105.0)
         (coordenadaY 195.0))
 
+    ([loc-metro-fontana] of Localitzacio
+        (adreca "Metro Fontana")
+        (districte Gracia)
+        (coordenadaX 155.0)
+        (coordenadaY 395.0))
+
     ([loc-escola-1] of Localitzacio
         (adreca "Escola Eixample")
-        (districte Eixample)
-        (coordenadaX 120.0)
-        (coordenadaY 220.0))
-
-    ([loc-hospital-1] of Localitzacio
-        (adreca "Hospital Clinic")
-        (districte Eixample)
-        (coordenadaX 90.0)
-        (coordenadaY 180.0))
-
-    ([loc-super-1] of Localitzacio
-        (adreca "Supermercat Eixample")
         (districte Eixample)
         (coordenadaX 110.0)
         (coordenadaY 210.0))
 
-    ([loc-parc-1] of Localitzacio
+    ([loc-hospital] of Localitzacio
+        (adreca "Hospital Clinic")
+        (districte Eixample)
+        (coordenadaX 85.0)
+        (coordenadaY 185.0))
+
+    ([loc-super-1] of Localitzacio
+        (adreca "Supermercat Mercadona")
+        (districte Eixample)
+        (coordenadaX 95.0)
+        (coordenadaY 205.0))
+
+    ([loc-parc] of Localitzacio
         (adreca "Parc Ciutadella")
         (districte CiutatVella)
-        (coordenadaX 220.0)
+        (coordenadaX 210.0)
         (coordenadaY 160.0))
+
+    ([loc-discoteca] of Localitzacio
+        (adreca "Zona Clubs Port Olimpic")
+        (districte SantMarti)
+        (coordenadaX 250.0)
+        (coordenadaY 120.0))
 )
 
-(definstances instancies-serveis
+(definstances serveis
+    ;;; TRANSPORT PUBLIC
     ([metro-pg] of EstacioMetro
-        (nomServei "Metro Passeig de Gracia")
-        (teLocalitzacio [loc-metro-1]))
+        (nomServei "Metro Passeig de Gracia L2 L3 L4")
+        (teLocalitzacio [loc-metro-pg]))
 
-    ([escola-eix] of Escola
+    ([metro-fontana] of EstacioMetro
+        (nomServei "Metro Fontana L3")
+        (teLocalitzacio [loc-metro-fontana]))
+
+    ;;; SERVEIS EDUCATIUS
+    ([escola-eixample] of Escola
         (nomServei "Escola Eixample")
         (teLocalitzacio [loc-escola-1]))
 
+    ;;; SERVEIS DE SALUT
     ([hospital-clinic] of Hospital
-        (nomServei "Hospital Clinic")
-        (teLocalitzacio [loc-hospital-1]))
+        (nomServei "Hospital Clinic Barcelona")
+        (teLocalitzacio [loc-hospital]))
 
-    ([super-eix] of Supermercat
-        (nomServei "Supermercat Eixample")
+    ;;; SERVEIS COMERCIALS
+    ([mercadona-eix] of Supermercat
+        (nomServei "Mercadona Eixample")
         (teLocalitzacio [loc-super-1]))
 
-    ([parc-ciut] of Parc
-        (nomServei "Parc Ciutadella")
-        (teLocalitzacio [loc-parc-1]))
+    ;;; ZONES VERDES
+    ([parc-ciutadella] of Parc
+        (nomServei "Parc de la Ciutadella")
+        (teLocalitzacio [loc-parc]))
+
+    ;;; SERVEIS MOLESTOS
+    ([discoteca-port] of Discoteca
+        (nomServei "Zona Clubs Port Olimpic")
+        (teLocalitzacio [loc-discoteca]))
 )
 
-(definstances instancies-habitatges
+(definstances habitatges
     ;;; HABITATGE 1: Pis familiar Eixample - MOLT COMPLET
     ([hab-1] of Pis
+        (teLocalitzacio [loc-eixample-1])
         (superficieHabitable 95.0)
         (numeroDormitoris 3)
         (numeroDormitorisDobles 2)
         (numeroDormitorisSimples 1)
         (numeroBanys 2)
+        (plantaPis 3)
+        (anyConstruccio 2005)
         (teTerrassaOBalco si)
         (superficieTerrassa 8.0)
         (moblat si)
         (ambElectrodomestics si)
-        (plantaPis 3)
         (teAscensor si)
         (permetMascotes si)
         (teCalefaccio si)
@@ -126,22 +163,22 @@
         (consumEnergetic B)
         (esExterior si)
         (nivellSoroll Baix)
-        (anyConstruccio 2005)
-        (estatConservacio BonEstat)
-        (teLocalitzacio [loc-eixample-1]))
+        (estatConservacio BonEstat))
 
-    ;;; HABITATGE 2: Atic luxe Gracia
+    ;;; HABITATGE 2: Atic de luxe Gracia
     ([hab-2] of Atic
+        (teLocalitzacio [loc-gracia-1])
         (superficieHabitable 120.0)
         (numeroDormitoris 3)
         (numeroDormitorisDobles 2)
         (numeroDormitorisSimples 1)
         (numeroBanys 2)
+        (plantaPis 5)
+        (anyConstruccio 2018)
         (teTerrassaOBalco si)
         (superficieTerrassa 40.0)
         (moblat no)
         (ambElectrodomestics si)
-        (plantaPis 5)
         (teAscensor si)
         (permetMascotes si)
         (teCalefaccio si)
@@ -156,27 +193,28 @@
         (consumEnergetic A)
         (esExterior si)
         (nivellSoroll Baix)
-        (anyConstruccio 2018)
-        (estatConservacio Nou)
-        (teLocalitzacio [loc-gracia-1]))
+        (estatConservacio Nou))
 
     ;;; HABITATGE 3: Estudi economic Sants - NO MASCOTES
     ([hab-3] of Estudi
+        (teLocalitzacio [loc-sants-1])
         (superficieHabitable 35.0)
         (numeroDormitoris 1)
         (numeroDormitorisDobles 0)
         (numeroDormitorisSimples 1)
         (numeroBanys 1)
+        (plantaPis 2)
+        (anyConstruccio 1975)
         (teTerrassaOBalco no)
         (moblat si)
         (ambElectrodomestics si)
-        (plantaPis 2)
         (teAscensor no)
         (permetMascotes no)
         (teCalefaccio si)
         (teAireCondicionat no)
         (orientacioSolar Mati)
         (teVistes no)
+        (tipusVistes Cap)
         (tePiscinaComunitaria no)
         (tePlacaAparcament no)
         (teArmariEncastat no)
@@ -184,22 +222,22 @@
         (consumEnergetic D)
         (esExterior no)
         (nivellSoroll Mitja)
-        (anyConstruccio 1975)
-        (estatConservacio BonEstat)
-        (teLocalitzacio [loc-sants-1]))
+        (estatConservacio BonEstat))
 
-    ;;; HABITATGE 4: Pis Born - SOROLLOS
+    ;;; HABITATGE 4: Pis al Born - SOROLLOS
     ([hab-4] of Pis
+        (teLocalitzacio [loc-born-1])
         (superficieHabitable 70.0)
         (numeroDormitoris 2)
         (numeroDormitorisDobles 1)
         (numeroDormitorisSimples 1)
         (numeroBanys 1)
+        (plantaPis 1)
+        (anyConstruccio 1920)
         (teTerrassaOBalco si)
         (superficieTerrassa 5.0)
         (moblat si)
         (ambElectrodomestics si)
-        (plantaPis 1)
         (teAscensor no)
         (permetMascotes no)
         (teCalefaccio si)
@@ -214,22 +252,22 @@
         (consumEnergetic C)
         (esExterior si)
         (nivellSoroll Alt)
-        (anyConstruccio 1920)
-        (estatConservacio BonEstat)
-        (teLocalitzacio [loc-born-1]))
+        (estatConservacio BonEstat))
 
-    ;;; HABITATGE 5: Casa Sarria - LUXE
+    ;;; HABITATGE 5: Casa unifamiliar Sarria - LUXE
     ([hab-5] of HabitatgeUnifamiliar
+        (teLocalitzacio [loc-sarria-1])
         (superficieHabitable 200.0)
         (numeroDormitoris 5)
         (numeroDormitorisDobles 3)
         (numeroDormitorisSimples 2)
         (numeroBanys 3)
+        (plantaPis 0)
+        (anyConstruccio 2010)
         (teTerrassaOBalco si)
         (superficieTerrassa 100.0)
         (moblat no)
         (ambElectrodomestics si)
-        (plantaPis 0)
         (teAscensor no)
         (permetMascotes si)
         (teCalefaccio si)
@@ -245,27 +283,28 @@
         (consumEnergetic B)
         (esExterior si)
         (nivellSoroll Baix)
-        (anyConstruccio 2010)
-        (estatConservacio BonEstat)
-        (teLocalitzacio [loc-sarria-1]))
+        (estatConservacio BonEstat))
 
-    ;;; HABITATGE 6: Pis PB accessible
+    ;;; HABITATGE 6: Pis planta baixa accessible
     ([hab-6] of Pis
+        (teLocalitzacio [loc-eixample-2])
         (superficieHabitable 80.0)
         (numeroDormitoris 2)
         (numeroDormitorisDobles 2)
         (numeroDormitorisSimples 0)
         (numeroBanys 1)
+        (plantaPis 0)
+        (anyConstruccio 1990)
         (teTerrassaOBalco no)
         (moblat si)
         (ambElectrodomestics si)
-        (plantaPis 0)
         (teAscensor no)
         (permetMascotes no)
         (teCalefaccio si)
         (teAireCondicionat si)
         (orientacioSolar Mati)
         (teVistes no)
+        (tipusVistes Cap)
         (tePiscinaComunitaria no)
         (tePlacaAparcament no)
         (teArmariEncastat si)
@@ -273,51 +312,56 @@
         (consumEnergetic C)
         (esExterior si)
         (nivellSoroll Mitja)
-        (anyConstruccio 1990)
-        (estatConservacio BonEstat)
-        (teLocalitzacio [loc-eixample-1]))
+        (estatConservacio BonEstat))
 )
 
-(definstances instancies-ofertes
+(definstances ofertes
     ([oferta-1] of Oferta
+        (teHabitatge [hab-1])
         (preuMensual 1350.0)
         (disponible si)
-        (teHabitatge [hab-1]))
+        (dataPublicacio "2024-11-01"))
 
     ([oferta-2] of Oferta
+        (teHabitatge [hab-2])
         (preuMensual 1800.0)
         (disponible si)
-        (teHabitatge [hab-2]))
+        (dataPublicacio "2024-11-10"))
 
     ([oferta-3] of Oferta
+        (teHabitatge [hab-3])
         (preuMensual 650.0)
         (disponible si)
-        (teHabitatge [hab-3]))
+        (dataPublicacio "2024-11-05"))
 
     ([oferta-4] of Oferta
+        (teHabitatge [hab-4])
         (preuMensual 1100.0)
         (disponible si)
-        (teHabitatge [hab-4]))
+        (dataPublicacio "2024-10-20"))
 
     ([oferta-5] of Oferta
+        (teHabitatge [hab-5])
         (preuMensual 3500.0)
         (disponible si)
-        (teHabitatge [hab-5]))
+        (dataPublicacio "2024-11-15"))
 
     ([oferta-6] of Oferta
+        (teHabitatge [hab-6])
         (preuMensual 950.0)
         (disponible si)
-        (teHabitatge [hab-6]))
+        (dataPublicacio "2024-11-12"))
 )
 
-(definstances instancies-sollicitants
-    ;;; FAMILIA amb fills i mascota
+(definstances sollicitants
+    ;;; FAMILIA BIPARENTAL amb fills i mascota
     ([familia-garcia] of FamiliaBiparental
+        (nom "Familia Garcia")
+        (edat 38)
+        (numeroPersones 4)
         (pressupostMaxim 1500.0)
         (pressupostMinim 600.0)
         (margeEstricte no)
-        (edatSollicitant 38)
-        (numeroPersones 4)
         (numeroFills 2)
         (edatsFills 6 10)
         (teAvis no)
@@ -325,16 +369,18 @@
         (prefereixTransportPublic no)
         (necessitaAccessibilitat no)
         (teMascotes si)
+        (numeroMascotes 1)
         (tipusMascota Gos)
         (treballaACiutat si))
 
-    ;;; ESTUDIANT
+    ;;; GRUP D'ESTUDIANTS
     ([estudiant-marc] of GrupEstudiants
-        (pressupostMaxim 700.0)
+        (nom "Marc i companys")
+        (edat 22)
+        (numeroPersones 3)
+        (pressupostMaxim 900.0)
         (pressupostMinim 300.0)
         (margeEstricte si)
-        (edatSollicitant 22)
-        (numeroPersones 1)
         (numeroFills 0)
         (teAvis no)
         (teVehicle no)
@@ -344,13 +390,14 @@
         (treballaACiutat no)
         (estudiaACiutat si))
 
-    ;;; PERSONA GRAN amb accessibilitat
+    ;;; PERSONA GRAN amb necessitat d'accessibilitat
     ([jubilada-maria] of PersonaGran
+        (nom "Maria Lopez")
+        (edat 72)
+        (numeroPersones 1)
         (pressupostMaxim 1000.0)
         (pressupostMinim 400.0)
         (margeEstricte no)
-        (edatSollicitant 72)
-        (numeroPersones 1)
         (numeroFills 0)
         (teAvis no)
         (teVehicle no)
@@ -359,13 +406,14 @@
         (teMascotes no)
         (treballaACiutat no))
 
-    ;;; PARELLA jove
+    ;;; PARELLA JOVE sense fills
     ([parella-martinez] of ParellaSenseFills
+        (nom "Parella Martinez")
+        (edat 30)
+        (numeroPersones 2)
         (pressupostMaxim 1400.0)
         (pressupostMinim 500.0)
         (margeEstricte no)
-        (edatSollicitant 30)
-        (numeroPersones 2)
         (numeroFills 0)
         (teAvis no)
         (teVehicle si)
@@ -374,19 +422,21 @@
         (teMascotes no)
         (treballaACiutat si))
 
-    ;;; PARELLA futurs fills
+    ;;; PARELLA que vol tenir fills aviat
     ([parella-lopez] of ParellaFutursFills
+        (nom "Parella Lopez")
+        (edat 32)
+        (numeroPersones 2)
         (pressupostMaxim 1600.0)
         (pressupostMinim 700.0)
         (margeEstricte no)
-        (edatSollicitant 32)
-        (numeroPersones 2)
         (numeroFills 0)
         (teAvis no)
         (teVehicle si)
         (prefereixTransportPublic no)
         (necessitaAccessibilitat no)
         (teMascotes si)
+        (numeroMascotes 1)
         (tipusMascota Gat)
         (treballaACiutat si))
 )
