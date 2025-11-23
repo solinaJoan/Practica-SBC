@@ -287,6 +287,35 @@
               " - Falta requisit inferit: " ?cat crlf)
 )
 
+(defrule resolucio-descartar-superficie-insuficient
+    "Descartar si la superficie no es adequada pel nombre de persones"
+    (declare (salience 40))
+    (fase-completada (nom abstraccio))
+    ?sol <- (object (is-a Solicitant) (numeroPersones ?npers))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (superficieHabitable ?sup))
+    (test (< ?sup (* ?npers 10)))  ; Mínim 10 m² per persona
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
+            (motiu "Superficie insuficient per al nombre de persones")))
+    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Massa petita" crlf)
+)
+
+(defrule resolucio-descartar-estudiant-sense-mobles
+    "Els estudiants necessiten habitatge moblat"
+    (declare (salience 40))
+    (fase-completada (nom abstraccio))
+    ?sol <- (object (is-a GrupEstudiants))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (moblat no))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
+            (motiu "Estudiants necessiten habitatge moblat")))
+    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - No moblat" crlf)
+)
+
 ;;; --- REGLES DE CRITERIS NO COMPLERTS ---
 
 (defrule resolucio-criteri-preu-alt
@@ -345,7 +374,7 @@
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Preu molt bo")))
     =>
-    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Preu molt bo")))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Preu molt bo (>20% estalvi)")))
 )
 
 (defrule resolucio-punt-terrassa
