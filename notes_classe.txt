@@ -1,6 +1,9 @@
-Teoria:
-Exemple de classificació heurística:
 
+19/11/25
+
+Teoria:
+
+Exemple de classificació heurística:
 No volem ser un metge que amb uns problemes concrets ens doni una solució. Volem fer 1. abstracte el problema, 2. resoldre el problema abstracte mitjançant regles de CLIPS i 
 3. donar una solució concreta
 Per tant, els passos són: 
@@ -28,5 +31,40 @@ Fase de resolució: Com hem estructurat el codi
 Fase de test: N'hem de fer mínim 6 per un deu, i s'han d'explicar tots al annexe:
     Cas 1: Una persona amb aquesta característiques... 
     Hem d'incloure la solució concreta, les trazas, les regles que ha executat...
+
+
+
+
+26/11/25
+
+1. Implementación
+
+2. Conceptualització
+- Domini
+- Problemes/ subproblemes
+- Coneixement expert (LLM)
+
+3. Formalització 
+- De l'ontologia 
+    - Incloure diagrames
+    - Classes, atributs, relacions
+    - Versions
+- Metodologia de la resolució 
+
+4. Implementación
+  - módulos (normalment 5, entrada dades, abstracció, refinament, sortida de dades...) 
+  - Reglas / Funciones/ def templates
+    - Qué
+    - Flujo
+  - Mètode incremental
+
+5. Jocs de prova:
+- Per les instacies de vivienda que tenim, crear jocs de prova.
+- Hem d'explicar el perquè del cas i adjuntar l'entrada i la sortida, amb un copy paste del CLIPS
+- Per crear instancies per jocs de proves, podem:
+        1. Demanar al LLM un fitxer RDF amb ~100 instancies de viviendes. 
+        2. També ho podem fer amb FAKER (Python), ja que podem fer servir models estadistics diferents
+        3. OpenStreetMap, amb dades reals de barris
+
 
 
