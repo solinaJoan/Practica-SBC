@@ -23,12 +23,10 @@ Per executar el sistema expert i veure les recomanacions generades, segueix els 
 1.  **Obrir CLIPS:** Inicia la consola de CLIPS.
 2.  **Carregar el sistema:** Escriu l'ordre per carregar el fitxer principal:
     ```clips
-    (load "main.clp")
+    (batch "run.clp")
     ```
 3.  **Executar el procés:** Un cop carregat, inicialitza i executa el sistema:
     ```clips
     (main)
-    (reset)
-    (run)
     ```
 
