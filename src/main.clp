@@ -23,7 +23,7 @@
     ;;; Carregar les instàncies (dades)
     (printout t "Carregant instàncies..." crlf)
     (load "instancies.clp")
-
+    (load "instancies_extended.clp")
     (printout t crlf)
     (printout t "Sistema carregat correctament!" crlf)
     (printout t crlf)
