@@ -223,7 +223,7 @@
             (make-instance ?nom-inst of PersonaGran
                 (nom ?nom)
                 (edat ?edat)
-                (numeroPersones ?num-persones)
+                ;(numeroPersones ?num-persones)
                 (pressupostMaxim ?pres-max)
                 (pressupostMinim ?pres-min)
                 (margeEstricte ?marge-estricte)
@@ -276,11 +276,9 @@
     (if (eq ?crear-nou si) then
         ;;; Crear nou perfil i executar
         (bind ?perfil (crear-perfil-solicitant))
-        
         (printout t crlf)
         (printout t "Iniciant cerca d'habitatges..." crlf)
         (printout t crlf)
-        (reset)
         (run)
     else
         ;;; Usar perfils existents

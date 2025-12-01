@@ -117,7 +117,6 @@
         (nom "Senyor Silenci")
         (edat 40)
         (pressupostMaxim 1500.0)
-        (evitaServei [discoteca-port])
         (margeEstricte no))
 
 )
