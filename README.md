@@ -21,14 +21,9 @@ Per executar el sistema expert i veure les recomanacions generades, segueix els 
 
 
 1.  **Obrir CLIPS:** Inicia la consola de CLIPS.
-2.  **Carregar el sistema:** Escriu l'ordre per carregar el fitxer principal:
+2.  **Carregar el sistema i executar el procés:** Escriu l'ordre per carregar i executar el fitxer principal:
     ```clips
-    (load "main.clp")
-    ```
-3.  **Executar el procés:** Un cop carregat, inicialitza i executa el sistema:
-    ```clips
-    (main)
-    (reset)
-    (run)
-    ```
+    (batch "run.clp")
+    ``` 
+El fitxer 'run.clp' s'encarrega de carregar l'ontologia, les regles, i si cal les instàncies de sol·licitants. També de crear un nou perfil si volem. S'executa el main automàticament.
 

@@ -1,0 +1,6 @@
+(clear)
+(load "ontologia.clp")
+(load "regles.clp")
+(load "main.clp")
+(reset)
+(main)
