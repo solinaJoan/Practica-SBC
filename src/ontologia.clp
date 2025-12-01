@@ -1,8 +1,8 @@
 ;;; ---------------------------------------------------------
 ;;; ontologiaSBC.clp
 ;;; Translated by owl2clips
-;;; Translated to CLIPS from ontology ontologiaSBC.ttl
-;;; :Date 23/11/2025 13:09:11
+;;; Translated to CLIPS from ontology ontologiaSBC.owl
+;;; :Date 01/12/2025 19:05:34
 
 (defclass Solicitant
     (is-a USER)
@@ -11,10 +11,10 @@
     (multislot evitaServei
         (type INSTANCE)
         (create-accessor read-write))
-    (slot llocEstudi
+    (multislot llocEstudi
         (type INSTANCE)
         (create-accessor read-write))
-    (slot llocTreball
+    (multislot llocTreball
         (type INSTANCE)
         (create-accessor read-write))
     (multislot prefereixServei
@@ -23,59 +23,59 @@
     (multislot requereixServei
         (type INSTANCE)
         (create-accessor read-write))
-    (slot edat
+    (multislot edat
         (type INTEGER)
         (create-accessor read-write))
-    ;;; Llista d'edats (slot en CLIPS)
+    ;;; Llista d'edats (multislot en CLIPS)
     (multislot edatsFills
         (type STRING)
         (create-accessor read-write))
-    (slot estudiaACiutat
+    (multislot estudiaACiutat
         (type SYMBOL)
         (create-accessor read-write))
-    (slot margeEstricte
+    (multislot margeEstricte
         (type SYMBOL)
         (create-accessor read-write))
-    (slot necessitaAccessibilitat
+    (multislot necessitaAccessibilitat
         (type SYMBOL)
         (create-accessor read-write))
-    (slot nom
+    (multislot nom
         (type STRING)
         (create-accessor read-write))
-    (slot numeroAvis
+    (multislot numeroAvis
         (type INTEGER)
         (create-accessor read-write))
-    (slot numeroFills
+    (multislot numeroFills
         (type INTEGER)
         (create-accessor read-write))
-    (slot numeroMascotes
+    (multislot numeroMascotes
         (type INTEGER)
         (create-accessor read-write))
-    (slot numeroPersones
+    (multislot numeroPersones
         (type INTEGER)
         (create-accessor read-write))
-    (slot prefereixTransportPublic
+    (multislot prefereixTransportPublic
         (type SYMBOL)
         (create-accessor read-write))
-    (slot pressupostMaxim
+    (multislot pressupostMaxim
         (type FLOAT)
         (create-accessor read-write))
-    (slot pressupostMinim
+    (multislot pressupostMinim
         (type FLOAT)
         (create-accessor read-write))
-    (slot teAvis
+    (multislot teAvis
         (type SYMBOL)
         (create-accessor read-write))
-    (slot teMascotes
+    (multislot teMascotes
         (type SYMBOL)
         (create-accessor read-write))
-    (slot teVehicle
+    (multislot teVehicle
         (type SYMBOL)
         (create-accessor read-write))
-    (slot tipusMascota
+    (multislot tipusMascota
         (type STRING)
         (create-accessor read-write))
-    (slot treballaACiutat
+    (multislot treballaACiutat
         (type SYMBOL)
         (create-accessor read-write))
 )
@@ -144,13 +144,13 @@
     (is-a USER)
     (role concrete)
     (pattern-match reactive)
-    (slot horariObertura
+    (multislot horariObertura
         (type STRING)
         (create-accessor read-write))
-    (slot horariTancament
+    (multislot horariTancament
         (type STRING)
         (create-accessor read-write))
-    (slot nomServei
+    (multislot nomServei
         (type STRING)
         (create-accessor read-write))
     (slot teLocalitzacio
@@ -218,42 +218,6 @@
     (pattern-match reactive)
 )
 
-(defclass ServeiMolest
-    (is-a Servei)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass Aeroport
-    (is-a ServeiMolest)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass Autopista
-    (is-a ServeiMolest)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass Discoteca
-    (is-a ServeiMolest)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass Estadi
-    (is-a ServeiMolest)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass ZonaIndustrial
-    (is-a ServeiMolest)
-    (role concrete)
-    (pattern-match reactive)
-)
-
 (defclass ServeiOci
     (is-a Servei)
     (role concrete)
@@ -272,6 +236,18 @@
     (pattern-match reactive)
 )
 
+(defclass Discoteca
+    (is-a ServeiOci)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass Estadi
+    (is-a ServeiOci)
+    (role concrete)
+    (pattern-match reactive)
+)
+
 (defclass Gimnas
     (is-a ServeiOci)
     (role concrete)
@@ -285,12 +261,6 @@
 )
 
 (defclass Teatre
-    (is-a ServeiOci)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass ZonaNocturna
     (is-a ServeiOci)
     (role concrete)
     (pattern-match reactive)
@@ -320,26 +290,38 @@
     (pattern-match reactive)
 )
 
-(defclass TransportPublic
+(defclass Transport
     (is-a Servei)
     (role concrete)
     (pattern-match reactive)
 )
 
+(defclass Aeroport
+    (is-a Transport)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass Autopista
+    (is-a Transport)
+    (role concrete)
+    (pattern-match reactive)
+)
+
 (defclass EstacioMetro
-    (is-a TransportPublic)
+    (is-a Transport)
     (role concrete)
     (pattern-match reactive)
 )
 
 (defclass EstacioTren
-    (is-a TransportPublic)
+    (is-a Transport)
     (role concrete)
     (pattern-match reactive)
 )
 
 (defclass ParadaBus
-    (is-a TransportPublic)
+    (is-a Transport)
     (role concrete)
     (pattern-match reactive)
 )
@@ -372,85 +354,85 @@
     (is-a USER)
     (role concrete)
     (pattern-match reactive)
-    (slot ambElectrodomestics
+    (multislot ambElectrodomestics
         (type SYMBOL)
         (create-accessor read-write))
-    (slot anyConstruccio
+    (multislot anyConstruccio
         (type INTEGER)
         (create-accessor read-write))
-    (slot consumEnergetic
+    (multislot consumEnergetic
         (type STRING)
         (create-accessor read-write))
-    (slot esExterior
+    (multislot esExterior
         (type SYMBOL)
         (create-accessor read-write))
-    (slot estatConservacio
+    (multislot estatConservacio
         (type STRING)
         (create-accessor read-write))
-    (slot moblat
+    (multislot moblat
         (type SYMBOL)
         (create-accessor read-write))
-    (slot nivellSoroll
+    (multislot nivellSoroll
         (type STRING)
         (create-accessor read-write))
-    (slot numeroBanys
+    (multislot numeroBanys
         (type INTEGER)
         (create-accessor read-write))
-    (slot numeroDormitoris
+    (multislot numeroDormitoris
         (type INTEGER)
         (create-accessor read-write))
-    (slot numeroDormitorisDobles
+    (multislot numeroDormitorisDobles
         (type INTEGER)
         (create-accessor read-write))
-    (slot numeroDormitorisSimples
+    (multislot numeroDormitorisSimples
         (type INTEGER)
         (create-accessor read-write))
-    (slot numeroPlacesAparcament
+    (multislot numeroPlacesAparcament
         (type INTEGER)
         (create-accessor read-write))
-    (slot orientacioSolar
+    (multislot orientacioSolar
         (type STRING)
         (create-accessor read-write))
-    (slot permetMascotes
+    (multislot permetMascotes
         (type SYMBOL)
         (create-accessor read-write))
-    (slot plantaPis
+    (multislot plantaPis
         (type INTEGER)
         (create-accessor read-write))
-    (slot superficieHabitable
+    (multislot superficieHabitable
         (type FLOAT)
         (create-accessor read-write))
-    (slot superficieTerrassa
+    (multislot superficieTerrassa
         (type FLOAT)
         (create-accessor read-write))
-    (slot teAireCondicionat
+    (multislot teAireCondicionat
         (type SYMBOL)
         (create-accessor read-write))
-    (slot teArmariEncastat
+    (multislot teArmariEncastat
         (type SYMBOL)
         (create-accessor read-write))
-    (slot teAscensor
+    (multislot teAscensor
         (type SYMBOL)
         (create-accessor read-write))
-    (slot teCalefaccio
+    (multislot teCalefaccio
         (type SYMBOL)
         (create-accessor read-write))
-    (slot tePiscinaComunitaria
+    (multislot tePiscinaComunitaria
         (type SYMBOL)
         (create-accessor read-write))
-    (slot tePlacaAparcament
+    (multislot tePlacaAparcament
         (type SYMBOL)
         (create-accessor read-write))
-    (slot teTerrassaOBalco
+    (multislot teTerrassaOBalco
         (type SYMBOL)
         (create-accessor read-write))
-    (slot teTraster
+    (multislot teTraster
         (type SYMBOL)
         (create-accessor read-write))
-    (slot teVistes
+    (multislot teVistes
         (type SYMBOL)
         (create-accessor read-write))
-    (slot tipusVistes
+    (multislot tipusVistes
         (type STRING)
         (create-accessor read-write))
     (slot teLocalitzacio
@@ -492,25 +474,25 @@
     (is-a USER)
     (role concrete)
     (pattern-match reactive)
-    (slot aPropDe
+    (multislot aPropDe
         (type INSTANCE)
         (create-accessor read-write))
-    (slot adreca
+    (multislot adreca
         (type STRING)
         (create-accessor read-write))
-    (slot barri
+    (multislot barri
         (type STRING)
         (create-accessor read-write))
-    (slot codiPostal
+    (multislot codiPostal
         (type STRING)
         (create-accessor read-write))
-    (slot coordenadaX
+    (multislot coordenadaX
         (type FLOAT)
         (create-accessor read-write))
-    (slot coordenadaY
+    (multislot coordenadaY
         (type FLOAT)
         (create-accessor read-write))
-    (slot districte
+    (multislot districte
         (type STRING)
         (create-accessor read-write))
 )
@@ -522,20 +504,20 @@
     (slot teHabitatge
         (type INSTANCE)
         (create-accessor read-write))
-    (slot dataPublicacio
+    (multislot dataPublicacio
         (type STRING)
         (create-accessor read-write))
-    (slot disponible
+    (multislot disponible
         (type SYMBOL)
         (create-accessor read-write))
     ;;; Valors: Parcialment, Adequat, MoltRecomanable, Cap
-    (slot grauRecomanacio
+    (multislot grauRecomanacio
         (type STRING)
         (create-accessor read-write))
     (multislot motiusRecomanacio
         (type STRING)
         (create-accessor read-write))
-    (slot preuMensual
+    (multislot preuMensual
         (type FLOAT)
         (create-accessor read-write))
 )
