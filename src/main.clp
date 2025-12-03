@@ -286,7 +286,7 @@
         (printout t "Usant perfils predefinits de les instàncies..." crlf)
         (printout t "Iniciant cerca d'habitatges..." crlf)
         (printout t crlf)
-        (load instancies_solicitants.clp)
+        (load instancies_solicitants_senzill.clp)
         (reset)
         (run)
 
