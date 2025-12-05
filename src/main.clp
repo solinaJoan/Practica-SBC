@@ -112,11 +112,13 @@
         (bind ?futur-fills (pregunta-si-no "Tindràs/eu fills properament?"))
     )
 
-    (bind ?num-gent-gran 0)
-    (if (< 0 (- ?num-persones ?num-fills)) then
-        (bind ?num-gent-gran (pregunta-numero "Conviureu amb avis o gent gran" 0 (- ?num-persones ?num-fills)))
-    )
-    (bind ?te-avis (> ?num-gent-gran 0))
+    ; (bind ?num-gent-gran 0)
+    ; (if (< 0 (- ?num-persones ?num-fills)) then
+    ;    (bind ?num-gent-gran (pregunta-numero "Conviureu amb avis o gent gran" 0 (- ?num-persones ?num-fills)))
+    ;)
+    ; (bind ?te-avis (> ?num-gent-gran 0))
+
+    (bind ?te-avis (pregunta-si-no "Conviureu amb avis o gent gran"))
     
     ;;; Pressupost
     (printout t crlf "--- PRESSUPOST ---" crlf)
