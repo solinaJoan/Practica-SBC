@@ -48,6 +48,33 @@
     (nth$ ?resp ?opcions)
 )
 
+(deffunction pregunta-multiopcio (?pregunta $?opcions)
+    "Pregunta amb opcions predefinides"
+    (printout t ?pregunta crlf)
+    (printout t "   0. Cap servei molest" crlf)
+    (bind ?i 1)
+    (foreach ?opc ?opcions
+        (printout t "   " ?i ". " ?opc crlf)
+        (bind ?i (+ ?i 1))
+    )
+    
+    (printout t crlf "Tria una o més opcions: ")
+    (bind $?numeros (explode$ (readline)))
+
+    ;; Cas de cap servei
+    (bind $?resposta (create$))
+    (foreach ?n $?numeros
+       (bind ?idx (integer ?n))
+       (if (and (>= ?idx 1) (<= ?idx (length$ ?opcions))) then
+            (bind $?resposta
+            (create$ $?resposta (nth$ ?idx ?opcions)))
+        )
+    )
+    (bind ?resp ?resposta)
+)
+
+
+
 
 ;;; ============================================================
 ;;; CREACIÓ DEL PERFIL DEL SOL·LICITANT
@@ -93,7 +120,7 @@
     
     ;;; Pressupost
     (printout t crlf "--- PRESSUPOST ---" crlf)
-    (bind ?pres-max (pregunta-numero "Pressupost màxim mensual (EUR)" 0 100000))
+    (bind ?pres-max (pregunta-numero "Pressupost màxim mensual (EUR)" 1 100000))
     (bind ?pres-min (pregunta-numero "Pressupost mínim mensual (EUR)" 0 ?pres-max))
     (bind ?marge-estricte (pregunta-si-no "És important que es respecti el pressupost"))
     
@@ -119,7 +146,14 @@
         (bind ?num-mascotes (pregunta-numero "Quantes mascotes tens?" 1 5))
     )
 
-    ;;; Falta afegir serveis molests
+    ;;; Serveis molests
+    (bind $?serveis-molestos
+        (pregunta-multiopcio
+        "Consideres algun d'aquests serveis molests?"
+        Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
+    )
+
+    ; (printout t crlf $?serveis-molestos crlf)
 
     ;;; Crear una instancia amb nom únic 
     (bind ?nom-inst (sym-cat sol- (gensym*)))
