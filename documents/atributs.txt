@@ -76,7 +76,7 @@ Qui busca habitatge i les seves necessitats.
 | teVehicle                | boolean           | Si disposa de vehicle propi                         |
 | treballaACiutat          | boolean           | Si treballa a la ciutat                             |
 | estudiaACiutat           | boolean           | Si estudia a la ciutat                              |
-| requereixTransporPublic  | boolean           | Si prefereix utilitzar el transport públic          |
+| requereixTransportPublic | boolean           | Si prefereix utilitzar el transport públic          |
 | necessitaAccessibilitat  | boolean           | Si necessita accessibilitat                         |
 | teMascotes               | boolean           | Si té animals de companyia                          |
 | numeroMascotes           | int               | Nombre de mascotes                                  |
