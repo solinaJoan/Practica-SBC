@@ -2,6 +2,7 @@
 ;;; regles.clp
 ;;; Sistema Expert de Recomanació d'Habitatges
 ;;; Fases: ABSTRACCIÓ -> RESOLUCIÓ -> REFINACIÓ
+;;; VERSIÓ CORREGIDA (TransportPublic -> Transport, Impressió Robusta)
 ;;; ============================================================
 
 ;;; ============================================================
@@ -29,7 +30,7 @@
     (slot motiu (type STRING))
 )
 
-(deftemplate criteri-no-complert
+(deftemplate criteri-no-cumplit
     (slot solicitant (type INSTANCE))
     (slot oferta (type INSTANCE))
     (slot criteri (type STRING))
@@ -118,9 +119,10 @@
     "Els estudiants necessiten transport i prefereixen oci"
     (declare (salience 95))
     ?sol <- (object (is-a GrupEstudiants))
-    (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
+    ;; CORRECCIO: TransportPublic no existeix, es Transport
+    (not (requisit-inferit (solicitant ?sol) (categoria-servei Transport)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei Transport)
             (obligatori si) (motiu "Estudiant necessita transport public")))
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiOci)
             (obligatori no) (motiu "Estudiant prefereix zones oci")))
@@ -131,9 +133,9 @@
     "Si necessita transport public, el necessita a prop"
     (declare (salience 95))
     ?sol <- (object (is-a Solicitant) (requereixTransportPublic si))
-    (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
+    (not (requisit-inferit (solicitant ?sol) (categoria-servei Transport)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei Transport)
             (obligatori si) (motiu "Prefereix transport public")))
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita transport public" crlf)
 )
@@ -241,10 +243,8 @@
     "Descartar si un servei que es vol evitar està Molt A Prop"
     (declare (salience 45))
     (fase-completada (nom abstraccio))
-    ;; Busquem un sol·licitant que tingui un servei a la llista d'evitar
     ?sol <- (object (is-a Solicitant) (evitaServei $? ?serveiEvitat $?))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ;; Comprovem si aquest habitatge té aquest servei concret Molt A Prop
     (proximitat (habitatge ?hab) (servei ?serveiEvitat) (distancia MoltAProp))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
@@ -258,10 +258,8 @@
     "Descartar si falta un servei que s'ha inferit com OBLIGATORI (i no n'hi ha cap a prop)"
     (declare (salience 42))
     (fase-completada (nom abstraccio))
-    ;; Recuperem el requisit inferit (ex: obligatori escola per tenir fills)
     (requisit-inferit (solicitant ?sol) (categoria-servei ?cat) (obligatori si) (motiu ?motiuTxt))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ;; Comprovem que NO existeixi cap proximitat d'aquesta categoria (ni a prop ni mitjana)
     (not (proximitat (habitatge ?hab) (categoria ?cat) (distancia MoltAProp|DistanciaMitjana)))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
@@ -278,7 +276,7 @@
     ?sol <- (object (is-a Solicitant) (numeroPersones ?npers))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (superficieHabitable ?sup))
-    (test (< ?sup (* ?npers 10)))  ; Mínim 10 m² per persona
+    (test (< ?sup (* ?npers 10)))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
@@ -310,9 +308,9 @@
     ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
     (test (and (> ?preu ?max) (<= ?preu (* ?max 1.15))))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteri-no-complert (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of)
+    (assert (criteri-no-cumplit (solicitant ?sol) (oferta ?of)
             (criteri "Preu lleugerament superior al pressupost") (gravetat Lleu)))
 )
 
@@ -324,9 +322,9 @@
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (nivellSoroll "Alt"))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Nivell de soroll alt")))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of) (criteri "Nivell de soroll alt")))
     =>
-    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of)
+    (assert (criteri-no-cumplit (solicitant ?sol) (oferta ?of)
             (criteri "Nivell de soroll alt") (gravetat Lleu)))
 )
 
@@ -340,9 +338,9 @@
     ?h <- (object (is-a Habitatge) (name ?hab) (teAscensor no) (plantaPis ?planta))
     (test (> ?planta 1))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Planta alta sense ascensor")))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of) (criteri "Planta alta sense ascensor")))
     =>
-    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of)
+    (assert (criteri-no-cumplit (solicitant ?sol) (oferta ?of)
             (criteri "Planta alta sense ascensor") (gravetat Moderat)))
 )
 
@@ -394,7 +392,7 @@
     ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (consumEnergetic ?ce))
-    (test (or (eq ?ce A) (eq ?ce B)))
+    (test (or (eq ?ce "A") (eq ?ce "B") (eq ?ce A) (eq ?ce B)))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Alta eficiencia energetica")))
     =>
@@ -459,8 +457,9 @@
     (fase-completada (nom abstraccio))
     ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ;; CORRECCIO: Usem classes generiques per si de cas
     (proximitat (habitatge ?hab) (categoria ?cat) (distancia MoltAProp))
-    (test (or (eq ?cat EstacioMetro) (eq ?cat ParadaBus) (eq ?cat EstacioTren)))
+    (test (or (eq ?cat EstacioMetro) (eq ?cat ParadaBus) (eq ?cat EstacioTren) (eq ?cat Transport)))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Transport public molt a prop")))
     =>
@@ -471,13 +470,10 @@
     "Dona punts si l'habitatge satisfà una necessitat inferida (ex: parc per nens)"
     (declare (salience 32))
     (fase-completada (nom abstraccio))
-    ;; Si tenim un requisit inferit (encara que no sigui obligatori)
     (requisit-inferit (solicitant ?sol) (categoria-servei ?cat) (motiu ?motiuTxt))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ;; I tenim un servei d'aquesta categoria a prop
     (proximitat (habitatge ?hab) (categoria ?cat) (distancia MoltAProp|DistanciaMitjana))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    ;; Evitem duplicar el mateix punt
     (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d&:(str-index ?motiuTxt ?d))))
     =>
     (assert (punt-positiu (solicitant ?sol) (oferta ?of)
@@ -496,7 +492,6 @@
 
 ;;; ============================================================
 ;;; FASE 3: REFINACIÓ
-;;; Classificació final de les ofertes
 ;;; ============================================================
 
 (defrule refinacio-molt-recomanable
@@ -506,7 +501,7 @@
     ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (disponible si))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteri-no-complert (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
     (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d1))
     (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d2&~?d1))
     (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d3&~?d1&~?d2))
@@ -523,7 +518,7 @@
     ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (disponible si))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteri-no-complert (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
     (not (recomanacio (solicitant ?sol) (oferta ?of)))
     =>
     (assert (recomanacio (solicitant ?sol) (oferta ?of) (grau Adequat) (puntuacio 70)))
@@ -537,7 +532,7 @@
     ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (disponible si))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (criteri-no-complert (solicitant ?sol) (oferta ?of))
+    (criteri-no-cumplit (solicitant ?sol) (oferta ?of))
     (not (recomanacio (solicitant ?sol) (oferta ?of)))
     =>
     (assert (recomanacio (solicitant ?sol) (oferta ?of) (grau Parcialment) (puntuacio 50)))
@@ -572,17 +567,13 @@
 )
 
 (defrule presentacio-recomanacio
-    "Mostra cada recomanacio amb detalls"
+    "Mostra cada recomanacio amb detalls (VERSIO ROBUSTA)"
     (declare (salience -20))
     (fase-completada (nom presentacio))
     (recomanacio (solicitant ?sol) (oferta ?of) (grau ?grau) (puntuacio ?punt))
-    ?oferta <- (object (is-a Oferta) (name ?of) (preuMensual ?preu) (teHabitatge ?hab))
-    ?habitatge <- (object (is-a Habitatge) (name ?hab)
-            (superficieHabitable ?sup)
-            (numeroDormitoris ?dorm)
-            (numeroBanys ?banys)
-            (teLocalitzacio ?loc))
-    ?localitzacio <- (object (is-a Localitzacio) (name ?loc) (adreca ?adreca) (barri ?barri))
+    ?oferta <- (object (is-a Oferta) (name ?of) (teHabitatge ?hab))
+    ?habitatge <- (object (is-a Habitatge) (name ?hab) (teLocalitzacio ?loc))
+    ?localitzacio <- (object (is-a Localitzacio) (name ?loc))
     =>
     (printout t crlf)
     (printout t "----------------------------------------------------------------" crlf)
@@ -591,7 +582,17 @@
     (printout t "----------------------------------------------------------------" crlf)
     (printout t "*** GRAU: " ?grau " *** (Puntuacio: " ?punt ")" crlf)
     (printout t "----------------------------------------------------------------" crlf)
-    (printout t "Tipus: " (class ?hab) crlf)
+    
+    ;; Obtenim els valors amb missatges per evitar errors de patró
+    (bind ?preu (send ?oferta get-preuMensual))
+    (bind ?tipus (class ?habitatge))
+    (bind ?sup (send ?habitatge get-superficieHabitable))
+    (bind ?dorm (send ?habitatge get-numeroDormitoris))
+    (bind ?banys (send ?habitatge get-numeroBanys))
+    (bind ?adreca (send ?localitzacio get-adreca))
+    (bind ?barri (send ?localitzacio get-barri))
+
+    (printout t "Tipus: " ?tipus crlf)
     (printout t "Superficie: " ?sup " m2" crlf)
     (printout t "Dormitoris: " ?dorm " | Banys: " ?banys crlf)
     (printout t "Preu: " ?preu " EUR/mes" crlf)
@@ -607,6 +608,7 @@
     (recomanacio (solicitant ?sol) (oferta ?of))
     (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?desc))
     =>
+    ;; Assegurem que surt sota la fitxa correcta
     (printout t "  [+] " ?desc crlf)
 )
 
@@ -615,18 +617,9 @@
     (declare (salience -22))
     (fase-completada (nom presentacio))
     (recomanacio (solicitant ?sol) (oferta ?of) (grau Parcialment))
-    (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri ?crit) (gravetat ?grav))
+    (criteri-no-cumplit (solicitant ?sol) (oferta ?of) (criteri ?crit) (gravetat ?grav))
     =>
     (printout t "  [-] " ?crit " (" ?grav ")" crlf)
-)
-
-(defrule presentacio-descartades
-    "Mostra les ofertes descartades"
-    (declare (salience -30))
-    (fase-completada (nom presentacio))
-    (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu ?motiu))
-    =>
-    (printout t crlf "[DESCARTADA] " (instance-name ?of) " per " (instance-name ?sol) ": " ?motiu crlf)
 )
 
 (defrule presentacio-fi

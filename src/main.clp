@@ -234,8 +234,6 @@
         (printout t "Usant perfils predefinits de les instàncies..." crlf)
         (printout t "Iniciant cerca d'habitatges..." crlf)
         (printout t crlf)
-        (load instancies_solicitants.clp)
-        (reset)
         (run)
 
         ;;; (printout t "Per executar el sistema manualment:" crlf)

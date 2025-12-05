@@ -1,0 +1,166 @@
+% 01_identificacio.tex
+% Capítol 1: Identificació del problema
+
+\section{Descripció del Problema}
+
+El problema aborda la necessitat de trobar l'habitatge de lloguer més adequat per a persones amb diferents perfils i necessitats. En un mercat immobiliari amb milers d'ofertes i característiques diverses, trobar l'opció òptima requereix avaluar múltiples factors simultàniament:
+
+\begin{itemize}
+    \item Característiques de l'habitatge (preu, superfície, nombre d'habitacions, equipament)
+    \item Localització i serveis propers (transport, escoles, centres de salut, zones verdes)
+    \item Perfil del sol·licitant (família, estudiants, persones grans, parelles)
+    \item Necessitats específiques (accessibilitat, mascotes, vehicle propi)
+\end{itemize}
+
+Aquest procés implica coneixement expert sobre criteris de qualitat d'habitatge, necessitats segons perfils demogràfics i sentit comú sobre preferències habitacionals.
+
+\section{Anàlisi de Viabilitat}
+
+\subsection{És adequat un Sistema Basat en Coneixement?}
+
+Un Sistema Basat en Coneixement (SBC) és adequat per aquest problema per les següents raons:
+
+\begin{enumerate}
+    \item \textbf{Existeix coneixement expert}: Agents immobiliaris experimentats utilitzen regles heurístiques per recomanar habitatges segons perfils.
+    
+    \item \textbf{El problema no té solució algorítmica simple}: La recomanació òptima depèn de múltiples factors qualitatius que interactuen de manera complexa.
+    
+    \item \textbf{Raonable complexitat}: El problema és prou complex per necessitar IA però no tant com per requerir aprenentatge automàtic.
+    
+    \item \textbf{Coneixement estructurable}: Es poden identificar clarament conceptes (habitatge, sol·licitant, servei) i relacions entre ells.
+    
+    \item \textbf{Explicabilitat important}: Els usuaris necessiten entendre per què se'ls recomana o descarta un habitatge.
+\end{enumerate}
+
+\subsection{Limitacions d'altres aproximacions}
+
+\begin{itemize}
+    \item \textbf{Cerca simple per filtres}: No captura preferències complexes ni coneixement expert sobre adequació.
+    \item \textbf{Machine Learning}: Requereix grans quantitats de dades d'usuaris reals i no proporciona explicabilitat transparent.
+    \item \textbf{Sistemes de puntuació numèrics}: No capturen adequadament les restriccions obligatòries vs. preferències opcionals.
+\end{itemize}
+
+\section{Identificació de Fonts de Coneixement}
+
+\subsection{Fonts Primàries}
+
+\begin{enumerate}
+    \item \textbf{Experts del domini}:
+    \begin{itemize}
+        \item Agents immobiliaris amb experiència en lloguer d'habitatges
+        \item Consultors d'habitatge social
+        \item Gestors de propietats
+    \end{itemize}
+    
+    \item \textbf{Lleis i normatives}:
+    \begin{itemize}
+        \item Llei d'Arrendaments Urbans (LAU)
+        \item Normatives d'accessibilitat
+        \item Regulacions locals de lloguer
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Fonts Secundàries}
+
+\begin{enumerate}
+    \item \textbf{Plataformes immobiliàries}:
+    \begin{itemize}
+        \item Idealista.com
+        \item Fotocasa.es
+        \item Habitaclia.com
+    \end{itemize}
+    Anàlisi de característiques ofertes i sistemes de cerca.
+    
+    \item \textbf{Estudis demogràfics i sociològics}:
+    \begin{itemize}
+        \item Necessitats habitacionals per grups d'edat
+        \item Patrons de mobilitat urbana
+        \item Preferències per tipologia familiar
+    \end{itemize}
+    
+    \item \textbf{Models de llenguatge (LLM)}:
+    \begin{itemize}
+        \item ChatGPT, Claude, Gemini
+        \item Utilitzats com a "expert virtual" per elicitació de coneixement
+        \item Validació posterior amb fonts reals
+    \end{itemize}
+\end{enumerate}
+
+\section{Objectius del Sistema}
+
+\subsection{Objectius Funcionals}
+
+\begin{enumerate}
+    \item \textbf{Recomanar habitatges adequats}: Generar una llista ordenada d'ofertes segons grau d'adequació (Molt Recomanable, Adequat, Parcialment Adequat).
+    
+    \item \textbf{Descartar ofertes inadequades}: Identificar i filtrar habitatges que no compleixen requisits obligatoris.
+    
+    \item \textbf{Justificar decisions}: Proporcionar explicacions clares sobre per què un habitatge és recomanat o descartat.
+    
+    \item \textbf{Inferir necessitats}: Deduir requisits no explícits basant-se en el perfil del sol·licitant.
+\end{enumerate}
+
+\subsection{Objectius No Funcionals}
+
+\begin{enumerate}
+    \item \textbf{Cobertura exhaustiva}: Considerar la majoria de casos reals d'habitatge i perfils d'usuari.
+    
+    \item \textbf{Mantenibilitat}: Estructura modular que permeti afegir noves regles fàcilment.
+    
+    \item \textbf{Rendiment adequat}: Processar desenes d'ofertes i sol·licitants en temps raonable.
+    
+    \item \textbf{Transparència}: Regles comprensibles i traçables.
+\end{enumerate}
+
+\section{Abast del Sistema}
+
+\subsection{Dins de l'abast}
+
+\begin{itemize}
+    \item Recomanació d'habitatges de lloguer a Barcelona (ciutat fictícia simplificada)
+    \item Avaluació de proximitat a serveis urbans
+    \item Perfils: individus, parelles, famílies, estudiants, persones grans
+    \item Restriccions de preu, accessibilitat, mascotes
+    \item Inferència de necessitats segons perfil demogràfic
+\end{itemize}
+
+\subsection{Fora de l'abast}
+
+\begin{itemize}
+    \item Habitatge en propietat (compra)
+    \item Anàlisi financer detallat (hipoteques, impostos)
+    \item Predicció de preus futurs
+    \item Recomanacions personalitzades amb aprenentatge d'usuari
+    \item Integració amb bases de dades reals d'ofertes
+    \item Gestió de reserves o contractes
+\end{itemize}
+
+\section{Resultats Esperats}
+
+El sistema ha de produir per cada sol·licitant:
+
+\begin{enumerate}
+    \item \textbf{Llista d'ofertes recomanades} amb tres nivells:
+    \begin{itemize}
+        \item Molt Recomanable: Compleix tot i té característiques excepcionals
+        \item Adequat: Compleix tots els requisits
+        \item Parcialment Adequat: Acceptable amb alguns criteris no complerts
+    \end{itemize}
+    
+    \item \textbf{Llista d'ofertes descartades} amb justificació de cada descart.
+    
+    \item \textbf{Explicacions detallades} per cada recomanació:
+    \begin{itemize}
+        \item Punts positius destacables
+        \item Criteris no complerts (per ofertes parcials)
+        \item Serveis propers rellevants
+    \end{itemize}
+\end{enumerate}
+
+\section{Beneficis Esperats}
+
+\begin{itemize}
+    \item \textbf{Per usuaris}: Estalvi de temps, recomanacions més adequades, transparència en decisions
+    \item \textbf{Per agents immobiliaris}: Automatització de pre-filtratge, més eficiència
+    \item \textbf{Per propietaris}: Millor matching amb llogaters adequats
+\end{itemize}

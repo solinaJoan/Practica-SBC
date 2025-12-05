@@ -1,0 +1,113 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[catalan]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+% Configuració de la pàgina
+\geometry{left=3cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+% Configuració dels capçals i peus
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% Configuració de listings per codi CLIPS
+\lstdefinestyle{clips}{
+    language=Lisp,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=5pt,
+    backgroundcolor=\color{white},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    escapeinside={\%*}{*},
+    xleftmargin=2em,
+    xrightmargin=2em
+}
+
+\lstset{style=clips}
+
+% Informació del document
+\title{
+    \includegraphics[width=0.3\textwidth]{fotos/upc-logo.png}\\[1cm]
+    {\LARGE Pràctica de Sistemes Basats en el Coneixement}\\[0.5cm]
+    {\large Sistema Expert de Recomanació d'Habitatges de Lloguer}\\[2cm]
+}
+
+\author{
+\large
+\textsc{Grau IA -- Q1 Curs 2025-2026}\\[2mm] 
+\normalsize Departament de Ciències de la Computació \\
+\normalsize Universitat Politècnica de Catalunya \\[1cm]
+%
+\begin{tabular}{cc}
+{\textsc{Anel Ademovic Suljic}} & {\textsc{Aleix Pitarch}} \\
+\normalsize \texttt{anel.suljic@estudiantat.upc.edu} & \normalsize \texttt{aleix.pitarch@estudiantat.upc.edu} \\[4mm]
+\multicolumn{2}{c}{\textsc{Joan Solina}} \\
+\multicolumn{2}{c}{\normalsize \texttt{joan.solina@estudiantat.upc.edu}}\\
+\end{tabular}
+}
+
+\date{14 de desembre de 2025}
+
+\begin{document}
+
+% Portada
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+% Índex
+\tableofcontents
+\newpage
+
+% Capítols
+\chapter{Identificació}
+\input{chapters/01_identificacio}
+
+\chapter{Conceptualització}
+%\input{chapters/02_conceptualitzacio}
+
+\chapter{Formalització}
+%\input{chapters/03_formalitzacio}
+
+\chapter{Implementació}
+%\input{chapters/04_implementacio}
+
+\chapter{Proves i Validació}
+%\input{chapters/05_proves}
+
+\chapter{Conclusions}
+%\input{chapters/06_conclusions}
+
+% Annexos
+%\appendix
+%\chapter{Codi Font Complet}
+%\input{annexa_codi}
+
+%\chapter{Ontologia Detallada}
+%\input{annexb_ontologia}
+
+%\chapter{Jocs de Prova Addicionals}
+%\input{annexc_proves_extra}
+
+\end{document}

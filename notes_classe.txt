@@ -1,3 +1,11 @@
+Comentaris:
+
+mirar coherencia entre transport o transportPublic 
+les instances crec que estan be pero no se si els tipus dels atributs son coherents entre els altres .clp
+arreglar defrule presentacions
+
+
+
 
 19/11/25
 

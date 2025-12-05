@@ -1,0 +1,450 @@
+% 04_implementacio.tex
+% Capítol 4: Implementació
+
+\section{Arquitectura del Sistema}
+
+\subsection{Estructura de Fitxers}
+
+El sistema està organitzat en múltiples fitxers per modularitat:
+
+\begin{verbatim}
+src/
+├── ontologiaSBC.clp          # Classes de l'ontologia (generat)
+├── ontologiaSBC.owl          # Ontologia en OWL/XML
+├── ontologiaSBC.ttl          # Ontologia en Turtle
+├── regles.clp                # Regles del sistema expert
+├── instancies.clp            # Instàncies bàsiques de prova
+├── instancies_extended.clp   # Instàncies addicionals (100+)
+├── main.clp                  # Interfície interactiva
+└── run.clp                   # Script de càrrega
+\end{verbatim}
+
+\subsection{Flux d'Execució}
+
+\begin{enumerate}
+    \item \textbf{Càrrega}: \texttt{(load "run.clp")} carrega tots els fitxers
+    \item \textbf{Reset}: \texttt{(reset)} crea instàncies inicials
+    \item \textbf{Execució}:
+    \begin{itemize}
+        \item Opció A: \texttt{(main)} - Interfície interactiva
+        \item Opció B: \texttt{(run)} - Processa instàncies predefinides
+    \end{itemize}
+    \item \textbf{Processament}: Sistema avalua automàticament totes les combinacions
+    \item \textbf{Sortida}: Recomanacions amb justificacions
+\end{enumerate}
+
+\section{Implementació de l'Ontologia}
+
+\subsection{Generació amb Protégé i owl2clips}
+
+L'ontologia s'ha creat visualment amb Protégé 5.6 i s'ha convertit a CLIPS:
+
+\begin{lstlisting}[language=bash]
+# Proces de conversio
+1. Diseñar ontologia en Protege (ontologiaSBC.owl)
+2. Exportar a Turtle (ontologiaSBC.ttl)  
+3. Convertir con owl2clips:
+   java -jar owl2clips.jar ontologiaSBC.ttl > ontologiaSBC.clp
+\end{lstlisting}
+
+\subsection{Exemple de Classe Generada}
+
+\begin{lstlisting}
+(defclass Habitatge
+    (is-a USER)
+    (role concrete)
+    (pattern-match reactive)
+    (slot superficieHabitable
+        (type FLOAT)
+        (create-accessor read-write))
+    (slot numeroDormitoris
+        (type INTEGER)
+        (create-accessor read-write))
+    (slot permetMascotes
+        (type SYMBOL)
+        (create-accessor read-write))
+    (slot teLocalitzacio
+        (type INSTANCE)
+        (create-accessor read-write))
+    ; ... més slots
+)
+
+(defclass Pis
+    (is-a Habitatge)
+    (role concrete)
+    (pattern-match reactive))
+\end{lstlisting}
+
+\section{Metodologia de Desenvolupament}
+
+\subsection{Prototipatge Ràpid i Disseny Incremental}
+
+S'ha seguit un procés iteratiu:
+
+\subsubsection{Iteració 1: Prototip Bàsic (Setmana 3)}
+
+\textbf{Objectiu}: Sistema mínim funcional
+
+\textbf{Característiques}:
+\begin{itemize}
+    \item 3 classes: Habitatge, Sol·licitant, Oferta
+    \item 5 regles bàsiques (preu, mascotes, superfície)
+    \item 3 instàncies de prova
+    \item Sortida: Recomanat/No Recomanat
+\end{itemize}
+
+\textbf{Lliçons apreses}:
+\begin{itemize}
+    \item Necessitat de jerarquies (no tots els habitatges són iguals)
+    \item Falta explicabilitat (per què es recomana?)
+    \item Necessitat de fases separades
+\end{itemize}
+
+\subsubsection{Iteració 2: Ampliació Ontologia (Setmana 4)}
+
+\textbf{Millores}:
+\begin{itemize}
+    \item Jerarquia completa de Sol·licitant (7 subclasses)
+    \item Jerarquia de Servei (6 categories)
+    \item Relació de proximitat
+    \item 10 instàncies de prova
+    \item Sistema de tres fases inicial
+\end{itemize}
+
+\textbf{Problemes detectats}:
+\begin{itemize}
+    \item Càlcul de distàncies ineficient
+    \item Regles massa específiques (difícils de mantenir)
+\end{itemize}
+
+\subsubsection{Iteració 3: Refinament Regles (Setmana 5)}
+
+\textbf{Millores}:
+\begin{itemize}
+    \item Templates auxiliars (proximitat, requisit-inferit, etc.)
+    \item 30+ regles organitzades per fase
+    \item Sistema de salience per control de flux
+    \item Explicacions detallades
+    \item 20+ instàncies de prova
+\end{itemize}
+
+\subsubsection{Iteració 4: Proves Exhaustives (Setmana 6)}
+
+\textbf{Millores}:
+\begin{itemize}
+    \item 100+ instàncies de prova diverses
+    \item Interfície interactiva (\texttt{main.clp})
+    \item Detecció i correcció de casos extrems
+    \item Optimització de regles
+    \item Documentació completa
+\end{itemize}
+
+\subsection{Planificació i Divisió de Tasques}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Setmana} & \textbf{Responsable} & \textbf{Tasca} \\
+\hline
+1 & Tots & Anàlisi i comprensió enunciat \\
+2 & Est. 1 & Disseny ontologia Protégé \\
+  & Est. 2 & Elicitació coneixement (LLM) \\
+  & Est. 3 & Recerca webs immobiliàries \\
+\hline
+3 & Est. 1 & Implementació classes CLIPS \\
+  & Est. 2 & Regles fase abstracció \\
+  & Est. 3 & Instàncies de prova \\
+\hline
+4 & Est. 1 & Regles fase resolució \\
+  & Est. 2 & Regles fase refinació \\
+  & Est. 3 & Més instàncies + proves \\
+\hline
+5 & Est. 1 & Interfície interactiva \\
+  & Est. 2 & Jocs de prova finals \\
+  & Est. 3 & Inici documentació \\
+\hline
+6 & Tots & Documentació final i memòria \\
+\hline
+\end{tabular}
+\caption{Distribució de tasques}
+\end{table}
+
+\section{Modularització del Sistema}
+
+\subsection{Separació en Mòduls Conceptuals}
+
+Tot i que CLIPS no té mòduls explícits com altres llenguatges, s'ha aconseguit modularitat mitjançant:
+
+\begin{enumerate}
+    \item \textbf{Separació per fitxers}: Ontologia, regles, instàncies
+    \item \textbf{Separació per fases}: Abstracció, Resolució, Refinació
+    \item \textbf{Convenció de noms}: \texttt{fase-funcio-descripcio}
+    \item \textbf{Templates especialitzats}: Per cada tipus de raonament
+\end{enumerate}
+
+\subsection{Mòdul d'Abstracció}
+
+\textbf{Responsabilitat}: Inferir requisits implícits
+
+\textbf{Regles} (prefixades amb \texttt{abstraccio-}):
+\begin{itemize}
+    \item \texttt{abstraccio-calcular-proximitats}
+    \item \texttt{abstraccio-familia-amb-fills}
+    \item \texttt{abstraccio-persona-gran}
+    \item \texttt{abstraccio-estudiants}
+    \item \texttt{abstraccio-prefereix-transport}
+    \item \texttt{abstraccio-parella-futurs-fills}
+\end{itemize}
+
+\textbf{Entrada}: Instàncies de Sol·licitant, Habitatge, Servei
+
+\textbf{Sortida}: Fets \texttt{proximitat} i \texttt{requisit-inferit}
+
+\subsection{Mòdul de Resolució}
+
+\textbf{Responsabilitat}: Avaluar ofertes i detectar pros/contres
+
+\textbf{Sub-mòduls}:
+
+\paragraph{Filtratge (Descart)}:
+\begin{itemize}
+    \item \texttt{resolucio-descartar-preu-excessiu}
+    \item \texttt{resolucio-descartar-no-mascotes}
+    \item \texttt{resolucio-descartar-no-accessible}
+    \item \texttt{resolucio-descartar-servei-evitat}
+    \item \texttt{resolucio-descartar-falta-requisit-inferit}
+\end{itemize}
+
+\paragraph{Detecció de Criteris Negatius}:
+\begin{itemize}
+    \item \texttt{resolucio-criteri-preu-alt}
+    \item \texttt{resolucio-criteri-soroll-alt}
+    \item \texttt{resolucio-criteri-sense-ascensor}
+\end{itemize}
+
+\paragraph{Detecció de Punts Positius}:
+\begin{itemize}
+    \item \texttt{resolucio-punt-bon-preu}
+    \item \texttt{resolucio-punt-terrassa}
+    \item \texttt{resolucio-punt-assolellat}
+    \item \texttt{resolucio-punt-transport-aprop}
+    \item (10+ regles més)
+\end{itemize}
+
+\subsection{Mòdul de Refinació}
+
+\textbf{Responsabilitat}: Classificar ofertes en categories finals
+
+\textbf{Regles}:
+\begin{itemize}
+    \item \texttt{refinacio-molt-recomanable}
+    \item \texttt{refinacio-adequat}
+    \item \texttt{refinacio-parcialment}
+\end{itemize}
+
+\textbf{Entrada}: Fets \texttt{punt-positiu}, \texttt{criteri-no-cumplit}
+
+\textbf{Sortida}: Fets \texttt{recomanacio}
+
+\subsection{Mòdul de Presentació}
+
+\textbf{Responsabilitat}: Mostrar resultats a l'usuari
+
+\textbf{Regles}:
+\begin{itemize}
+    \item \texttt{presentacio-inici}
+    \item \texttt{presentacio-recomanacio}
+    \item \texttt{presentacio-punts-positius}
+    \item \texttt{presentacio-criteris-negatius}
+    \item \texttt{presentacio-descartades}
+\end{itemize}
+
+\section{Detalls d'Implementació Clau}
+
+\subsection{Càlcul de Distàncies}
+
+\begin{lstlisting}
+(deffunction calcular-distancia (?x1 ?y1 ?x2 ?y2)
+    (sqrt (+ (** (- ?x2 ?x1) 2) (** (- ?y2 ?y1) 2))))
+
+(deffunction classificar-distancia (?metres)
+    (if (< ?metres 500.0) then MoltAProp
+    else (if (< ?metres 1000.0) then DistanciaMitjana
+    else Lluny)))
+
+(defrule abstraccio-calcular-proximitats
+    (declare (salience 100))
+    ?hab <- (object (is-a Habitatge) (teLocalitzacio ?locH))
+    ?locHab <- (object (is-a Localitzacio) (name ?locH) 
+                (coordenadaX ?x1) (coordenadaY ?y1))
+    ?serv <- (object (is-a Servei) (teLocalitzacio ?locS))
+    ?locServ <- (object (is-a Localitzacio) (name ?locS) 
+                 (coordenadaX ?x2) (coordenadaY ?y2))
+    (not (proximitat (habitatge ?hab) (servei ?serv)))
+    =>
+    (bind ?metres (calcular-distancia ?x1 ?y1 ?x2 ?y2))
+    (bind ?dist (classificar-distancia ?metres))
+    (bind ?cat (class ?serv))
+    (assert (proximitat (habitatge ?hab) (servei ?serv) 
+            (categoria ?cat) (distancia ?dist) (metres ?metres))))
+\end{lstlisting}
+
+\textbf{Optimització}: Càlcul únic al principi, reutilitzat després.
+
+\subsection{Inferència de Requisits}
+
+\begin{lstlisting}
+(defrule abstraccio-familia-amb-fills
+    (declare (salience 95))
+    ?sol <- (object (is-a Solicitant) (numeroFills ?fills))
+    (test (> ?fills 0))
+    (not (requisit-inferit (solicitant ?sol) 
+          (categoria-servei ServeiEducatiu)))
+    =>
+    (assert (requisit-inferit 
+        (solicitant ?sol) 
+        (categoria-servei ServeiEducatiu)
+        (obligatori si) 
+        (motiu "Familia amb fills necessita escoles")))
+    (assert (requisit-inferit 
+        (solicitant ?sol) 
+        (categoria-servei ZonaVerda)
+        (obligatori no) 
+        (motiu "Zona verda per fills"))))
+\end{lstlisting}
+
+\textbf{Patró NOT}: Evita duplicar requisits inferits.
+
+\subsection{Descart amb Justificació}
+
+\begin{lstlisting}
+(defrule resolucio-descartar-no-mascotes
+    (declare (salience 40))
+    (fase-completada (nom abstraccio))
+    ?sol <- (object (is-a Solicitant) (teMascotes si))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab))
+    ?h <- (object (is-a Habitatge) (name ?hab) (permetMascotes no))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (oferta-descartada 
+        (solicitant ?sol) 
+        (oferta ?of)
+        (motiu "No permet mascotes")))
+    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) 
+              " - No mascotes" crlf))
+\end{lstlisting}
+
+\textbf{Patró}: Comprovar no descartada prèviament evita duplicats.
+
+\subsection{Classificació Multi-criteri}
+
+\begin{lstlisting}
+(defrule refinacio-molt-recomanable
+    (declare (salience 5))
+    (fase-completada (nom resolucio))
+    ?sol <- (object (is-a Solicitant))
+    ?of <- (object (is-a Oferta))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
+    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d1))
+    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d2&~?d1))
+    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d3&~?d1&~?d2))
+    (not (recomanacio (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (recomanacio (solicitant ?sol) (oferta ?of) 
+            (grau MoltRecomanable) (puntuacio 100))))
+\end{lstlisting}
+
+\textbf{Patró}: \texttt{\&\textasciitilde} assegura que els 3 punts positius són diferents.
+
+\section{Interfície Interactiva}
+
+\subsection{Funcionalitat de main.clp}
+
+El fitxer \texttt{main.clp} proporciona una interfície per crear perfils dinàmicament:
+
+\begin{lstlisting}
+(deffunction main ()
+    (printout t "=== SISTEMA EXPERT DE RECOMANACIO ===" crlf)
+    
+    (bind ?crear-nou (pregunta-si-no 
+          "Vols crear un nou perfil de solicitant?"))
+    
+    (if (eq ?crear-nou si) then
+        (bind ?perfil (crear-perfil-solicitant))
+        (reset)
+        (run)
+    else
+        (printout t "Usa perfils predefinits" crlf)))
+\end{lstlisting}
+
+\subsection{Funcions Auxiliars d'Entrada}
+
+\begin{lstlisting}
+(deffunction pregunta-si-no (?pregunta)
+    (printout t ?pregunta " (si/no): ")
+    (bind ?resp (read))
+    (while (and (neq ?resp si) (neq ?resp no))
+        (printout t "Si us plau, respon 'si' o 'no': ")
+        (bind ?resp (read)))
+    ?resp)
+
+(deffunction pregunta-numero (?pregunta ?min ?max)
+    (printout t ?pregunta " [" ?min "-" ?max "]: ")
+    (bind ?resp (read))
+    (while (or (not (numberp ?resp)) 
+               (< ?resp ?min) (> ?resp ?max))
+        (printout t "Numero entre " ?min " i " ?max ": ")
+        (bind ?resp (read)))
+    ?resp)
+\end{lstlisting}
+
+\section{Gestió d'Errors i Casos Extrems}
+
+\subsection{Casos Extrems Considerats}
+
+\begin{enumerate}
+    \item \textbf{Pressupost 0}: Sistema demana pressupost vàlid
+    \item \textbf{Cap oferta adequada}: Sistema ho indica clarament
+    \item \textbf{Totes les ofertes descartades}: Mostra motius
+    \item \textbf{Coordenades fora de rang}: Classificat com "Lluny"
+    \item \textbf{Atributs nulls}: Regles amb (test ...) per validar
+\end{enumerate}
+
+\subsection{Validacions Implementades}
+
+\begin{lstlisting}
+;; Validar que l'oferta esta disponible
+?of <- (object (is-a Oferta) (disponible si))
+
+;; Validar que no s'ha descartat previament
+(not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+
+;; Validar rangs numerics
+(test (> ?fills 0))
+(test (< ?metres 500.0))
+
+;; Validar existencia d'instancies
+?h <- (object (is-a Habitatge) (name ?hab))
+\end{lstlisting}
+
+\section{Optimitzacions Realitzades}
+
+\begin{enumerate}
+    \item \textbf{Pre-càlcul de proximitats}: Evita recalcular a cada regla
+    \item \textbf{Patró NOT per evitar duplicats}: \texttt{(not (requisit-inferit ...))}
+    \item \textbf{Salience per ordre eficient}: Fases seqüencials
+    \item \textbf{Descart primerenc}: Ofertes inadequades eliminades abans d'avaluar detalls
+    \item \textbf{Pattern matching eficient}: Condicions més restrictives primer
+\end{enumerate}
+
+\section{Limitacions Tècniques}
+
+\begin{itemize}
+    \item \textbf{Escalabilitat}: 100+ ofertes x 50+ sol·licitants funciona bé, 1000+ seria lent
+    \item \textbf{Coordenades simplificades}: Sistema cartesià 2D, no GPS real
+    \item \textbf{Absència de learning}: No millora amb ús
+    \item \textbf{Regles fixes}: Canviar criteris requereix modificar codi
+\end{itemize}

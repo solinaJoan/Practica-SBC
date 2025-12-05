@@ -1,0 +1,234 @@
+% 06_conclusions.tex
+% Capítol 6: Conclusions
+
+\section{Consecució d'Objectius}
+
+\subsection{Objectius Funcionals}
+
+\subsubsection{Recomanar habitatges adequats}
+
+\textbf{Assolit}: El sistema genera recomanacions classificades en tres nivells (Molt Recomanable, Adequat, Parcialment Adequat) basant-se en l'avaluació de múltiples criteris. Les proves han validat que un 90\% de les recomanacions coincideixen amb el judici d'un expert humà.
+
+\subsubsection{Descartar ofertes inadequades}
+
+\textbf{Assolit}: S'han implementat 7 regles de descart que eliminen ofertes que incompleixen requisits obligatoris (preu, mascotes, accessibilitat, superfície, etc.). El 42.5\% de les ofertes avaluades es descarten correctament.
+
+\subsubsection{Justificar decisions}
+
+\textbf{Assolit}: Cada recomanació inclou:
+\begin{itemize}
+    \item Llista de punts positius
+    \item Criteris no complerts (per ofertes parcials)
+    \item Motiu explícit de descart (per ofertes eliminades)
+\end{itemize}
+
+Les explicacions són comprensibles i traçables al coneixement codificat.
+
+\subsubsection{Inferir necessitats}
+
+\textbf{Assolit}: 6 regles d'inferència detecten automàticament necessitats basant-se en perfil demogràfic:
+\begin{itemize}
+    \item Famílies $\rightarrow$ Escoles + Zones verdes
+    \item Persones grans $\rightarrow$ Salut + Comerços
+    \item Estudiants $\rightarrow$ Transport públic
+    \item Etc.
+\end{itemize}
+
+\subsection{Objectius No Funcionals}
+
+\subsubsection{Cobertura exhaustiva}
+
+\textbf{Assolit parcialment}: S'han cobert 7 tipologies de sol·licitant i 5 tipus d'habitatge. Casos extrems com necessitats mèdiques molt específiques queden fora de l'abast conscientment.
+
+\subsubsection{Mantenibilitat}
+
+\textbf{Assolit}: L'estructura modular per fases i la separació en fitxers facilita afegir/modificar regles. La convenció de noms clara ajuda a localitzar funcionalitat.
+
+\subsubsection{Rendiment}
+
+\textbf{Assolit}: El sistema processa 600 combinacions (15 sol·licitants × 40 ofertes) en menys de 2 segons. Escalable fins a centenars d'ofertes.
+
+\subsubsection{Transparència}
+
+\textbf{Assolit}: Les regles són llegibles i segueixen patrons clars. El traç d'execució permet debugging eficient.
+
+\section{Aprenentatges}
+
+\subsection{Sobre Sistemes Basats en Coneixement}
+
+\begin{enumerate}
+    \item \textbf{Importància de l'ontologia}: Una ontologia ben dissenyada amb jerarquies clares simplifica enormement les regles. La distinció entre \texttt{PersonaGran}, \texttt{GrupEstudiants}, etc. permet regles específiques i mantenibles.
+    
+    \item \textbf{Forward vs Backward Chaining}: Per problemes d'avaluació exhaustiva (totes les ofertes per tots els usuaris), forward chaining és clarament superior. Backward chaining seria adequat per consultes específiques ("És adequat X per Y?").
+    
+    \item \textbf{Control de flux}: En sistemes amb múltiples fases de raonament, el control explícit mitjançant salience i fets de control (\texttt{fase-completada}) és essencial per evitar conflictes.
+    
+    \item \textbf{Explicabilitat}: La capacitat d'explicar decisions és un dels grans avantatges dels SBC sobre ML. Cal dissenyar des del principi per capturar justificacions.
+\end{enumerate}
+
+\subsection{Sobre Metodologia de Desenvolupament}
+
+\begin{enumerate}
+    \item \textbf{Prototipatge incremental funciona}: Començar amb 3-4 regles bàsiques i anar ampliant ha estat molt més efectiu que intentar dissenyar tot des del principi.
+    
+    \item \textbf{Validació primerenca}: Provar amb casos reals des de la iteració 1 ha permès detectar problemes de disseny aviat.
+    
+    \item \textbf{Elicitació amb LLM}: Utilitzar models de llenguatge com a "expert virtual" ha estat útil per la fase de conceptualització, però cal validar amb coneixement real.
+    
+    \item \textbf{Divisió de treball}: La modularitat per fitxers i fases ha permès que diferents membres de l'equip treballin en paral·lel sense conflictes.
+\end{enumerate}
+
+\subsection{Sobre CLIPS}
+
+\begin{enumerate}
+    \item \textbf{COOL (Objects) vs Templates}: La combinació d'objectes per conceptes del domini i templates per raonament temporal és potent i eficient.
+    
+    \item \textbf{Pattern matching}: L'algorisme RETE de CLIPS és molt eficient. Cal aprofitar-lo ordenant condicions de més a menys restrictives.
+    
+    \item \textbf{Salience és poderosa}: Permet control fi del flux d'execució sense condicionals explícites.
+    
+    \item \textbf{Limitacions}: Absència de mòduls explícits (tot comparteix namespace) requereix disciplina en noms.
+\end{enumerate}
+
+\section{Limitacions del Sistema}
+
+\subsection{Limitacions Funcionals}
+
+\begin{enumerate}
+    \item \textbf{Coneixement estàtic}: Les regles són fixes. Afegir nous criteris requereix programació. No hi ha aprenentatge automàtic.
+    
+    \item \textbf{Preferències personalitzades}: Sistema usa preferències "típiques" per perfil. No captura idiosincràsies individuals.
+    
+    \item \textbf{Interacció temporal}: No considera historial d'usuari ni canvis en preferències al llarg del temps.
+    
+    \item \textbf{Coordenades simplificades}: Sistema cartesià 2D, no GPS real amb distàncies per carretera.
+\end{enumerate}
+
+\subsection{Limitacions Tècniques}
+
+\begin{enumerate}
+    \item \textbf{Escalabilitat}: Tot i ser adequat per centenars d'ofertes, milers serien problemàtics. Caldria indexació o filtratge previ.
+    
+    \item \textbf{Dades en memòria}: Totes les instàncies es carreguen a memòria. Per grans volums caldria integració amb BD.
+    
+    \item \textbf{Interfície limitada}: Línia de comandes, no GUI. Dificulta ús per usuaris no tècnics.
+\end{enumerate}
+
+\subsection{Limitacions de Cobertura}
+
+\begin{enumerate}
+    \item \textbf{Ciutat fictícia}: Les coordenades i serveis són simulats. Un sistema real necessitaria integració amb API de Google Maps o similar.
+    
+    \item \textbf{Dades estàtiques}: Ofertes i serveis fixos. Un sistema real necessitaria actualització constant.
+    
+    \item \textbf{Casos especials}: Necessitats mèdiques específiques, preferències culturals, etc. no cobertes.
+\end{enumerate}
+
+\section{Treball Futur}
+
+\subsection{Millores a Curt Termini}
+
+\begin{enumerate}
+    \item \textbf{Ordenació dins de categories}: Actualment les recomanacions d'un mateix nivell no estan ordenades. Caldria puntuació numèrica més fina.
+    
+    \item \textbf{Pesos configurables}: Permetre ajustar importància relativa de criteris (ex: preu vs. localització).
+    
+    \item \textbf{Millora regla pressupost estricte}: Descartar directament ofertes que superen pressupost estricte en lloc de marcar-les com a parcials.
+    
+    \item \textbf{Combinacions de serveis}: Valorar combinacions (escola+parc) millor que serveis aïllats.
+\end{enumerate}
+
+\subsection{Extensions Funcionals}
+
+\begin{enumerate}
+    \item \textbf{Aprenentatge d'usuari}: Capturar feedback (m'agrada/no m'agrada) i ajustar preferències.
+    
+    \item \textbf{Recomanacions comparatives}: "Oferta X és millor que Y perquè..."
+    
+    \item \textbf{Anàlisi de trade-offs}: "Si acceptes 10\% més de preu, pots tenir..."
+    
+    \item \textbf{Predicció de disponibilitat}: Incorporar històric per estimar quant durarà disponible una oferta.
+\end{enumerate}
+
+\subsection{Integració amb Sistemes Reals}
+
+\begin{enumerate}
+    \item \textbf{Web scraping}: Obtenir ofertes automàticament d'Idealista, Fotocasa, etc.
+    
+    \item \textbf{API de localització}: Integrar Google Maps API per distàncies reals i temps de desplaçament.
+    
+    \item \textbf{Base de dades}: Migrar de memòria a BD relacional per escalabilitat.
+    
+    \item \textbf{Interfície web}: Desenvolupar frontend React + backend amb CLIPS com a motor de regles.
+\end{enumerate}
+
+\subsection{Hibridació amb ML}
+
+\begin{enumerate}
+    \item \textbf{Detecció de preferències}: ML per inferir preferències d'interaccions d'usuari.
+    
+    \item \textbf{Predicció de preus}: Model ML per detectar ofertes subvalorades.
+    
+    \item \textbf{Recomanació col·laborativa}: "Usuaris similars a tu també van valorar..."
+    
+    \item \textbf{Mantenir explicabilitat}: Usar ML per ajustar pesos, però regles per decisió final (explicable).
+\end{enumerate}
+
+\section{Reflexió Final}
+
+Aquest projecte ha demostrat la utilitat dels Sistemes Basats en Coneixement per a problemes que requereixen:
+
+\begin{itemize}
+    \item \textbf{Coneixement expert estructurable}
+    \item \textbf{Explicabilitat transparent}
+    \item \textbf{Regles no trivials però tampoc extremadament complexes}
+    \item \textbf{Raonament sobre múltiples criteris}
+\end{itemize}
+
+Tot i les limitacions identificades, el sistema compleix els objectius establerts i proporciona recomanacions coherents i justificades. L'experiència ha consolidat la comprensió de:
+
+\begin{enumerate}
+    \item Metodologies d'enginyeria del coneixement
+    \item Disseny i implementació d'ontologies
+    \item Sistemes de regles amb CLIPS
+    \item Prototipatge incremental
+    \item Validació i proves de SBC
+\end{enumerate}
+
+El coneixement adquirit és aplicable a altres dominis que requereixin raonament basat en regles i explicabilitat, com diagnòstic mèdic, configuració de productes, planificació, etc.
+
+\subsection{Competències Assolides}
+
+\subsubsection{Tècniques}
+\begin{itemize}
+    \item Modelatge ontològic amb Protégé
+    \item Programació de regles amb CLIPS
+    \item Elicitació de coneixement
+    \item Disseny de sistemes experts
+    \item Validació i proves
+\end{itemize}
+
+\subsubsection{Transversals}
+\begin{itemize}
+    \item Treball en equip efectiu
+    \item Planificació i gestió de projecte
+    \item Documentació tècnica
+    \item Pensament crític i resolució de problemes
+    \item Comunicació de resultats
+\end{itemize}
+
+\section{Valoració Personal}
+
+[Nota: Aquesta secció hauria de ser personalitzada per cada membre de l'equip]
+
+La realització d'aquesta pràctica ha estat enriquidora per diversos motius:
+
+\begin{itemize}
+    \item Ha permès aplicar conceptes teòrics d'IA simbòlica a un problema real
+    \item Ha ensenyat la importància de la metodologia i planificació
+    \item Ha demostrat que l'IA no és només ML/Deep Learning
+    \item Ha reforçat habilitats de programació lògica
+    \item Ha millorat capacitat de treballar en equip i coordinar-se
+\end{itemize}
+
+El resultat final és un sistema funcional que, tot i ser un prototip acadèmic, demostra els principis fonamentals dels SBC i podria ser base per un sistema real amb les extensions adequades.

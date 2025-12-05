@@ -1,0 +1,301 @@
+% annexb_ontologia.tex
+% Annex B: Ontologia Detallada
+
+\section{Visualització de l'Ontologia}
+
+Aquest annex presenta la visualització gràfica de l'ontologia completa generada amb Protégé.
+
+\section{Jerarquia de Classes Completa}
+
+\subsection{Vista General}
+
+\begin{verbatim}
+Thing
+├── Habitatge
+│   ├── Atic
+│   ├── Duplex
+│   ├── Estudi
+│   ├── HabitatgeUnifamiliar
+│   └── Pis
+├── Localitzacio
+├── Oferta
+├── Servei
+│   ├── ServeiComercial
+│   │   ├── CentreComercial
+│   │   ├── Hipermercat
+│   │   ├── Mercat
+│   │   └── Supermercat
+│   ├── ServeiEducatiu
+│   │   ├── Escola
+│   │   ├── Institut
+│   │   ├── LlarInfants
+│   │   └── Universitat
+│   ├── ServeiMolest
+│   │   ├── Aeroport
+│   │   ├── Autopista
+│   │   ├── Discoteca
+│   │   ├── Estadi
+│   │   └── ZonaIndustrial
+│   ├── ServeiOci
+│   │   ├── Bar
+│   │   ├── Cinema
+│   │   ├── Gimnas
+│   │   ├── Restaurant
+│   │   ├── Teatre
+│   │   └── ZonaNocturna
+│   ├── ServeiSalut
+│   │   ├── CentreSalut
+│   │   ├── Farmacia
+│   │   └── Hospital
+│   ├── TransportPublic
+│   │   ├── EstacioMetro
+│   │   ├── EstacioTren
+│   │   └── ParadaBus
+│   └── ZonaVerda
+│       ├── Jardi
+│       ├── Parc
+│       └── ZonaEsportiva
+└── Solicitant
+    ├── Familia
+    │   ├── FamiliaBiparental
+    │   └── FamiliaMonoparental
+    ├── GrupEstudiants
+    ├── Individu
+    ├── Parella
+    │   ├── ParellaAmbFills
+    │   ├── ParellaFutursFills
+    │   └── ParellaSenseFills
+    └── PersonaGran
+\end{verbatim}
+
+\section{Propietats d'Objecte (Object Properties)}
+
+\subsection{Relacions Principals}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Propietat} & \textbf{Domini} & \textbf{Rang} & \textbf{Característiques} \\
+\hline
+teLocalitzacio & Habitatge $\cup$ Servei & Localitzacio & Functional \\
+teHabitatge & Oferta & Habitatge & Functional \\
+aPropDe & Localitzacio & Servei & - \\
+llocTreball & Solicitant & Localitzacio & - \\
+llocEstudi & Solicitant & Localitzacio & - \\
+requereixServei & Solicitant & Servei & - \\
+prefereixServei & Solicitant & Servei & - \\
+evitaServei & Solicitant & ServeiMolest & - \\
+\hline
+\end{tabular}
+\caption{Propietats d'objecte}
+\end{table}
+
+\subsection{Subpropietats de Proximitat}
+
+\begin{itemize}
+    \item \textbf{aPropDe} (propietat base)
+    \begin{itemize}
+        \item \textbf{moltAPropDe}: Distància < 500m
+        \item \textbf{aDistanciaMitjana}: 500m $\leq$ Distància < 1000m
+        \item \textbf{llunyde}: Distància $\geq$ 1000m
+    \end{itemize}
+\end{itemize}
+
+\section{Propietats de Dades (Data Properties)}
+
+\subsection{Habitatge}
+
+\begin{longtable}{|l|l|p{6cm}|}
+\hline
+\textbf{Propietat} & \textbf{Tipus} & \textbf{Descripció} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Propietat} & \textbf{Tipus} & \textbf{Descripció} \\
+\hline
+\endhead
+superficieHabitable & xsd:float & Superfície en m² \\
+numeroDormitoris & xsd:int & Total dormitoris \\
+numeroDormitorisDobles & xsd:int & Dormitoris dobles \\
+numeroDormitorisSimples & xsd:int & Dormitoris simples \\
+numeroBanys & xsd:int & Nombre de banys \\
+plantaPis & xsd:int & Planta (0=baixa) \\
+anyConstruccio & xsd:int & Any de construcció \\
+teTerrassaOBalco & xsd:boolean & Té terrassa o balcó \\
+superficieTerrassa & xsd:float & Superfície terrassa en m² \\
+moblat & xsd:boolean & Està moblat \\
+ambElectrodomestics & xsd:boolean & Té electrodomèstics \\
+teAscensor & xsd:boolean & Té ascensor \\
+permetMascotes & xsd:boolean & Permet mascotes \\
+teCalefaccio & xsd:boolean & Té calefacció \\
+teAireCondicionat & xsd:boolean & Té aire condicionat \\
+orientacioSolar & xsd:string & Mati/Tarda/TotElDia \\
+teVistes & xsd:boolean & Té vistes \\
+tipusVistes & xsd:string & Mar/Muntanya/Ciutat/Cap \\
+tePiscinaComunitaria & xsd:boolean & Té piscina comunitària \\
+tePlacaAparcament & xsd:boolean & Té plaça d'aparcament \\
+numeroPlacesAparcament & xsd:int & Nombre de places \\
+teArmariEncastat & xsd:boolean & Té armari encastat \\
+teTraster & xsd:boolean & Té traster \\
+consumEnergetic & xsd:string & A/B/C/D/E/F/G \\
+esExterior & xsd:boolean & És exterior \\
+nivellSoroll & xsd:string & Baix/Mitja/Alt \\
+estatConservacio & xsd:string & Nou/BonEstat/Reformar \\
+\hline
+\caption{Propietats de dades d'Habitatge}
+\end{longtable}
+
+\subsection{Sol·licitant}
+
+\begin{longtable}{|l|l|p{6cm}|}
+\hline
+\textbf{Propietat} & \textbf{Tipus} & \textbf{Descripció} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Propietat} & \textbf{Tipus} & \textbf{Descripció} \\
+\hline
+\endhead
+nom & xsd:string & Nom identificador \\
+edat & xsd:int & Edat en anys \\
+numeroPersones & xsd:int & Nombre de persones que conviuran \\
+pressupostMaxim & xsd:float & Pressupost màxim en EUR/mes \\
+pressupostMinim & xsd:float & Pressupost mínim en EUR/mes \\
+margeEstricte & xsd:boolean & Pressupost és estricte \\
+numeroFills & xsd:int & Nombre de fills \\
+edatsFills & xsd:string & Llista d'edats dels fills \\
+teAvis & xsd:boolean & Conviu amb avis \\
+numeroAvis & xsd:int & Nombre d'avis \\
+teVehicle & xsd:boolean & Té vehicle propi \\
+teMascotes & xsd:boolean & Té mascotes \\
+numeroMascotes & xsd:int & Nombre de mascotes \\
+tipusMascota & xsd:string & Tipus de mascota \\
+prefereixTransportPublic & xsd:boolean & Prefereix transport públic \\
+necessitaAccessibilitat & xsd:boolean & Necessita accessibilitat \\
+treballaACiutat & xsd:boolean & Treballa a la ciutat \\
+estudiaACiutat & xsd:boolean & Estudia a la ciutat \\
+\hline
+\caption{Propietats de dades de Sol·licitant}
+\end{longtable}
+
+\subsection{Oferta}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{Propietat} & \textbf{Tipus} & \textbf{Descripció} \\
+\hline
+preuMensual & xsd:float & Preu mensual en EUR \\
+disponible & xsd:boolean & Està disponible \\
+dataPublicacio & xsd:string & Data de publicació \\
+grauRecomanacio & xsd:string & Calculat pel sistema \\
+motiusRecomanacio & xsd:string & Motius de recomanació \\
+\hline
+\end{tabular}
+\caption{Propietats de dades d'Oferta}
+\end{table}
+
+\subsection{Localitzacio}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{Propietat} & \textbf{Tipus} & \textbf{Descripció} \\
+\hline
+adreca & xsd:string & Adreça completa \\
+districte & xsd:string & Districte \\
+barri & xsd:string & Barri \\
+codiPostal & xsd:string & Codi postal \\
+coordenadaX & xsd:float & Coordenada X (simplificada) \\
+coordenadaY & xsd:float & Coordenada Y (simplificada) \\
+\hline
+\end{tabular}
+\caption{Propietats de dades de Localitzacio}
+\end{table}
+
+\subsection{Servei}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{Propietat} & \textbf{Tipus} & \textbf{Descripció} \\
+\hline
+nomServei & xsd:string & Nom del servei \\
+horariObertura & xsd:string & Horari d'obertura \\
+horariTancament & xsd:string & Horari de tancament \\
+\hline
+\end{tabular}
+\caption{Propietats de dades de Servei}
+\end{table}
+
+\section{Restriccions i Axiomes}
+
+\subsection{Disjunció de Classes}
+
+Les subclasses d'Habitatge són mútuament excloents:
+
+\begin{verbatim}
+AllDisjointClasses(Pis, Atic, Duplex, Estudi, HabitatgeUnifamiliar)
+\end{verbatim}
+
+Això assegura que un habitatge no pot ser simultàniament un Pis i un Àtic.
+
+\subsection{Propietats Funcionals}
+
+\textbf{teLocalitzacio} és funcional:
+\begin{itemize}
+    \item Un habitatge o servei té exactament una localització
+\end{itemize}
+
+\textbf{teHabitatge} és funcional:
+\begin{itemize}
+    \item Una oferta fa referència a exactament un habitatge
+\end{itemize}
+
+\section{Raonament Automàtic}
+
+L'ontologia permet raonament automàtic sobre:
+
+\begin{enumerate}
+    \item \textbf{Jerarquies}: Un GrupEstudiants és un Solicitant
+    \item \textbf{Proximitat}: Si X moltAPropDe Y, llavors X aPropDe Y
+    \item \textbf{Consistència}: Detectar contradicions (ex: plantaPis=-1)
+\end{enumerate}
+
+\section{Mètriques de l'Ontologia}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Concepte} & \textbf{Quantitat} \\
+\hline
+Classes & 51 \\
+Propietats d'Objecte & 8 \\
+Propietats de Dades & 44 \\
+Nivells de jerarquia (màxim) & 4 \\
+\hline
+Instàncies (instancies.clp) & 20 \\
+Instàncies (extended) & 100+ \\
+\hline
+\end{tabular}
+\caption{Mètriques de l'ontologia}
+\end{table}
+
+\section{Documentació Generada amb Protégé}
+
+La documentació completa en format HTML generada automàticament amb Protégé està disponible com a fitxer adjunt: \texttt{ontologia\_doc.html}
+
+Aquesta documentació inclou:
+\begin{itemize}
+    \item Vista gràfica de la jerarquia
+    \item Taula de totes les classes amb descripció
+    \item Taula de totes les propietats
+    \item Restriccions i axiomes
+    \item Estadístiques
+\end{itemize}

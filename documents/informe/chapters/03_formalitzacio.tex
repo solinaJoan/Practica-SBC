@@ -1,0 +1,563 @@
+% 03_formalitzacio.tex
+% Capítol 3: Formalització
+
+\section{Construcció de l'Ontologia}
+
+\subsection{Procés de Construcció}
+
+L'ontologia s'ha desenvolupat seguint una metodologia incremental:
+
+\begin{enumerate}
+    \item \textbf{Identificació de conceptes principals}: A partir de l'anàlisi del problema
+    \item \textbf{Establiment de jerarquies}: Especialització de conceptes generals
+    \item \textbf{Definició d'atributs}: Per cada classe, identificar propietats rellevants
+    \item \textbf{Definició de relacions}: Connexions entre conceptes
+    \item \textbf{Validació}: Comprovar cobertura de casos d'ús
+    \item \textbf{Iteració}: Refinament basat en proves
+\end{enumerate}
+
+\subsection{Jerarquia de Classes}
+
+\subsubsection{Jerarquia d'Habitatge}
+
+\begin{verbatim}
+Habitatge (classe abstracta)
+├── Pis
+├── Àtic
+├── Dúplex
+├── Estudi
+└── HabitatgeUnifamiliar
+\end{verbatim}
+
+\textbf{Justificació}: Cada tipus té característiques específiques (àtics tenen terrassa gran, estudis són petits, etc.) que afecten l'adequació.
+
+\subsubsection{Jerarquia de Sol·licitant}
+
+\begin{verbatim}
+Sol·licitant (classe abstracta)
+├── Individu
+├── Parella
+│   ├── ParellaSenseFills
+│   ├── ParellaAmbFills
+│   └── ParellaFutursFills
+├── Família
+│   ├── FamiliaBiparental
+│   └── FamiliaMonoparental
+├── GrupEstudiants
+└── PersonaGran
+\end{verbatim}
+
+\textbf{Justificació}: Les necessitats varien significativament segons la tipologia familiar i demogràfica.
+
+\subsubsection{Jerarquia de Servei}
+
+\begin{verbatim}
+Servei (classe abstracta)
+├── TransportPublic
+│   ├── EstacioMetro
+│   ├── ParadaBus
+│   └── EstacioTren
+├── ServeiEducatiu
+│   ├── LlarInfants
+│   ├── Escola
+│   ├── Institut
+│   └── Universitat
+├── ServeiSalut
+│   ├── Hospital
+│   ├── CentreSalut
+│   └── Farmàcia
+├── ServeiComercial
+│   ├── Supermercat
+│   ├── Hipermercat
+│   ├── CentreComercial
+│   └── Mercat
+├── ZonaVerda
+│   ├── Parc
+│   ├── Jardí
+│   └── ZonaEsportiva
+├── ServeiOci
+│   ├── Gimnàs
+│   ├── Biblioteca
+│   ├── CentreCultural
+│   └── ZonaNocturna
+└── ServeiMolest
+    ├── Discoteca
+    ├── Estadi
+    ├── Aeroport
+    ├── ZonaIndustrial
+    └── Autopista
+\end{verbatim}
+
+\textbf{Justificació}: La categorització permet regles específiques (ex: famílies necessiten escoles, no estadis).
+
+\subsection{Atributs Principals per Classe}
+
+\subsubsection{Classe Habitatge}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{Atribut} & \textbf{Tipus} & \textbf{Justificació} \\
+\hline
+superficieHabitable & Float & Determina capacitat per nombre de persones \\
+numeroDormitoris & Integer & Essencial per famílies \\
+numeroDormitorisDobles & Integer & Afecta capacitat real \\
+numeroDormitorisSimples & Integer & Afecta capacitat real \\
+numeroBanys & Integer & Comoditat, necessari per famílies grans \\
+plantaPis & Integer & Accessibilitat per persones grans \\
+teAscensor & Boolean & Crític per accessibilitat \\
+permetMascotes & Boolean & Restricció obligatòria \\
+moblat & Boolean & Necessari per estudiants \\
+teTerrassaOBalco & Boolean & Plus valorat \\
+superficieTerrassa & Float & Diferencia qualitat \\
+orientacioSolar & String & Afecta qualitat de vida \\
+teVistes & Boolean & Plus valorat \\
+tipusVistes & String & Mar, muntanya, ciutat \\
+teCalefaccio & Boolean & Comoditat \\
+teAireCondicionat & Boolean & Comoditat \\
+tePlacaAparcament & Boolean & Necessari si tens vehicle \\
+consumEnergetic & String & A, B, C, D, E (eficiència) \\
+nivellSoroll & String & Baix, Mitjà, Alt \\
+estatConservacio & String & Nou, BonEstat, Reformar \\
+\hline
+\end{tabular}
+\caption{Atributs de la classe Habitatge}
+\end{table}
+
+\subsubsection{Classe Sol·licitant}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{Atribut} & \textbf{Tipus} & \textbf{Justificació} \\
+\hline
+nom & String & Identificació \\
+edat & Integer & Determina categoria (jove, gran) \\
+numeroPersones & Integer & Espai necessari \\
+pressupostMaxim & Float & Restricció crítica \\
+pressupostMinim & Float & Detecta ofertes sospitoses \\
+margeEstricte & Boolean & Flexibilitat en preu \\
+numeroFills & Integer & Necessitats específiques \\
+edatsFills & List<Integer> & Afecta serveis necessaris \\
+teAvis & Boolean & Accessibilitat \\
+teVehicle & Boolean & Parking rellevant \\
+teMascotes & Boolean & Restricció obligatòria \\
+numeroMascotes & Integer & - \\
+tipusMascota & String & - \\
+prefereixTransportPublic & Boolean & Proximitat transport \\
+necessitaAccessibilitat & Boolean & Ascensor obligatori \\
+treballaACiutat & Boolean & Transport necessari \\
+estudiaACiutat & Boolean & Transport necessari \\
+\hline
+\end{tabular}
+\caption{Atributs de la classe Sol·licitant}
+\end{table}
+
+\subsubsection{Classe Oferta}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|p{6cm}|}
+\hline
+\textbf{Atribut} & \textbf{Tipus} & \textbf{Justificació} \\
+\hline
+preuMensual & Float & Restricció principal \\
+disponible & Boolean & Filtrar no disponibles \\
+dataPublicacio & String & Informació addicional \\
+grauRecomanacio & String & Calculat pel sistema \\
+motiusRecomanacio & List<String> & Explicabilitat \\
+\hline
+\end{tabular}
+\caption{Atributs de la classe Oferta}
+\end{table}
+
+\subsection{Relacions (Object Properties)}
+
+\subsubsection{Relació teLocalitzacio}
+
+\begin{itemize}
+    \item \textbf{Domini}: Habitatge $\cup$ Servei
+    \item \textbf{Rang}: Localitzacio
+    \item \textbf{Cardinalitat}: Funcional (1:1)
+    \item \textbf{Justificació}: Tot habitatge i servei té exactament una ubicació
+\end{itemize}
+
+\subsubsection{Relació aPropDe}
+
+\begin{itemize}
+    \item \textbf{Domini}: Localitzacio
+    \item \textbf{Rang}: Servei
+    \item \textbf{Subpropietats}:
+    \begin{itemize}
+        \item moltAPropDe: < 500m
+        \item aDistanciaMitjana: 500-1000m
+        \item llunyde: > 1000m
+    \end{itemize}
+    \item \textbf{Justificació}: Permet inferir proximitat a serveis sense calcular sempre
+\end{itemize}
+
+\subsubsection{Relació teHabitatge}
+
+\begin{itemize}
+    \item \textbf{Domini}: Oferta
+    \item \textbf{Rang}: Habitatge
+    \item \textbf{Cardinalitat}: Funcional (1:1)
+    \item \textbf{Justificació}: Cada oferta fa referència a un habitatge concret
+\end{itemize}
+
+\subsubsection{Relacions de Preferència del Sol·licitant}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|p{4cm}|}
+\hline
+\textbf{Relació} & \textbf{Domini} & \textbf{Rang} & \textbf{Significat} \\
+\hline
+requereixServei & Sol·licitant & Servei & Necessita obligatòriament \\
+prefereixServei & Sol·licitant & Servei & Millora valoració \\
+evitaServei & Sol·licitant & ServeiMolest & Descarta si massa a prop \\
+\hline
+\end{tabular}
+\caption{Relacions de preferències}
+\end{table}
+
+\subsection{Documentació de l'Ontologia}
+
+L'ontologia s'ha creat amb \textbf{Protégé 5.6} i exportada a:
+\begin{itemize}
+    \item \textbf{OWL/XML} (\texttt{ontologiaSBC.owl}): Format estàndard
+    \item \textbf{Turtle} (\texttt{ontologiaSBC.ttl}): Format llegible
+    \item \textbf{CLIPS} (\texttt{ontologiaSBC.clp}): Mitjançant owl2clips
+\end{itemize}
+
+La jerarquia completa es pot visualitzar a l'Annex B.
+
+\section{Metodologia de Resolució de Problemes}
+
+\subsection{Paradigma Escollit: Forward Chaining amb Fases}
+
+S'utilitza \textbf{encadenament cap endavant (forward chaining)} organitzat en \textbf{tres fases seqüencials}:
+
+\begin{enumerate}
+    \item \textbf{Abstracció}: Inferència de requisits
+    \item \textbf{Resolució}: Avaluació i filtratge
+    \item \textbf{Refinació}: Classificació final
+\end{enumerate}
+
+\subsection{Justificació de la Metodologia}
+
+\subsubsection{Per què Forward Chaining?}
+
+\begin{itemize}
+    \item \textbf{Dades disponibles des del principi}: Tenim tots els sol·licitants i ofertes
+    \item \textbf{Avaluació exhaustiva}: Volem avaluar totes les combinacions
+    \item \textbf{Explicabilitat}: El traç de regles és natural
+    \item \textbf{Eficiència}: CLIPS està optimitzat per FC amb algoritme RETE
+\end{itemize}
+
+\subsubsection{Per què Organització en Fases?}
+
+\begin{itemize}
+    \item \textbf{Separació de responsabilitats}: Cada fase té objectiu clar
+    \item \textbf{Control de flux}: Evita conflictes entre regles de fases diferents
+    \item \textbf{Mantenibilitat}: Facilita afegir/modificar regles
+    \item \textbf{Debugging}: Errors localitzats per fase
+\end{itemize}
+
+Control de fases mitjançant:
+\begin{lstlisting}
+(deftemplate fase-completada
+    (slot nom (type SYMBOL)))
+    
+;; Les regles de cada fase comproven:
+(declare (salience 40))
+(fase-completada (nom abstraccio))
+...
+\end{lstlisting}
+
+\subsection{Templates Auxiliars}
+
+A més de les classes de l'ontologia, s'utilitzen templates CLIPS per raonament:
+
+\subsubsection{proximitat}
+Emmagatzema distància entre habitatge i servei:
+\begin{lstlisting}
+(deftemplate proximitat
+    (slot habitatge (type INSTANCE))
+    (slot servei (type INSTANCE))
+    (slot categoria (type SYMBOL))
+    (slot distancia (type SYMBOL))  ; MoltAProp, DistanciaMitjana, Lluny
+    (slot metres (type FLOAT)))
+\end{lstlisting}
+
+\subsubsection{requisit-inferit}
+Necessitats detectades automàticament:
+\begin{lstlisting}
+(deftemplate requisit-inferit
+    (slot solicitant (type INSTANCE))
+    (slot categoria-servei (type SYMBOL))
+    (slot obligatori (type SYMBOL))  ; si/no
+    (slot motiu (type STRING)))
+\end{lstlisting}
+
+\subsubsection{oferta-descartada}
+Ofertes eliminades amb justificació:
+\begin{lstlisting}
+(deftemplate oferta-descartada
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot motiu (type STRING)))
+\end{lstlisting}
+
+\subsubsection{criteri-no-cumplit}
+Aspectes negatius de ofertes parcials:
+\begin{lstlisting}
+(deftemplate criteri-no-cumplit
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot criteri (type STRING))
+    (slot gravetat (type SYMBOL)))  ; Lleu, Moderat, Greu
+\end{lstlisting}
+
+\subsubsection{punt-positiu}
+Aspectes destacables:
+\begin{lstlisting}
+(deftemplate punt-positiu
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot descripcio (type STRING)))
+\end{lstlisting}
+
+\subsubsection{recomanacio}
+Resultat final:
+\begin{lstlisting}
+(deftemplate recomanacio
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot grau (type SYMBOL))  ; MoltRecomanable, Adequat, Parcialment
+    (slot puntuacio (type INTEGER)))
+\end{lstlisting}
+
+\section{Disseny de Regles}
+
+\subsection{Estratègia de Resolució per Fase}
+
+\subsubsection{FASE 1: Abstracció (Salience 95-100)}
+
+\textbf{Objectiu}: Inferir requisits implícits del perfil
+
+\textbf{Regles exemple}:
+
+\begin{lstlisting}
+(defrule abstraccio-familia-amb-fills
+    "Les families amb fills necessiten escoles i zones verdes"
+    (declare (salience 95))
+    ?sol <- (object (is-a Solicitant) (numeroFills ?fills))
+    (test (> ?fills 0))
+    (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)))
+    =>
+    (assert (requisit-inferit (solicitant ?sol) 
+            (categoria-servei ServeiEducatiu)
+            (obligatori si) 
+            (motiu "Familia amb fills necessita escoles")))
+    (assert (requisit-inferit (solicitant ?sol) 
+            (categoria-servei ZonaVerda)
+            (obligatori no) 
+            (motiu "Familia amb fills prefereix zones verdes"))))
+\end{lstlisting}
+
+\textbf{Altres regles d'aquesta fase}:
+\begin{itemize}
+    \item \texttt{abstraccio-calcular-proximitats}: Calcula distàncies
+    \item \texttt{abstraccio-persona-gran}: Salut + comerç
+    \item \texttt{abstraccio-estudiants}: Transport
+    \item \texttt{abstraccio-prefereix-transport}: Si ho indica explícitament
+\end{itemize}
+
+\subsubsection{FASE 2: Resolució (Salience 30-45)}
+
+\textbf{Objectiu}: Avaluar ofertes, descartar inadequades, detectar pros/contres
+
+\paragraph{Regles de descart (Salience 40-45)}:
+
+\begin{lstlisting}
+(defrule resolucio-descartar-preu-excessiu
+    (declare (salience 40))
+    (fase-completada (nom abstraccio))
+    ?sol <- (object (is-a Solicitant) 
+            (pressupostMaxim ?max) (margeEstricte si))
+    ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
+    (test (> ?preu ?max))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
+            (motiu "Preu supera pressupost maxim (estricte)"))))
+\end{lstlisting}
+
+Altres descarts:
+\begin{itemize}
+    \item No permet mascotes
+    \item No accessible
+    \item Preu sospitós (massa baix)
+    \item Servei moles molt a prop
+    \item Falta requisit obligatori
+    \item Superfície insuficient
+\end{itemize}
+
+\paragraph{Regles de criteris no complerts (Salience 35)}:
+
+Per ofertes que no es descarten però tenen aspectes negatius:
+
+\begin{lstlisting}
+(defrule resolucio-criteri-preu-alt
+    (declare (salience 35))
+    (fase-completada (nom abstraccio))
+    ?sol <- (object (is-a Solicitant) 
+            (pressupostMaxim ?max) (margeEstricte no))
+    ?of <- (object (is-a Oferta) (preuMensual ?preu))
+    (test (and (> ?preu ?max) (<= ?preu (* ?max 1.15))))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (criteri-no-cumplit (solicitant ?sol) (oferta ?of)
+            (criteri "Preu lleugerament superior") 
+            (gravetat Lleu))))
+\end{lstlisting}
+
+\paragraph{Regles de punts positius (Salience 30)}:
+
+\begin{lstlisting}
+(defrule resolucio-punt-bon-preu
+    (declare (salience 30))
+    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max))
+    ?of <- (object (is-a Oferta) (preuMensual ?preu))
+    (test (< ?preu (* ?max 0.8)))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) 
+            (descripcio "Preu molt bo (>20% estalvi)"))))
+\end{lstlisting}
+
+Altres punts positius:
+\begin{itemize}
+    \item Terrassa/balcó
+    \item Molt assolellat
+    \item Alta eficiència energètica
+    \item Exterior i silenciós
+    \item Bones vistes
+    \item Parking (si té vehicle)
+    \item Transport molt a prop
+\end{itemize}
+
+\subsubsection{FASE 3: Refinació (Salience 3-5)}
+
+\textbf{Objectiu}: Classificar ofertes segons punts positius/negatius
+
+\begin{lstlisting}
+(defrule refinacio-molt-recomanable
+    (declare (salience 5))
+    (fase-completada (nom resolucio))
+    ?sol <- (object (is-a Solicitant))
+    ?of <- (object (is-a Oferta))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
+    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d1))
+    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d2&~?d1))
+    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d3&~?d1&~?d2))
+    =>
+    (assert (recomanacio (solicitant ?sol) (oferta ?of) 
+            (grau MoltRecomanable) (puntuacio 100))))
+\end{lstlisting}
+
+Criteris de classificació:
+\begin{itemize}
+    \item \textbf{Molt Recomanable}: 0 negatius, 3+ positius
+    \item \textbf{Adequat}: 0 negatius, <3 positius
+    \item \textbf{Parcialment}: 1-2 negatius
+    \item \textbf{Descartat}: (ja filtrat en fase 2)
+\end{itemize}
+
+\subsection{Control de Salience}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|l|}
+\hline
+\textbf{Fase} & \textbf{Salience} & \textbf{Objectiu} \\
+\hline
+Càlcul proximitats & 100 & Precalcular distàncies \\
+Inferència requisits & 95 & Deduir necessitats \\
+Fi abstracció & 50 & Marcar fase completa \\
+Descart obligatori & 40-45 & Eliminar inadequades \\
+Criteris negatius & 35 & Detectar febleses \\
+Punts positius & 30-32 & Detectar fortaleses \\
+Fi resolució & 10 & Marcar fase completa \\
+Classificació final & 3-5 & Assignar grau \\
+Presentació & -10 a -100 & Mostrar resultats \\
+\hline
+\end{tabular}
+\caption{Estratègia de salience per controlar flux}
+\end{table}
+
+\section{Justificació de Decisions de Disseny}
+
+\subsection{Per què no Backward Chaining?}
+
+\begin{itemize}
+    \item BC és goal-driven: "És adequat l'habitatge X per usuari Y?"
+    \item Nosaltres volem avaluar TOTES les ofertes per TOTS els usuaris
+    \item FC avalua exhaustivament totes les combinacions
+\end{itemize}
+
+\subsection{Per què Templates en lloc de només Objects?}
+
+\begin{itemize}
+    \item \textbf{Objects (COOL)}: Per conceptes del domini (ontologia)
+    \item \textbf{Templates}: Per fets de raonament temporal
+    \begin{itemize}
+        \item Més eficients per pattern matching
+        \item Faciliten acumulació d'evidència
+        \item Simplifiquen regles
+    \end{itemize}
+\end{itemize}
+
+\subsection{Per què Tres Fases?}
+
+Alternatives considerades:
+
+\begin{enumerate}
+    \item \textbf{Una sola fase}: Massa complex, regles interfereixen
+    \item \textbf{Dues fases} (Avaluació + Classificació): No separa inferència
+    \item \textbf{Tres fases} (escollit): Equilibri òptim
+\end{enumerate}
+
+\subsection{Per què Proximitat Pre-calculada?}
+
+\begin{itemize}
+    \item \textbf{Alternativa}: Calcular distància a cada regla
+    \item \textbf{Problema}: Ineficient, codi duplicat
+    \item \textbf{Solució}: Pre-calcular i assertar com a fets
+\end{itemize}
+
+\section{Cobertura de l'Ontologia}
+
+L'ontologia cobreix:
+
+\begin{itemize}
+    \item \textbf{Tipus d'habitatge}: 5 categories principals
+    \item \textbf{Perfils sol·licitant}: 7 tipologies
+    \item \textbf{Serveis}: 6 categories, 20+ subclasses
+    \item \textbf{Atributs}: 40+ propietats rellevants
+    \item \textbf{Regles}: 30+ regles de raonament
+\end{itemize}
+
+Casos no coberts (conscientment fora d'abast):
+\begin{itemize}
+    \item Habitatges comercials (oficines, locals)
+    \item Lloguers temporals (vacances)
+    \item Co-housing o lloguers compartits parcials
+\end{itemize}
