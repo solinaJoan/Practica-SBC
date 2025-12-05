@@ -98,12 +98,6 @@
     (printout t crlf "--- SITUACIÓ FAMILIAR ---" crlf)
     (bind ?num-persones (pregunta-numero "Nombre de persones que viuran a l'habitatge" 1 10))
 
-    (bind ?num-gent-gran 0)
-    (if (< 0 (- ?num-persones ?num-fills)) then
-        (bind ?num-gent-gran (pregunta-numero "Dels quals avis o gent gran" 0 (- ?num-persones ?num-fills)))
-    )
-    (bind ?te-avis (> ?num-gent-gran 0))
-
     (bind ?num-fills 0)
     (if (> ?num-persones 1) then 
         (bind ?num-fills (pregunta-numero "Dels quals fills" 0 (- ?num-persones 1)))
@@ -117,6 +111,12 @@
         ) else 
         (bind ?futur-fills (pregunta-si-no "Tindràs/eu fills properament?"))
     )
+
+    (bind ?num-gent-gran 0)
+    (if (< 0 (- ?num-persones ?num-fills)) then
+        (bind ?num-gent-gran (pregunta-numero "Conviureu amb avis o gent gran" 0 (- ?num-persones ?num-fills)))
+    )
+    (bind ?te-avis (> ?num-gent-gran 0))
     
     ;;; Pressupost
     (printout t crlf "--- PRESSUPOST ---" crlf)
