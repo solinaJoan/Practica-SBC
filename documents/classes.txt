@@ -37,10 +37,12 @@ SOLICITANT
     └── Persona Gran
 
 SERVEI
-    ├── Transport Públic
+    ├── Transport
     │     ├── Estació Metro
+    │     ├── Aeroport
     │     ├── Parada Bus
-    │     └── Estació Tren
+    │     ├── Estació Tren
+    │     └── Autopista
     ├── Servei Salut
     │     ├── Centre Salut
     │     ├── Hospital
@@ -59,16 +61,15 @@ SERVEI
     │     ├── Parc
     │     ├── Jardí
     │     └── Zona Esportiva
-    ├── Servei Oci
-    │     ├── Zona Nocturna
-    │     ├── Cinema
-    │     ├── Teatre
-    │     ├── Gimnàs
-    │     ├── Restaurant
-    │     └── Bar
-    └── Servei Molest
-          ├── Estadi
-          ├── Aeroport
-          ├── Zona Industrial
+    └── Servei Oci
           ├── Discoteca
-          └── Autopista
+          ├── Cinema
+          ├── Teatre
+          ├── Gimnàs
+          ├── Restaurant
+          ├── Estadi
+          └── Bar
+
+
+
+

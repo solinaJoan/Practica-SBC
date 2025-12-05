@@ -74,14 +74,15 @@
     (bind ?num-fills 0)
     (if (> ?num-persones 1) then 
         (bind ?num-fills (pregunta-numero "Dels quals fills" 0 (- ?num-persones 1)))
-    )
+    ) 
 
     (bind ?edats-fills (create$))
     (if (> ?num-fills 0) then
         (loop-for-count (?i 1 ?num-fills)
             (bind ?edat-fill (pregunta-numero (str-cat "Edat del fill " ?i) 0 25))
             (bind ?edats-fills (create$ ?edats-fills ?edat-fill))
-        )
+        ) else 
+        (bind ?futur-fills (pregunta-si-no "Tindràs/eu fills properament?"))
     )
 
     (bind ?num-gent-gran 0)
@@ -89,7 +90,7 @@
         (bind ?num-gent-gran (pregunta-numero "Dels quals avis o gent gran" 0 (- ?num-persones ?num-fills)))
     )
     (bind ?te-avis (> ?num-gent-gran 0))
-
+    
     ;;; Pressupost
     (printout t crlf "--- PRESSUPOST ---" crlf)
     (bind ?pres-max (pregunta-numero "Pressupost màxim mensual (EUR)" 0 100000))
@@ -118,7 +119,7 @@
         (bind ?num-mascotes (pregunta-numero "Quantes mascotes tens?" 1 5))
     )
 
-    ;;; Altres, serveis molests i 
+    ;;; Falta afegir serveis molests
 
     ;;; Crear una instancia amb nom únic 
     (bind ?nom-inst (sym-cat sol- (gensym*)))
