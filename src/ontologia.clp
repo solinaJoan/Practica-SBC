@@ -11,10 +11,10 @@
     (multislot evitaServei
         (type INSTANCE)
         (create-accessor read-write))
-    (multislot llocEstudi
+    (slot llocEstudi
         (type INSTANCE)
         (create-accessor read-write))
-    (multislot llocTreball
+    (slot llocTreball
         (type INSTANCE)
         (create-accessor read-write))
     (multislot prefereixServei
@@ -23,59 +23,59 @@
     (multislot requereixServei
         (type INSTANCE)
         (create-accessor read-write))
-    (multislot edat
+    (slot edat
         (type INTEGER)
         (create-accessor read-write))
-    ;;; Llista d'edats (multislot en CLIPS)
+    ;;; Llista d'edats (slot en CLIPS)
     (multislot edatsFills
         (type STRING)
         (create-accessor read-write))
-    (multislot estudiaACiutat
+    (slot estudiaACiutat
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot margeEstricte
+    (slot margeEstricte
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot necessitaAccessibilitat
+    (slot necessitaAccessibilitat
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot nom
+    (slot nom
         (type STRING)
         (create-accessor read-write))
-    (multislot numeroAvis
+    (slot numeroAvis
         (type INTEGER)
         (create-accessor read-write))
-    (multislot numeroFills
+    (slot numeroFills
         (type INTEGER)
         (create-accessor read-write))
-    (multislot numeroMascotes
+    (slot numeroMascotes
         (type INTEGER)
         (create-accessor read-write))
-    (multislot numeroPersones
+    (slot numeroPersones
         (type INTEGER)
         (create-accessor read-write))
-    (multislot prefereixTransportPublic
+    (slot prefereixTransportPublic
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot pressupostMaxim
+    (slot pressupostMaxim
         (type FLOAT)
         (create-accessor read-write))
-    (multislot pressupostMinim
+    (slot pressupostMinim
         (type FLOAT)
         (create-accessor read-write))
-    (multislot teAvis
+    (slot teAvis
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot teMascotes
+    (slot teMascotes
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot teVehicle
+    (slot teVehicle
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot tipusMascota
+    (slot tipusMascota
         (type STRING)
         (create-accessor read-write))
-    (multislot treballaACiutat
+    (slot treballaACiutat
         (type SYMBOL)
         (create-accessor read-write))
 )
@@ -144,13 +144,13 @@
     (is-a USER)
     (role concrete)
     (pattern-match reactive)
-    (multislot horariObertura
+    (slot horariObertura
         (type STRING)
         (create-accessor read-write))
-    (multislot horariTancament
+    (slot horariTancament
         (type STRING)
         (create-accessor read-write))
-    (multislot nomServei
+    (slot nomServei
         (type STRING)
         (create-accessor read-write))
     (slot teLocalitzacio
@@ -354,85 +354,85 @@
     (is-a USER)
     (role concrete)
     (pattern-match reactive)
-    (multislot ambElectrodomestics
+    (slot ambElectrodomestics
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot anyConstruccio
+    (slot anyConstruccio
         (type INTEGER)
         (create-accessor read-write))
-    (multislot consumEnergetic
+    (slot consumEnergetic
         (type STRING)
         (create-accessor read-write))
-    (multislot esExterior
+    (slot esExterior
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot estatConservacio
+    (slot estatConservacio
         (type STRING)
         (create-accessor read-write))
-    (multislot moblat
+    (slot moblat
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot nivellSoroll
+    (slot nivellSoroll
         (type STRING)
         (create-accessor read-write))
-    (multislot numeroBanys
+    (slot numeroBanys
         (type INTEGER)
         (create-accessor read-write))
-    (multislot numeroDormitoris
+    (slot numeroDormitoris
         (type INTEGER)
         (create-accessor read-write))
-    (multislot numeroDormitorisDobles
+    (slot numeroDormitorisDobles
         (type INTEGER)
         (create-accessor read-write))
-    (multislot numeroDormitorisSimples
+    (slot numeroDormitorisSimples
         (type INTEGER)
         (create-accessor read-write))
-    (multislot numeroPlacesAparcament
+    (slot numeroPlacesAparcament
         (type INTEGER)
         (create-accessor read-write))
-    (multislot orientacioSolar
+    (slot orientacioSolar
         (type STRING)
         (create-accessor read-write))
-    (multislot permetMascotes
+    (slot permetMascotes
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot plantaPis
+    (slot plantaPis
         (type INTEGER)
         (create-accessor read-write))
-    (multislot superficieHabitable
+    (slot superficieHabitable
         (type FLOAT)
         (create-accessor read-write))
-    (multislot superficieTerrassa
+    (slot superficieTerrassa
         (type FLOAT)
         (create-accessor read-write))
-    (multislot teAireCondicionat
+    (slot teAireCondicionat
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot teArmariEncastat
+    (slot teArmariEncastat
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot teAscensor
+    (slot teAscensor
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot teCalefaccio
+    (slot teCalefaccio
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot tePiscinaComunitaria
+    (slot tePiscinaComunitaria
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot tePlacaAparcament
+    (slot tePlacaAparcament
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot teTerrassaOBalco
+    (slot teTerrassaOBalco
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot teTraster
+    (slot teTraster
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot teVistes
+    (slot teVistes
         (type SYMBOL)
         (create-accessor read-write))
-    (multislot tipusVistes
+    (slot tipusVistes
         (type STRING)
         (create-accessor read-write))
     (slot teLocalitzacio
@@ -474,25 +474,25 @@
     (is-a USER)
     (role concrete)
     (pattern-match reactive)
-    (multislot aPropDe
+    (slot aPropDe
         (type INSTANCE)
         (create-accessor read-write))
-    (multislot adreca
+    (slot adreca
         (type STRING)
         (create-accessor read-write))
-    (multislot barri
+    (slot barri
         (type STRING)
         (create-accessor read-write))
-    (multislot codiPostal
+    (slot codiPostal
         (type STRING)
         (create-accessor read-write))
-    (multislot coordenadaX
+    (slot coordenadaX
         (type FLOAT)
         (create-accessor read-write))
-    (multislot coordenadaY
+    (slot coordenadaY
         (type FLOAT)
         (create-accessor read-write))
-    (multislot districte
+    (slot districte
         (type STRING)
         (create-accessor read-write))
 )
@@ -504,20 +504,20 @@
     (slot teHabitatge
         (type INSTANCE)
         (create-accessor read-write))
-    (multislot dataPublicacio
+    (slot dataPublicacio
         (type STRING)
         (create-accessor read-write))
-    (multislot disponible
+    (slot disponible
         (type SYMBOL)
         (create-accessor read-write))
     ;;; Valors: Parcialment, Adequat, MoltRecomanable, Cap
-    (multislot grauRecomanacio
+    (slot grauRecomanacio
         (type STRING)
         (create-accessor read-write))
     (multislot motiusRecomanacio
         (type STRING)
         (create-accessor read-write))
-    (multislot preuMensual
+    (slot preuMensual
         (type FLOAT)
         (create-accessor read-write))
 )

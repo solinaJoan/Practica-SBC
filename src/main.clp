@@ -63,18 +63,14 @@
     
     ;;; Dades basiques
     (bind ?nom (pregunta-text "Nom o identificador"))
-    (bind ?edat (pregunta-numero "Edat" 18 120))
-    (bind ?num-persones (pregunta-numero "Nombre de persones que viviran a l'habitatge" 1 10))
-    
-    ;;; Pressupost
-    (printout t crlf "--- PRESSUPOST ---" crlf)
-    (bind ?pres-max (pregunta-numero "Pressupost maxim mensual (EUR)" 0 10000))
-    (bind ?pres-min (pregunta-numero "Pressupost minim mensual (EUR)" 0 ?pres-max))
-    (bind ?marge-estricte (pregunta-si-no "El pressupost es estricte? (si = no puc gastar mes)"))
-    
-    ;;; Situacio familiar
+    (bind ?edat (pregunta-numero "Edat" 18 99))
+
+    ;;; Situació familiar
     (printout t crlf "--- SITUACIÓ FAMILIAR ---" crlf)
-    (bind ?num-fills (pregunta-numero "Nombre de fills" 0 10))
+    (bind ?num-persones (pregunta-numero "Nombre de persones que viuran a l'habitatge" 1 10))
+
+    (bind ?num-fills (pregunta-numero "Dels quals fills" 0 (- ?num-persones 1)))
+
     (bind ?edats-fills (create$))
     (if (> ?num-fills 0) then
         (loop-for-count (?i 1 ?num-fills)
@@ -82,18 +78,29 @@
             (bind ?edats-fills (create$ ?edats-fills ?edat-fill))
         )
     )
+
+    (if (< 0 (- ?num-persones ?num-fills)) then
+        (bind ?num-gent-gran (pregunta-numero "Dels quals avis o gent gran" 0 (- ?num-persones ?num-fills)))
+    )
+
     
     (bind ?te-avis (pregunta-si-no "Conviureu amb avis o gent gran?"))
+
+    ;;; Pressupost
+    (printout t crlf "--- PRESSUPOST ---" crlf)
+    (bind ?pres-max (pregunta-numero "Pressupost màxim mensual (EUR)" 0 100000))
+    (bind ?pres-min (pregunta-numero "Pressupost mínim mensual (EUR)" 0 ?pres-max))
+    (bind ?marge-estricte (pregunta-si-no "Es important que es respecti el pressupost"))
     
     ;;; Mobilitat
     (printout t crlf "--- MOBILITAT ---" crlf)
     (bind ?te-vehicle (pregunta-si-no "Tens vehicle propi?"))
-    (bind ?pref-transport (pregunta-si-no "Prefereixes transport public?"))
+    ; (bind ?pref-transport (pregunta-si-no "Prefereixes transport public?"))
     (bind ?treballa-ciutat (pregunta-si-no "Treballes a la ciutat?"))
     (bind ?estudia-ciutat (pregunta-si-no "Estudies a la ciutat?"))
     
     ;;; Accessibilitat
-    (bind ?nec-access (pregunta-si-no "Necessites accessibilitat (ascensor, planta baixa)?"))
+    (bind ?nec-access (pregunta-si-no "L'habitatge ha de ser accessible (ascensor, planta baixa...)?"))
     
     ;;; Mascotes
     (printout t crlf "--- MASCOTES ---" crlf)
