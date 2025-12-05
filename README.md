@@ -20,8 +20,9 @@ El sistema està dividit en els següents fitxers CLIPS:
 Per executar el sistema expert i veure les recomanacions generades, segueix els següents passos:
 
 
-1.  **Obrir CLIPS:** Inicia la consola de CLIPS.
-2.  **Carregar el sistema i executar el procés:** Escriu l'ordre per carregar i executar el fitxer principal:
+1.  Dirigir-se al directori `/src`.
+2.  **Obrir CLIPS:** Inicia la consola de CLIPS.
+3.  **Carregar el sistema i executar el procés:** Escriu l'ordre per carregar i executar el fitxer principal:
     ```clips
     (batch "run.clp")
     ``` 
