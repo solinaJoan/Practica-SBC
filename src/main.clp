@@ -48,6 +48,7 @@
     (nth$ ?resp ?opcions)
 )
 
+
 ;;; ============================================================
 ;;; CREACIÓ DEL PERFIL DEL SOL·LICITANT
 ;;; ============================================================
@@ -62,6 +63,7 @@
     (printout t crlf)
     
     ;;; Dades basiques
+    (printout t crlf "--- IDENTIFICACIÓ ---" crlf)
     (bind ?nom (pregunta-text "Nom o identificador"))
     (bind ?edat (pregunta-numero "Edat" 18 99))
 
@@ -69,7 +71,10 @@
     (printout t crlf "--- SITUACIÓ FAMILIAR ---" crlf)
     (bind ?num-persones (pregunta-numero "Nombre de persones que viuran a l'habitatge" 1 10))
 
-    (bind ?num-fills (pregunta-numero "Dels quals fills" 0 (- ?num-persones 1)))
+    (bind ?num-fills 0)
+    (if (> ?num-persones 1) then 
+        (bind ?num-fills (pregunta-numero "Dels quals fills" 0 (- ?num-persones 1)))
+    )
 
     (bind ?edats-fills (create$))
     (if (> ?num-fills 0) then
@@ -79,25 +84,26 @@
         )
     )
 
+    (bind ?num-gent-gran 0)
     (if (< 0 (- ?num-persones ?num-fills)) then
         (bind ?num-gent-gran (pregunta-numero "Dels quals avis o gent gran" 0 (- ?num-persones ?num-fills)))
     )
-
-    
-    (bind ?te-avis (pregunta-si-no "Conviureu amb avis o gent gran?"))
+    (bind ?te-avis (> ?num-gent-gran 0))
 
     ;;; Pressupost
     (printout t crlf "--- PRESSUPOST ---" crlf)
     (bind ?pres-max (pregunta-numero "Pressupost màxim mensual (EUR)" 0 100000))
     (bind ?pres-min (pregunta-numero "Pressupost mínim mensual (EUR)" 0 ?pres-max))
-    (bind ?marge-estricte (pregunta-si-no "Es important que es respecti el pressupost"))
+    (bind ?marge-estricte (pregunta-si-no "És important que es respecti el pressupost"))
     
     ;;; Mobilitat
     (printout t crlf "--- MOBILITAT ---" crlf)
-    (bind ?te-vehicle (pregunta-si-no "Tens vehicle propi?"))
-    ; (bind ?pref-transport (pregunta-si-no "Prefereixes transport public?"))
     (bind ?treballa-ciutat (pregunta-si-no "Treballes a la ciutat?"))
     (bind ?estudia-ciutat (pregunta-si-no "Estudies a la ciutat?"))
+    (bind ?te-vehicle (pregunta-si-no "Tens vehicle propi?"))
+
+    ; Potser aquesta preguntaria me l'evitaria i faria que si no te vehicle propi i treballa o estudia a la ciutat es posi automàticament a cert
+    (bind ?pref-transport (pregunta-si-no "Necessites transport públic?"))
     
     ;;; Accessibilitat
     (bind ?nec-access (pregunta-si-no "L'habitatge ha de ser accessible (ascensor, planta baixa...)?"))
@@ -108,143 +114,34 @@
     (bind ?num-mascotes 0)
     (bind ?tipus-mascota "Cap")
     (if (eq ?te-mascotes si) then
-        (bind ?num-mascotes (pregunta-numero "Quantes mascotes tens?" 1 5))
         (bind ?tipus-mascota (pregunta-opcio "Quin tipus de mascota?" Gos Gat Ocell Altre))
+        (bind ?num-mascotes (pregunta-numero "Quantes mascotes tens?" 1 5))
     )
-    
-    ;;; Determinar tipus de solicitant
-    (printout t crlf "--- TIPUS DE SOLICITANT ---" crlf)
-    (bind ?tipus (pregunta-opcio 
-        "Quin tipus de sollicitant ets?"
-        "Individu"
-        "Parella sense fills"
-        "Parella amb plans de tenir fills"
-        "Familia amb fills"
-        "Grup d'estudiants"
-        "Persona gran (>60 anys)"
-    ))
-    
-    ;;; Crear la instancia segons el tipus
+
+    ;;; Altres, serveis molests i 
+
+    ;;; Crear una instancia amb nom únic 
     (bind ?nom-inst (sym-cat sol- (gensym*)))
-    
-    (switch ?tipus
-        (case "Individu" then
-            (make-instance ?nom-inst of Individu
-                (nom ?nom)
-                (edat ?edat)
-                (numeroPersones ?num-persones)
-                (pressupostMaxim ?pres-max)
-                (pressupostMinim ?pres-min)
-                (margeEstricte ?marge-estricte)
-                (numeroFills ?num-fills)
-                (edatsFills ?edats-fills)
-                (teAvis ?te-avis)
-                (teVehicle ?te-vehicle)
-                (prefereixTransportPublic ?pref-transport)
-                (necessitaAccessibilitat ?nec-access)
-                (teMascotes ?te-mascotes)
-                (numeroMascotes ?num-mascotes)
-                (tipusMascota ?tipus-mascota)
-                (treballaACiutat ?treballa-ciutat)
-            )
-        )
-        (case "Parella sense fills" then
-            (make-instance ?nom-inst of ParellaSenseFills
-                (nom ?nom)
-                (edat ?edat)
-                (numeroPersones ?num-persones)
-                (pressupostMaxim ?pres-max)
-                (pressupostMinim ?pres-min)
-                (margeEstricte ?marge-estricte)
-                (numeroFills 0)
-                (teAvis ?te-avis)
-                (teVehicle ?te-vehicle)
-                (prefereixTransportPublic ?pref-transport)
-                (necessitaAccessibilitat ?nec-access)
-                (teMascotes ?te-mascotes)
-                (numeroMascotes ?num-mascotes)
-                (tipusMascota ?tipus-mascota)
-                (treballaACiutat ?treballa-ciutat)
-            )
-        )
-        (case "Parella amb plans de tenir fills" then
-            (make-instance ?nom-inst of ParellaFutursFills
-                (nom ?nom)
-                (edat ?edat)
-                (numeroPersones ?num-persones)
-                (pressupostMaxim ?pres-max)
-                (pressupostMinim ?pres-min)
-                (margeEstricte ?marge-estricte)
-                (numeroFills 0)
-                (teAvis ?te-avis)
-                (teVehicle ?te-vehicle)
-                (prefereixTransportPublic ?pref-transport)
-                (necessitaAccessibilitat ?nec-access)
-                (teMascotes ?te-mascotes)
-                (numeroMascotes ?num-mascotes)
-                (tipusMascota ?tipus-mascota)
-                (treballaACiutat ?treballa-ciutat)
-            )
-        )
-        (case "Familia amb fills" then
-            (make-instance ?nom-inst of FamiliaBiparental
-                (nom ?nom)
-                (edat ?edat)
-                (numeroPersones ?num-persones)
-                (pressupostMaxim ?pres-max)
-                (pressupostMinim ?pres-min)
-                (margeEstricte ?marge-estricte)
-                (numeroFills ?num-fills)
-                (edatsFills ?edats-fills)
-                (teAvis ?te-avis)
-                (teVehicle ?te-vehicle)
-                (prefereixTransportPublic ?pref-transport)
-                (necessitaAccessibilitat ?nec-access)
-                (teMascotes ?te-mascotes)
-                (numeroMascotes ?num-mascotes)
-                (tipusMascota ?tipus-mascota)
-                (treballaACiutat ?treballa-ciutat)
-            )
-        )
-        (case "Grup d'estudiants" then
-            (make-instance ?nom-inst of GrupEstudiants
-                (nom ?nom)
-                (edat ?edat)
-                (numeroPersones ?num-persones)
-                (pressupostMaxim ?pres-max)
-                (pressupostMinim ?pres-min)
-                (margeEstricte ?marge-estricte)
-                (numeroFills 0)
-                (teAvis no)
-                (teVehicle ?te-vehicle)
-                (prefereixTransportPublic ?pref-transport)
-                (necessitaAccessibilitat ?nec-access)
-                (teMascotes ?te-mascotes)
-                (numeroMascotes ?num-mascotes)
-                (tipusMascota ?tipus-mascota)
-                (treballaACiutat no)
-                (estudiaACiutat ?estudia-ciutat)
-            )
-        )
-        (case "Persona gran (>60 anys)" then
-            (make-instance ?nom-inst of PersonaGran
-                (nom ?nom)
-                (edat ?edat)
-                ;(numeroPersones ?num-persones)
-                (pressupostMaxim ?pres-max)
-                (pressupostMinim ?pres-min)
-                (margeEstricte ?marge-estricte)
-                (numeroFills 0)
-                (teAvis no)
-                (teVehicle ?te-vehicle)
-                (prefereixTransportPublic ?pref-transport)
-                (necessitaAccessibilitat ?nec-access)
-                (teMascotes ?te-mascotes)
-                (numeroMascotes ?num-mascotes)
-                (tipusMascota ?tipus-mascota)
-                (treballaACiutat no)
-            )
-        )
+
+    ; En ves de preguntar al usuari quin tipus és, fer comprovacions per determinar-lo nosaltres.  No sé si comprovar-ho aquí al main o crear un solicitant i més tard dir que es de la classe X més concreta
+
+    (make-instance ?nom-inst of Solicitant
+        (nom ?nom)
+        (edat ?edat)
+        (numeroPersones ?num-persones)
+        (pressupostMaxim ?pres-max)
+        (pressupostMinim ?pres-min)
+        (margeEstricte ?marge-estricte)
+        (numeroFills ?num-fills)
+        (edatsFills ?edats-fills)
+        ; (teAvis ?te-avis)
+        (teVehicle ?te-vehicle)
+        ; (prefereixTransportPublic ?pref-transport)
+        (necessitaAccessibilitat ?nec-access)
+        (teMascotes ?te-mascotes)
+        (numeroMascotes ?num-mascotes)
+        (tipusMascota ?tipus-mascota)
+        (treballaACiutat ?treballa-ciutat)
     )
     
     (printout t crlf)
