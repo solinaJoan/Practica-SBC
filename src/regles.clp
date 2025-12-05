@@ -130,7 +130,7 @@
 (defrule abstraccio-requereix-transport
     "Si necessita transport public, el necessita a prop"
     (declare (salience 95))
-    ?sol <- (object (is-a Solicitant) (requereixTransporPublic si))
+    ?sol <- (object (is-a Solicitant) (requereixTransportPublic si))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)
@@ -176,13 +176,13 @@
 
 ;;; --- REGLES DE DESCART ---
 
-(defrule resolucio-descartar-preu-excessiu
-    "Descartar si preu supera maxim amb marge estricte"
+(defrule resolucio-descartar-preu-marge-estricte
+    "Descartar si preu supera màxim o mínim amb marge estricte"
     (declare (salience 40))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max) (margeEstricte si))
+    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max) (pressupostMinim ?min) (margeEstricte si))
     ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
-    (test (> ?preu ?max))
+    (test (or (> ?preu ?max) (< ?preu ?min)))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
@@ -191,13 +191,13 @@
               " - Preu " ?preu " > " ?max " EUR" crlf)
 )
 
-(defrule resolucio-descartar-preu-molt-alt
+(defrule resolucio-descartar-preu-marge-flexible
     "Descartar si preu supera maxim mes del 15% (marge flexible)"
     (declare (salience 40))
     (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max) (margeEstricte no))
+    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max) (pressupostMinim ?min) (margeEstricte no))
     ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
-    (test (> ?preu (* ?max 1.15)))
+    (test (or (> ?preu (* ?max 1.15)) (< ?preu (* ?min 0.85))))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
@@ -207,7 +207,7 @@
 )
 
 (defrule resolucio-descartar-no-mascotes
-    "Descartar si no permet mascotes i el solicitant en te"
+    "Descartar si no permet mascotes i el solicitant en té"
     (declare (salience 40))
     (fase-completada (nom abstraccio))
     ?sol <- (object (is-a Solicitant) (teMascotes si))
@@ -235,22 +235,6 @@
             (motiu "No accessible: sense ascensor i planta alta")))
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
               " - No accessible" crlf)
-)
-
-(defrule resolucio-descartar-preu-sospitos
-    "Descartar si preu es sospitosament baix"
-    (declare (salience 40))
-    (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Solicitant) (pressupostMinim ?min))
-    (test (> ?min 0))
-    ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
-    (test (< ?preu ?min))
-    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    =>
-    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
-            (motiu "Preu sospitosament baix")))
-    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
-              " - Preu sospitos" crlf)
 )
 
 (defrule resolucio-descartar-servei-evitat
