@@ -105,7 +105,7 @@
 (defrule abstraccio-prefereix-transport
     "Si prefereix transport public, el necessita a prop"
     (declare (salience 95))
-    ?sol <- (object (is-a Solicitant) (prefereixTransportPublic si))
+    ?sol <- (object (is-a Solicitant) (requereixTransporPublic si))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)

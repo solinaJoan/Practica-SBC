@@ -8,27 +8,23 @@
     (is-a USER)
     (role concrete)
     (pattern-match reactive)
+    (slot nom
+        (type STRING)
+        (create-accessor read-write))
+    (slot edat
+        (type INTEGER)
+        (create-accessor read-write))
     (multislot evitaServei
-        (type INSTANCE)
-        (create-accessor read-write))
-    (slot llocEstudi
-        (type INSTANCE)
-        (create-accessor read-write))
-    (slot llocTreball
-        (type INSTANCE)
-        (create-accessor read-write))
-    (multislot prefereixServei
         (type INSTANCE)
         (create-accessor read-write))
     (multislot requereixServei
         (type INSTANCE)
         (create-accessor read-write))
-    (slot edat
+    (multislot edatsFills
         (type INTEGER)
         (create-accessor read-write))
-    ;;; Llista d'edats (slot en CLIPS)
-    (multislot edatsFills
-        (type STRING)
+    (slot treballaACiutat
+        (type SYMBOL)
         (create-accessor read-write))
     (slot estudiaACiutat
         (type SYMBOL)
@@ -38,9 +34,6 @@
         (create-accessor read-write))
     (slot necessitaAccessibilitat
         (type SYMBOL)
-        (create-accessor read-write))
-    (slot nom
-        (type STRING)
         (create-accessor read-write))
     (slot numeroAvis
         (type INTEGER)
@@ -54,7 +47,7 @@
     (slot numeroPersones
         (type INTEGER)
         (create-accessor read-write))
-    (slot prefereixTransportPublic
+    (slot requereixTransportPublic
         (type SYMBOL)
         (create-accessor read-write))
     (slot pressupostMaxim
@@ -74,9 +67,6 @@
         (create-accessor read-write))
     (slot tipusMascota
         (type STRING)
-        (create-accessor read-write))
-    (slot treballaACiutat
-        (type SYMBOL)
         (create-accessor read-write))
 )
 

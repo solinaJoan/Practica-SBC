@@ -131,7 +131,7 @@
     (bind ?te-vehicle (pregunta-si-no "Tens vehicle propi?"))
 
     ; Potser aquesta preguntaria me l'evitaria i faria que si no te vehicle propi i treballa o estudia a la ciutat es posi automàticament a cert
-    (bind ?pref-transport (pregunta-si-no "Necessites transport públic?"))
+    (bind ?req-transport (pregunta-si-no "Necessites transport públic?"))
     
     ;;; Accessibilitat
     (bind ?nec-access (pregunta-si-no "L'habitatge ha de ser accessible (ascensor, planta baixa...)?"))
@@ -152,8 +152,15 @@
         "Consideres algun d'aquests serveis molests?"
         Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
     )
+    (printout t crlf $?serveis-molestos crlf)
 
-    ; (printout t crlf $?serveis-molestos crlf)
+    (bind $?prefereix-servei
+        (pregunta-multiopcio
+        "Consideres algun d'aquests serveis imprescindibles?"
+        Estació Metro
+        Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
+    )
+    (printout t crlf $?prefereix-servei crlf)
 
     ;;; Crear una instancia amb nom únic 
     (bind ?nom-inst (sym-cat sol- (gensym*)))
@@ -169,9 +176,9 @@
         (margeEstricte ?marge-estricte)
         (numeroFills ?num-fills)
         (edatsFills ?edats-fills)
-        ; (teAvis ?te-avis)
+        (teAvis ?te-avis)
         (teVehicle ?te-vehicle)
-        ; (prefereixTransportPublic ?pref-transport)
+        (requereixTransporPublic ?req-transport)
         (necessitaAccessibilitat ?nec-access)
         (teMascotes ?te-mascotes)
         (numeroMascotes ?num-mascotes)
@@ -225,7 +232,7 @@
         (printout t "Usant perfils predefinits de les instàncies..." crlf)
         (printout t "Iniciant cerca d'habitatges..." crlf)
         (printout t crlf)
-        (load instancies_solicitants_senzill.clp)
+        (load instancies_solicitants.clp)
         (reset)
         (run)
 

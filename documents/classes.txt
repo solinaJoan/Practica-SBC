@@ -34,7 +34,7 @@ SOLICITANT
     │     ├── Família Monoparental
     │     └── Família Biparental
     ├── Grup Estudiants
-    └── Persona Gran
+    └── Persona gran
 
 SERVEI
     ├── Transport
