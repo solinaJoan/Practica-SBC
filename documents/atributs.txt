@@ -61,26 +61,26 @@ On està ubicat l'habitatge o servei.
 
 SOL·LICITANT
 Qui busca habitatge i les seves necessitats.
-| Atribut                  | Tipus             | Significat                                          |
-| ------------------------ | ----------------- | --------------------------------------------------- |
-| nom                      | string            | Nom del sol·licitant                                |
-| edat                     | int               | Edat del sol·licitant                               |
-| pressupostMaxim          | float             | Màxim que pot pagar                                 |
-| pressupostMinim          | float             | Mínim acceptable (desconfiança si és massa barat)   |
-| margeEstricte            | boolean           | Si el pressupost màxim és negociable o no           |
-| numeroPersones           | int               | Quantes persones viuran a l’habitatge               |
-| numeroFills              | int               | Nombre de fills                                     |
-| edatsFills               | int (multi)       | Edats dels fills (ex: `3 7 12`)                     |
-| teAvis                   | boolean           | Si conviu amb avis                                  |
-| numeroAvis               | int               | Nombre d’avis                                       |
-| teVehicle                | boolean           | Si disposa de vehicle propi                         |
-| treballaACiutat          | boolean           | Si treballa a la ciutat                             |
-| estudiaACiutat           | boolean           | Si estudia a la ciutat                              |
-| requereixTransportPublic | boolean           | Si prefereix utilitzar el transport públic          |
-| necessitaAccessibilitat  | boolean           | Si necessita accessibilitat                         |
-| teMascotes               | boolean           | Si té animals de companyia                          |
-| numeroMascotes           | int               | Nombre de mascotes                                  |
-| tipusMascota             | string            | Tipus de mascota                                    |
-| evitaServei              | instance (multi)  | Serveis que vol evitar                              |
-| requereixServei          | instance (multi)  | Serveis que necessita                               |
+| Atribut                  | Tipus             | Significat                                   |
+| ------------------------ | ----------------- | -------------------------------------------- |
+| nom                      | string            | Nom del sol·licitant                         |
+| edat                     | int               | Edat del sol·licitant                        |
+| pressupostMaxim          | float             | Màxim que pot pagar                          |
+| pressupostMinim          | float             | Mínim acceptable                             |
+| margeEstricte            | boolean           | Si el pressupost màxim és negociable o no    |
+| numeroPersones           | int               | Quantes persones viuran a l’habitatge        |
+| numeroFills              | int               | Nombre de fills                              |
+| numeroAvis               | int               | Nombre d’avis                                |
+| edatsFills               | int (multi)       | Edats dels fills                             |
+| teAvis                   | boolean           | Si conviu amb avis                           |
+| teVehicle                | boolean           | Si disposa de vehicle propi                  |
+| treballaACiutat          | boolean           | Si treballa a la ciutat                      |
+| estudiaACiutat           | boolean           | Si estudia a la ciutat                       |
+| requereixTransportPublic | boolean           | Si prefereix utilitzar el transport públic   |
+| necessitaAccessibilitat  | boolean           | Si necessita accessibilitat                  |
+| teMascotes               | boolean           | Si té animals de companyia                   |
+| numeroMascotes           | int               | Nombre de mascotes                           |
+| tipusMascota             | string            | Tipus de mascota                             |
+| evitaServei              | instance (multi)  | Serveis que vol evitar                       |
+| requereixServei          | instance (multi)  | Serveis que necessita                        |
 

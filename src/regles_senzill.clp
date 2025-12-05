@@ -29,7 +29,7 @@
     (slot motiu (type STRING))
 )
 
-(deftemplate criteri-no-cumplit
+(deftemplate criteri-no-complert
     (slot solicitant (type INSTANCE))
     (slot oferta (type INSTANCE))
     (slot criteri (type STRING))
@@ -105,7 +105,7 @@
 (defrule abstraccio-prefereix-transport
     "Si prefereix transport public, el necessita a prop"
     (declare (salience 95))
-    ?sol <- (object (is-a Solicitant) (requereixTransporPublic si))
+    ?sol <- (object (is-a Solicitant) (requereixTransportPublic si))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)
@@ -258,9 +258,9 @@
     ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
     (test (and (> ?preu ?max) (<= ?preu (* ?max 1.15))))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-complert (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (criteri-no-cumplit (solicitant ?sol) (oferta ?of)
+    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of)
             (criteri "Preu lleugerament superior al pressupost") (gravetat Lleu)))
 )
 
@@ -272,9 +272,9 @@
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ?h <- (object (is-a Habitatge) (name ?hab) (nivellSoroll "Alt"))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of) (criteri "Nivell de soroll alt")))
+    (not (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Nivell de soroll alt")))
     =>
-    (assert (criteri-no-cumplit (solicitant ?sol) (oferta ?of)
+    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of)
             (criteri "Nivell de soroll alt") (gravetat Lleu)))
 )
 
@@ -288,9 +288,9 @@
     ?h <- (object (is-a Habitatge) (name ?hab) (teAscensor no) (plantaPis ?planta))
     (test (> ?planta 1))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of) (criteri "Planta alta sense ascensor")))
+    (not (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Planta alta sense ascensor")))
     =>
-    (assert (criteri-no-cumplit (solicitant ?sol) (oferta ?of)
+    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of)
             (criteri "Planta alta sense ascensor") (gravetat Moderat)))
 )
 
@@ -454,7 +454,7 @@
     ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (disponible si))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-complert (solicitant ?sol) (oferta ?of)))
     (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d1))
     (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d2&~?d1))
     (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?d3&~?d1&~?d2))
@@ -471,7 +471,7 @@
     ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (disponible si))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteri-no-cumplit (solicitant ?sol) (oferta ?of)))
+    (not (criteri-no-complert (solicitant ?sol) (oferta ?of)))
     (not (recomanacio (solicitant ?sol) (oferta ?of)))
     =>
     (assert (recomanacio (solicitant ?sol) (oferta ?of) (grau Adequat) (puntuacio 70)))
@@ -485,7 +485,7 @@
     ?sol <- (object (is-a Solicitant))
     ?of <- (object (is-a Oferta) (disponible si))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (criteri-no-cumplit (solicitant ?sol) (oferta ?of))
+    (criteri-no-complert (solicitant ?sol) (oferta ?of))
     (not (recomanacio (solicitant ?sol) (oferta ?of)))
     =>
     (assert (recomanacio (solicitant ?sol) (oferta ?of) (grau Parcialment) (puntuacio 50)))
@@ -574,7 +574,7 @@
     (declare (salience -22))
     (fase-completada (nom presentacio))
     (recomanacio (solicitant ?sol) (oferta ?of) (grau Parcialment))
-    (criteri-no-cumplit (solicitant ?sol) (oferta ?of) (criteri ?crit) (gravetat ?grav))
+    (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri ?crit) (gravetat ?grav))
     =>
     (printout t "  [-] " ?crit " (" ?grav ")" crlf)
 )

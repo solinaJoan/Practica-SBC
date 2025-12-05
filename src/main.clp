@@ -49,7 +49,7 @@
 )
 
 (deffunction pregunta-multiopcio (?pregunta $?opcions)
-    "Pregunta amb opcions predefinides"
+    "Pregunta amb seleccio multiple segura"
     (printout t ?pregunta crlf)
     (printout t "   0. Cap servei molest" crlf)
     (bind ?i 1)
@@ -57,17 +57,18 @@
         (printout t "   " ?i ". " ?opc crlf)
         (bind ?i (+ ?i 1))
     )
-    
     (printout t crlf "Tria una o més opcions: ")
     (bind $?numeros (explode$ (readline)))
-
-    ;; Cas de cap servei
+    ;; Inicialitzem resposta
     (bind $?resposta (create$))
     (foreach ?n $?numeros
-       (bind ?idx (integer ?n))
-       (if (and (>= ?idx 1) (<= ?idx (length$ ?opcions))) then
-            (bind $?resposta
-            (create$ $?resposta (nth$ ?idx ?opcions)))
+        ;; Només si és un número vàlid
+        (if (numberp ?n) then
+            (bind ?idx (integer ?n))
+            ;; Rang correcte
+            (if (and (>= ?idx 1) (<= ?idx (length$ ?opcions))) then
+                    (bind $?resposta (create$ $?resposta (nth$ ?idx ?opcions)))
+            )
         )
     )
     (bind ?resp ?resposta)
@@ -187,7 +188,7 @@
         (tipusMascota ?tipus-mascota)
         (treballaACiutat ?treballa-ciutat)
     )
-    
+
     (printout t crlf)
     (printout t "============================================================" crlf)
     (printout t "  Perfil creat correctament: " ?nom crlf)
