@@ -137,6 +137,8 @@
     (bind ?req-transport (pregunta-si-no "Necessites transport públic?"))
     
     ;;; Accessibilitat
+    (bind ?nec-reformes (pregunta-si-no "T'interessen cases per reformar"))
+    (bind ?prim-residencia (pregunta-si-no "Es tractaria de la primera residència"))
     (bind ?nec-access (pregunta-si-no "L'habitatge ha de ser accessible (ascensor, planta baixa...)?"))
     
     ;;; Mascotes
@@ -149,21 +151,18 @@
         (bind ?num-mascotes (pregunta-numero "Quantes mascotes tens?" 1 5))
     )
 
-    ;;; Serveis molests
+    (bind $?prefereix-servei
+        (pregunta-multiopcio
+        "Consideres algun d'aquests serveis imprescindibles?" Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
+    )
+    (printout t crlf $?prefereix-servei crlf)
+
     (bind $?serveis-molestos
         (pregunta-multiopcio
-        "Consideres algun d'aquests serveis molests?"
-        Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
+        "Consideres algun d'aquests serveis molests?" Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
     )
     (printout t crlf $?serveis-molestos crlf)
 
-    (bind $?prefereix-servei
-        (pregunta-multiopcio
-        "Consideres algun d'aquests serveis imprescindibles?"
-        Estació Metro
-        Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
-    )
-    (printout t crlf $?prefereix-servei crlf)
 
     ;;; Crear una instancia amb nom únic 
     (bind ?nom-inst (sym-cat sol- (gensym*)))

@@ -53,6 +53,25 @@
     (slot nom (type SYMBOL))
 )
 
+;; Proposta Joan:
+; El de proximitat i aquest, que a recomanacions és una nova classe que ja té grau de recomanacio i puntuacio.
+; Es simplement un template amb cada usuari, i per cada usuari un vector de recomanacions. A les regles, per cada oferta que compleixi les restriccions, pujem 10 punts a l'oferta i restem si no compleix alguna restriccio. 
+
+; Lo dels requisits inferits al final son serveis que podem posar directament al multislot de requereix servei a l'usuari, no cal un deftemplate de requisit inferit.
+
+; Oferta descartada tambe ho podem mantenir amb nomes aquest deftemplate de recomanacions, al motiu o amb una puntuacio super negativa
+
+; Falta documentar la nova classe al fitxer classes.txt, si fem el que estic dient canviar bastant tot el regles (jo ho puc fer pero avui no), i sobretot falta gestionar la creació de l'usuari. Ara mateix es crea al main com a classe solicitant i a les regles fem servir les subclasses. Per mi tenim dos opcions, que en ves de ser via subclasses sigui un slot de categoria, un string, i així  facil d'assignar mes tard de la creacio, a la fase d'abstraccio seria ideal, o l'altra opció es continuar amb susbclasses, pero llavors al main abans de la creacio hauriem de fer una classficacio segons el que han dit i fer la creacio del tipus de solicitant que sigui. 
+
+; Jo faria l'opcio de que sigui una categoria dins els atributs, perque no li veig sentit a fer subclasses sobretot si no tenen atributs diferents entre elles, i posats a canviar el regles.clp doncs també es pot fer. 
+
+; Sigui com sigui, li hauriem de donar una volta a les categories que tenim, i canviar-les perque tinguin sentit i siguin coherents (jo potser afegiria una categoria de inversor o comprador de segones residencies o aixi, i afegiria un atribut a la classe habitatge que sigui necessitaReforma, donar mes suc tambe a la practica)
+
+(deftemplate recomanacions
+    (slot solicitant (type INSTANCE))
+    (multislot recomanacions (type INSTANCE))
+)
+
 ;;; ============================================================
 ;;; FUNCIONS AUXILIARS
 ;;; ============================================================
@@ -66,11 +85,6 @@
     else (if (< ?metres 1000.0) then DistanciaMitjana
     else Lluny))
 )
-
-;;; ============================================================
-;;; FASE 1: ABSTRACCIÓ
-;;; Inferència de requisits segons el perfil del sol·licitant
-;;; ============================================================
 
 (defrule abstraccio-calcular-proximitats
     "Calcula la proximitat entre cada habitatge i cada servei"
@@ -86,6 +100,12 @@
     (bind ?cat (class ?serv))
     (assert (proximitat (habitatge ?hab) (servei ?serv) (categoria ?cat) (distancia ?dist) (metres ?metres)))
 )
+
+
+;;; ============================================================
+;;; FASE 1: ABSTRACCIÓ
+;;; Inferència de requisits segons el perfil del sol·licitant
+;;; ============================================================
 
 (defrule abstraccio-familia-amb-fills
     "Les families amb fills necessiten escoles i zones verdes"

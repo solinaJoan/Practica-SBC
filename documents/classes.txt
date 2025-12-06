@@ -40,9 +40,10 @@ SERVEI
     ├── Transport
     │     ├── Estació Metro
     │     ├── Aeroport
-    │     ├── Parada Bus
-    │     ├── Estació Tren
-    │     └── Autopista
+    │     └── Transport Public
+    │          ├── Parada Bus
+    │          ├── Estació Tren
+    │          └── Autopista
     ├── Servei Salut
     │     ├── Centre Salut
     │     ├── Hospital

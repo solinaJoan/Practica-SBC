@@ -298,20 +298,26 @@
     (pattern-match reactive)
 )
 
-(defclass EstacioMetro
+(defclass TransportPublic
     (is-a Transport)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass EstacioMetro
+    (is-a TransportPublic)
     (role concrete)
     (pattern-match reactive)
 )
 
 (defclass EstacioTren
-    (is-a Transport)
+    (is-a TransportPublic)
     (role concrete)
     (pattern-match reactive)
 )
 
 (defclass ParadaBus
-    (is-a Transport)
+    (is-a TransportPublic)
     (role concrete)
     (pattern-match reactive)
 )
@@ -500,10 +506,6 @@
     (slot disponible
         (type SYMBOL)
         (create-accessor read-write))
-    ;;; Valors: Parcialment, Adequat, MoltRecomanable, Cap
-    (slot grauRecomanacio
-        (type STRING)
-        (create-accessor read-write))
     (multislot motiusRecomanacio
         (type STRING)
         (create-accessor read-write))
@@ -511,6 +513,24 @@
         (type FLOAT)
         (create-accessor read-write))
 )
+
+(defclass Recomanacio
+    (is-a USER)
+    (role concrete)
+    (pattern-match reactive)
+    (slot Habitatge
+        (type INSTANCE)
+        (create-accessor read-write))
+    (slot Puntuacio
+        (type INTEGER)
+        (create-accessor read-write))
+    ;;; Valors: Parcialment, Adequat, MoltRecomanable, Cap
+    (slot grauRecomanacio
+        (type STRING)
+        (create-accessor read-write))
+)
+
+
 
 (definstances instances
 )
