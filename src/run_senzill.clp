@@ -1,7 +1,0 @@
-(clear)
-(load "ontologia.clp")
-(load "instancies_ciutat_senzill.clp")
-(load "regles_senzill.clp")
-(load "main.clp")
-(reset)
-(main)
