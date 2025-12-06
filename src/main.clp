@@ -1,14 +1,12 @@
 ;;; ============================================================
 ;;; main.clp
 ;;; Sistema Expert Interactiu de Recomanació d'Habitatges
+;;; VERSIÓ FINAL - CORREGIDA
 ;;; ============================================================
 
-;;; ============================================================
-;;; FUNCIONS AUXILIARS PER LLEGIR DADES
-;;; ============================================================
+;;; --- FUNCIONS AUXILIARS ---
 
 (deffunction pregunta-si-no (?pregunta)
-    "Pregunta amb resposta si/no"
     (printout t ?pregunta " (si/no): ")
     (bind ?resp (read))
     (while (and (neq ?resp si) (neq ?resp no))
@@ -19,7 +17,6 @@
 )
 
 (deffunction pregunta-numero (?pregunta ?min ?max)
-    "Pregunta amb resposta numerica amb limits"
     (printout t ?pregunta " [" ?min "-" ?max "]: ")
     (bind ?resp (read))
     (while (or (not (numberp ?resp)) (< ?resp ?min) (> ?resp ?max))
@@ -30,14 +27,12 @@
 )
 
 (deffunction pregunta-text (?pregunta)
-    "Pregunta amb resposta de text"
     (printout t ?pregunta ": ")
     (bind ?resp (readline))
     ?resp
 )
 
 (deffunction pregunta-opcio (?pregunta $?opcions)
-    "Pregunta amb opcions predefinides"
     (printout t ?pregunta crlf)
     (bind ?i 1)
     (foreach ?opc ?opcions
@@ -49,7 +44,6 @@
 )
 
 (deffunction pregunta-multiopcio (?pregunta $?opcions)
-    "Pregunta amb opcions predefinides"
     (printout t ?pregunta crlf)
     (printout t "   0. Cap servei molest" crlf)
     (bind ?i 1)
@@ -57,191 +51,131 @@
         (printout t "   " ?i ". " ?opc crlf)
         (bind ?i (+ ?i 1))
     )
-    
-    (printout t crlf "Tria una o més opcions: ")
+    (printout t crlf "Tria una o més opcions (separades per espais, o 0 per cap): ")
     (bind $?numeros (explode$ (readline)))
-
-    ;; Cas de cap servei
     (bind $?resposta (create$))
     (foreach ?n $?numeros
        (bind ?idx (integer ?n))
        (if (and (>= ?idx 1) (<= ?idx (length$ ?opcions))) then
-            (bind $?resposta
-            (create$ $?resposta (nth$ ?idx ?opcions)))
+            (bind $?resposta (create$ $?resposta (nth$ ?idx ?opcions)))
         )
     )
-    (bind ?resp ?resposta)
+    ?resposta
 )
 
-
-
-
-;;; ============================================================
-;;; CREACIÓ DEL PERFIL DEL SOL·LICITANT
-;;; ============================================================
+;;; --- CREACIÓ PERFIL ---
 
 (deffunction crear-perfil-solicitant ()
-    "Crea un nou perfil de solicitant mitjancant preguntes"
-    
-    (printout t crlf)
+    (printout t crlf "============================================================" crlf)
+    (printout t "          CREACIÓ DEL PERFIL DEL SOL·LICITANT" crlf)
     (printout t "============================================================" crlf)
-    (printout t "          CREACIÓ DEL PERFIL DEL SOLLICITANT" crlf)
-    (printout t "============================================================" crlf)
-    (printout t crlf)
     
-    ;;; Dades basiques
-    (printout t crlf "--- IDENTIFICACIÓ ---" crlf)
-    (bind ?nom (pregunta-text "Nom o identificador"))
-    (bind ?edat (pregunta-numero "Edat" 18 99))
-
-    ;;; Situació familiar
-    (printout t crlf "--- SITUACIÓ FAMILIAR ---" crlf)
-    (bind ?num-persones (pregunta-numero "Nombre de persones que viuran a l'habitatge" 1 10))
-
+    (printout t crlf "--- 1. DADES PERSONALS ---" crlf)
+    (bind ?nom (pregunta-text "Nom del sol·licitant"))
+    (bind ?edat (pregunta-numero "Edat del sol·licitant principal" 18 99))
+    
+    (printout t crlf "--- 2. CONVIVÈNCIA ---" crlf)
+    (bind ?num-persones (pregunta-numero "Quantes persones viuran al pis (incloent-te a tu)" 1 10))
     (bind ?num-fills 0)
-    (if (> ?num-persones 1) then 
-        (bind ?num-fills (pregunta-numero "Dels quals fills" 0 (- ?num-persones 1)))
-    ) 
-
     (bind ?edats-fills (create$))
-    (if (> ?num-fills 0) then
-        (loop-for-count (?i 1 ?num-fills)
-            (bind ?edat-fill (pregunta-numero (str-cat "Edat del fill " ?i) 0 25))
-            (bind ?edats-fills (create$ ?edats-fills ?edat-fill))
-        ) else 
-        (bind ?futur-fills (pregunta-si-no "Tindràs/eu fills properament?"))
+    (bind ?te-avis no)
+
+    (if (> ?num-persones 1) then
+        (bind ?té-fills (pregunta-si-no "Hi haurà fills menors convivint"))
+        (if (eq ?té-fills si) then
+            (bind ?num-fills (pregunta-numero "Quants fills" 1 (- ?num-persones 1)))
+            (loop-for-count (?i 1 ?num-fills)
+                (bind ?edat-fill (pregunta-numero (str-cat "Edat del fill " ?i) 0 17))
+                (bind ?edats-fills (create$ ?edats-fills ?edat-fill))
+            )
+        )
+        (if (< (+ 1 ?num-fills) ?num-persones) then
+             (bind ?te-avis (pregunta-si-no "Conviureu amb persones grans (>65 anys)"))
+        )
     )
 
-    ; (bind ?num-gent-gran 0)
-    ; (if (< 0 (- ?num-persones ?num-fills)) then
-    ;    (bind ?num-gent-gran (pregunta-numero "Conviureu amb avis o gent gran" 0 (- ?num-persones ?num-fills)))
-    ;)
-    ; (bind ?te-avis (> ?num-gent-gran 0))
+    (printout t crlf "--- 3. ECONOMIA I HABITATGE ---" crlf)
+    (bind ?pres-max (pregunta-numero "Pressupost màxim (EUR)" 300 6000))
+    (bind ?pres-min (pregunta-numero "Pressupost mínim ideal (EUR)" 0 ?pres-max))
+    (bind ?marge-estricte (pregunta-si-no "El pressupost màxim és infranquejable (sense marge)"))
 
-    (bind ?te-avis (pregunta-si-no "Conviureu amb avis o gent gran"))
+    (printout t crlf "--- 4. UBICACIÓ I MOBILITAT ---" crlf)
+    (bind ?treballa-ciutat (pregunta-si-no "El lloc de treball principal és a la ciutat"))
+    (bind ?estudia-ciutat no)
+    (if (and (< ?edat 30) (eq ?treballa-ciutat no)) then
+        (bind ?estudia-ciutat (pregunta-si-no "Estudies a la ciutat (Universitat/Màster)"))
+    )
+    (bind ?te-vehicle (pregunta-si-no "Disposeu de cotxe propi"))
+    (bind ?req-transport no)
+    (if (eq ?te-vehicle no) then
+        (printout t ">> Com que no teniu cotxe..." crlf)
+        (bind ?req-transport (pregunta-si-no "És imprescindible tenir Metro/Bus a menys de 5 minuts"))
+    else
+        (bind ?req-transport (pregunta-si-no "Tot i tenir cotxe, voleu transport públic a prop"))
+    )
     
-    ;;; Pressupost
-    (printout t crlf "--- PRESSUPOST ---" crlf)
-    (bind ?pres-max (pregunta-numero "Pressupost màxim mensual (EUR)" 1 100000))
-    (bind ?pres-min (pregunta-numero "Pressupost mínim mensual (EUR)" 0 ?pres-max))
-    (bind ?marge-estricte (pregunta-si-no "És important que es respecti el pressupost"))
-    
-    ;;; Mobilitat
-    (printout t crlf "--- MOBILITAT ---" crlf)
-    (bind ?treballa-ciutat (pregunta-si-no "Treballes a la ciutat?"))
-    (bind ?estudia-ciutat (pregunta-si-no "Estudies a la ciutat?"))
-    (bind ?te-vehicle (pregunta-si-no "Tens vehicle propi?"))
+    (bind ?nec-access no)
+    (if (or (eq ?te-avis si) (> ?edat 65)) then
+        (bind ?nec-access (pregunta-si-no "És IMPRESCINDIBLE que l'edifici tingui ascensor/accessibilitat"))
+    else
+        (bind ?nec-access (pregunta-si-no "Necessiteu accés per a mobilitat reduïda (cadira rodes, etc.)"))
+    )
 
-    ; Potser aquesta preguntaria me l'evitaria i faria que si no te vehicle propi i treballa o estudia a la ciutat es posi automàticament a cert
-    (bind ?req-transport (pregunta-si-no "Necessites transport públic?"))
-    
-    ;;; Accessibilitat
-    (bind ?nec-access (pregunta-si-no "L'habitatge ha de ser accessible (ascensor, planta baixa...)?"))
-    
-    ;;; Mascotes
-    (printout t crlf "--- MASCOTES ---" crlf)
-    (bind ?te-mascotes (pregunta-si-no "Tens mascotes?"))
+    (printout t crlf "--- 5. ALTRES ---" crlf)
+    (bind ?te-mascotes (pregunta-si-no "Teniu mascotes"))
     (bind ?num-mascotes 0)
     (bind ?tipus-mascota "Cap")
     (if (eq ?te-mascotes si) then
-        (bind ?tipus-mascota (pregunta-opcio "Quin tipus de mascota?" Gos Gat Ocell Altre))
-        (bind ?num-mascotes (pregunta-numero "Quantes mascotes tens?" 1 5))
+        (bind ?tipus-mascota (pregunta-opcio "Quin tipus principal?" Gos Gat Altre))
+        (bind ?num-mascotes (pregunta-numero "Quantes mascotes" 1 5))
     )
-
-    ;;; Serveis molests
     (bind $?serveis-molestos
-        (pregunta-multiopcio
-        "Consideres algun d'aquests serveis molests?"
-        Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
+        (pregunta-multiopcio "Voleu EVITAR viure a prop d'algun d'aquests llocs?" Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
     )
-    (printout t crlf $?serveis-molestos crlf)
 
-    (bind $?prefereix-servei
-        (pregunta-multiopcio
-        "Consideres algun d'aquests serveis imprescindibles?"
-        Estació Metro
-        Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
-    )
-    (printout t crlf $?prefereix-servei crlf)
+    (bind ?classe Solicitant)
+    (if (eq ?estudia-ciutat si) then (bind ?classe GrupEstudiants)
+    else (if (> ?edat 65) then (bind ?classe PersonaGran)
+    else (if (> ?num-persones 1) then
+        (if (> ?num-fills 0) then (bind ?classe FamiliaBiparental)
+        else (bind ?classe ParellaSenseFills))
+    else (bind ?classe Individu))))
 
-    ;;; Crear una instancia amb nom únic 
+    (printout t crlf ">> Perfil detectat: " ?classe crlf)
     (bind ?nom-inst (sym-cat sol- (gensym*)))
 
-    ; En ves de preguntar al usuari quin tipus és, fer comprovacions per determinar-lo nosaltres.  No sé si comprovar-ho aquí al main o crear un solicitant i més tard dir que es de la classe X més concreta
-
-    (make-instance ?nom-inst of Solicitant
-        (nom ?nom)
-        (edat ?edat)
-        (numeroPersones ?num-persones)
-        (pressupostMaxim ?pres-max)
-        (pressupostMinim ?pres-min)
-        (margeEstricte ?marge-estricte)
-        (numeroFills ?num-fills)
-        (edatsFills ?edats-fills)
-        (teAvis ?te-avis)
-        (teVehicle ?te-vehicle)
-        (requereixTransportPublic ?req-transport)
-        (necessitaAccessibilitat ?nec-access)
-        (teMascotes ?te-mascotes)
-        (numeroMascotes ?num-mascotes)
-        (tipusMascota ?tipus-mascota)
-        (treballaACiutat ?treballa-ciutat)
+    (make-instance ?nom-inst of ?classe
+        (nom ?nom) (edat ?edat) (numeroPersones ?num-persones)
+        (pressupostMaxim ?pres-max) (pressupostMinim ?pres-min) (margeEstricte ?marge-estricte)
+        (numeroFills ?num-fills) (edatsFills ?edats-fills) (teAvis ?te-avis)
+        (teVehicle ?te-vehicle) (requereixTransportPublic ?req-transport)
+        (necessitaAccessibilitat ?nec-access) (teMascotes ?te-mascotes)
+        (numeroMascotes ?num-mascotes) (tipusMascota ?tipus-mascota)
+        (treballaACiutat ?treballa-ciutat) (estudiaACiutat ?estudia-ciutat)
+        (evitaServei $?serveis-molestos)
     )
-    
-    (printout t crlf)
-    (printout t "============================================================" crlf)
-    (printout t "  Perfil creat correctament: " ?nom crlf)
-    (printout t "============================================================" crlf)
-    (printout t crlf)
-    
     ?nom-inst
 )
 
-;;; ============================================================
-;;; FUNCIÓ PRINCIPAL
-;;; ============================================================
-
 (deffunction main ()
-    "Funció principal per executar el sistema"
-
-    (printout t crlf)
+    "Funció principal amb neteja d'instàncies antigues"
+    (printout t crlf "============================================================" crlf)
+    (printout t "   SISTEMA EXPERT D'HABITATGES - v3.0 (Final)" crlf)
     (printout t "============================================================" crlf)
-    (printout t "   SISTEMA EXPERT DE RECOMANACIÓ D'HABITATGES DE LLOGUER" crlf)
-    (printout t "============================================================" crlf)
-    (printout t crlf)
-
     
-    
-    ;; Recorda: Ontologia, Regles i Instancies s'han de carregar ABANS 
-    ;; de carregar aquest fitxer (main.clp).
-    
-    (printout t "Sistema carregat i a punt." crlf)
-    (printout t crlf)
-    
-    ;;; Preguntar si vol crear un nou perfil
-    (bind ?crear-nou (pregunta-si-no "Vols crear un nou perfil de solicitant?"))
+    (reset)
+    (bind ?crear-nou (pregunta-si-no "Vols crear un nou perfil de sol·licitant"))
     
     (if (eq ?crear-nou si) then
-        ;;; Crear nou perfil i executar
+        ;; CORRECCIÓ AQUI: Usem (send ?s delete) en lloc de (delete ?s)
+        (do-for-all-instances ((?s Solicitant)) TRUE (send ?s delete))
+        
         (bind ?perfil (crear-perfil-solicitant))
-        (printout t crlf)
-        (printout t "Iniciant cerca d'habitatges..." crlf)
-        (printout t crlf)
+        (printout t crlf "Iniciant cerca personalitzada per a " ?perfil "..." crlf)
         (run)
     else
-        ;;; Usar perfils existents
-        (printout t crlf)
-        (printout t "Usant perfils predefinits de les instàncies..." crlf)
-        (printout t "Iniciant cerca d'habitatges..." crlf)
-        (printout t crlf)
+        (printout t crlf "Usant perfils de prova..." crlf)
         (run)
-
-        ;;; (printout t "Per executar el sistema manualment:" crlf)
-        ;;; (printout t "  1. Escriu: (reset)" crlf)
-        ;;; (printout t "  2. Escriu: (run)" crlf)
-        ;;; (printout t crlf)
     )
-    
     (printout t "============================================================" crlf)
-    (printout t crlf)
 )

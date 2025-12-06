@@ -1,7 +1,7 @@
 Comentaris:
 
 mirar coherencia entre transport o transportPublic 
-les instances crec que estan be pero no se si els tipus dels atributs son coherents entre els altres .clp
+les instances crec que estan be pero no se si els tipus dels atributs son coherents entre els altres .clp i surten poques abstraccions
 arreglar defrule presentacions
 
 
