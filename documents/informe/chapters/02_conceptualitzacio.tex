@@ -1,352 +1,713 @@
 % 02_conceptualitzacio.tex
 % Capítol 2: Conceptualització
 
-\section{Conceptes del Domini}
+\section{Conceptualització}
+\label{sec:conceptualitzacio}
 
-\subsection{Conceptes Principals}
+\vspace{0.5cm}
+
+\subsection{Introducció a la fase de conceptualització}
+
+La fase de conceptualització és el pont entre la identificació del problema i la seva formalització tècnica. En aquesta etapa, transformem el coneixement expert identificat en una estructura conceptual clara i coherent, definint els elements principals del domini i les seves interrelacions. L'objectiu és obtenir una visió compartida i no ambigua del problema que serveixi de base per a la posterior formalització en una ontologia i implementació en regles.
+
+Aquesta fase és crítica perquè determina l'abast i la qualitat del sistema final. Una conceptualització inadequada (incompleta, ambigua o mal estructurada) propagarà problemes a totes les fases posteriors, mentre que una conceptualització sòlida facilitarà tant la formalització com la implementació i el manteniment.
+
+Per dur a terme aquesta conceptualització, hem combinat diverses fonts de coneixement. Primer, hem analitzat plataformes immobiliàries existents per identificar les característiques que el mercat considera rellevants. Segon, hem consultat models de llenguatge actuals (ChatGPT i Claude) com a "experts virtuals" per explorar el domini de manera sistemàtica. Tercer, hem aplicat el nostre propi coneixement i sentit comú per validar i completar la informació obtinguda. Finalment, hem contrastat el resultat amb la literatura sobre sistemes de recomanació d'habitatge i amb agents immobiliaris reals quan ha estat possible.
+
+\vspace{0.5cm}
+
+\subsection{Conceptes principals del domini}
 
 \subsubsection{Habitatge}
 
-Representa una vivenda disponible per llogar. Atributs principals:
+El concepte central del nostre domini és l'habitatge, que representa una vivenda disponible per llogar. Un habitatge no és simplement un conjunt de metres quadrats, sinó una entitat complexa amb múltiples facetes que determinen la seva adequació per a diferents perfils d'usuaris.
 
-\begin{itemize}
-    \item \textbf{Físics}: Superfície habitable, nombre de dormitoris (simples/dobles), nombre de banys
-    \item \textbf{Tipologia}: Pis, Àtic, Dúplex, Estudi, Habitatge Unifamiliar
-    \item \textbf{Equipament}: Moblat, amb electrodomèstics, calefacció, aire condicionat
-    \item \textbf{Característiques}: Terrassa/balcó, ascensor, vistes, orientació solar
-    \item \textbf{Accessibilitat}: Planta, ascensor, adaptacions
-    \item \textbf{Restriccions}: Permet mascotes, estat de conservació
-    \item \textbf{Extras}: Parking, piscina comunitària, traster
-\end{itemize}
+Hem identificat diversos grups d'atributs que caracteritzen un habitatge. Els atributs físics bàsics inclouen la superfície habitable (expressada en metres quadrats), el nombre total de dormitoris, la distinció entre dormitoris dobles i simples (rellevant per determinar la capacitat real), i el nombre de banys (que afecta la comoditat, especialment per a famílies nombroses).
+
+La tipologia de l'habitatge és un atribut fonamental que afecta molts altres aspectes. Distingim entre pis (la opció més comuna), àtic (generalment preferit per la llum i les vistes), dúplex (amb dos nivells), estudi (opció compacta per a individus o parelles), i habitatge unifamiliar (ideal per a famílies grans que busquen independència). Cada tipologia té implicacions sobre altres característiques: per exemple, els àtics solen tenir terrassa gran, mentre que els estudis són compactes i econòmics.
+
+L'equipament determina el nivell de comoditat i afecta especialment perfils com estudiants o persones que es traslladen temporalment. Considerem si l'habitatge està moblat (essencial per a estudiants i expatriats), si inclou electrodomèstics (nevera, rentadora, forn), si disposa de calefacció i aire condicionat (cada cop més valorats), i l'estat de conservació general (nou, bon estat, necessita reformes).
+
+Les característiques arquitectòniques i de situació dins l'edifici també són rellevants. La planta on es troba l'habitatge (entresòl, primer, segon, àtic) i la presència o absència d'ascensor determinen l'accessibilitat. L'orientació solar (matí, tarda, tot el dia) afecta la lluminositat i l'eficiència energètica. Si l'habitatge és exterior o interior condiciona el soroll i la llum natural. La presència de terrassa o balcó i la seva superfície augmenten significativament l'atractiu. Les vistes (mar, muntanya, ciutat, o cap) són un plus valorat.
+
+Les restriccions i condicions de lloguer inclouen si l'habitatge permet mascotes (eliminator per a moltes famílies), el consum energètic (de A a G, afectant les factures mensuals), i el nivell de soroll de la zona (baix, mitjà, alt).
+
+Finalment, els extres o amenities poden ser determinants per a certs perfils: plaça d'aparcament (essencial si tens vehicle), piscina comunitària (atractiva per a famílies amb fills), traster (útil per a emmagatzematge addicional), i armaris encastats (alliberen espai habitable).
 
 \subsubsection{Localització}
 
-Posició geogràfica d'un habitatge o servei:
+La localització és un concepte aparentment simple però fonamental, ja que connecta l'habitatge amb els serveis urbans i determina gran part de la seva adequació.
 
-\begin{itemize}
-    \item Adreça completa
-    \item Districte i barri
-    \item Coordenades GPS (X, Y simplificades)
-    \item Codi postal
-\end{itemize}
+Una localització es caracteritza per diversos nivells de granularitat. Al nivell més general, tenim el districte i el barri, que proporcionen context urbà i socioeconòmic. A nivell més específic, tenim l'adreça completa (carrer i número) i el codi postal. Finalment, per a càlculs de distància, utilitzem coordenades geogràfiques.
+
+En la nostra implementació simplificada, utilitzem un sistema de coordenades cartesià 2D (X, Y) que representa metres des d'un punt d'origen arbitrari a la ciutat. Això facilita els càlculs de distància sense la complexitat de treballar amb latitud/longitud. No obstant això, el disseny és prou flexible per adaptar-se fàcilment a coordenades GPS reals si es desitja integrar amb dades reals.
+
+La localització és el punt de contacte entre l'habitatge i els serveis: cada habitatge té una localització, cada servei té una localització, i calculem la distància entre elles per determinar la proximitat.
 
 \subsubsection{Servei}
 
-Equipament o infraestructura urbana rellevant:
+Els serveis urbans són elements de la ciutat que afecten la qualitat de vida dels residents i, per tant, l'adequació d'un habitatge per a un perfil determinat. La seva proximitat a l'habitatge pot ser un factor obligatori, preferent, o fins i tot negatiu segons el tipus de servei i el perfil del sol·licitant.
 
-\begin{itemize}
-    \item \textbf{Transport Públic}: Metro, bus, tren
-    \item \textbf{Serveis Educatius}: Escoles, instituts, universitats, llars d'infants
-    \item \textbf{Serveis de Salut}: Hospitals, centres de salut, farmàcies
-    \item \textbf{Serveis Comercials}: Supermercats, hipermercats, centres comercials
-    \item \textbf{Zones Verdes}: Parcs, jardins, zones esportives
-    \item \textbf{Serveis d'Oci}: Gimnasos, biblioteques, centres culturals
-    \item \textbf{Serveis Molestos}: Discoteques, estadis, zones industrials, aeroports
-\end{itemize}
+Hem identificat sis categories principals de serveis, cadascuna amb múltiples subtipus.
+
+Els serveis de transport públic són crucials en una ciutat gran. Inclouen estacions de metro (la forma més ràpida de transport urbà), parades de bus (donen més capilaritat), estacions de tren (per a connexions interurbanes), i en alguns casos, estacions de tramvia. La proximitat al transport públic és especialment important per a estudiants, persones grans, i qualsevol que no tingui vehicle propi.
+
+Els serveis educatius són fonamentals per a famílies amb fills. Distingim entre llars d'infants (0-3 anys), escoles primàries (6-12 anys), instituts (12-18 anys), i universitats (18+ anys). No totes les famílies necessiten tots els tipus: una família amb un nadó prioritzarà llars d'infants, mentre que una amb adolescents buscarà instituts propers.
+
+Els serveis de salut inclouen hospitals (per a urgències i especialitats), centres de salut o CAPs (per a atenció primària rutinària), i farmàcies (per a medicació i consultes menors). Són especialment importants per a persones grans i famílies amb fills petits.
+
+Els serveis comercials són necessaris per a la vida quotidiana. Inclouen supermercats (compra setmanal o diària), hipermercats (compra mensual de gran volum), mercats municipals (productes frescos), i centres comercials (compres i oci). Les persones grans prefereixen supermercats propers on fer compra diària, mentre que les famílies poden preferir hipermercats per a compra mensual.
+
+Les zones verdes són espais per a l'esbarjo i l'exercici. Inclouen parcs (grans extensions per a passejada i esport), jardins (espais més petits i tranquils), i zones esportives (amb instal·lacions específiques). Són particularment rellevants per a famílies amb fills (necessiten espais de joc) i persones amb mascotes.
+
+Els serveis d'oci enriqueixen la vida social i cultural. Inclouen gimnasos, biblioteques, centres culturals, cinemes, teatres, restaurants i bars. Alguns d'aquests (bars, discoteques) poden generar soroll i ser considerats negatius per certs perfils.
+
+Finalment, hem identificat una categoria especial de serveis potencialment molestos que alguns perfils voldran evitar: discoteques (soroll nocturn), estadis esportius (aglomeracions i soroll en dies de partit), zones industrials (contaminació i trànsit pesat), autopistes (soroll constant), i aeroports (soroll de vols). La proximitat a aquests serveis pot ser un factor d'exclusió per a certs sol·licitants.
 
 \subsubsection{Sol·licitant}
 
-Persona o grup que busca habitatge. Tipus:
+El sol·licitant és la persona o grup de persones que busca habitatge. És el concepte més complex i divers, ja que diferents perfils tenen necessitats radicalment diferents.
 
-\begin{itemize}
-    \item \textbf{Individu}: Persona sola
-    \item \textbf{Parella sense fills}
-    \item \textbf{Parella amb plans de fills}
-    \item \textbf{Família biparental}: Amb fills
-    \item \textbf{Família monoparental}
-    \item \textbf{Grup d'estudiants}
-    \item \textbf{Persona gran}: Major de 60 anys
-\end{itemize}
+Hem identificat set tipologies principals de sol·licitants, organitzades jeràrquicament.
 
-Atributs:
-\begin{itemize}
-    \item Pressupost màxim/mínim
-    \item Nombre de persones
-    \item Fills i edats
-    \item Mascotes (tipus i nombre)
-    \item Vehicle propi
-    \item Necessitats d'accessibilitat
-    \item Preferències de transport
-    \item Lloc de treball/estudi
-\end{itemize}
+L'individu representa una persona sola, que pot ser un professional jove, un divorçat, o qualsevol que visqui independentment. Generalment tenen necessitats senzilles (superfície moderada, preu ajustat) però poden ser exigents amb la localització segons si treballen o estudien.
+
+La parella sense fills és una unitat de dues persones adultes. Solen prioritzar la qualitat de vida (terrassa, bona zona) sobre l'espai, ja que no necessiten múltiples dormitoris. Poden permetre's gastar més per persona que un individu sol.
+
+La parella amb plans de fills és un cas especial: actualment són dues persones, però preveuen ampliar la família en un futur pròxim (1-2 anys). Busquen habitatges amb "potencial de créixer", preferint 3 dormitoris a 2, i valoren la proximitat a escoles i zones verdes tot i que encara no les necessiten.
+
+La família amb fills és una de les tipologies més exigents. Distingim entre família biparental (dos adults) i monoparental (un adult), ja que aquest factor afecta el pressupost disponible. El nombre i les edats dels fills determinen necessitats específiques: famílies amb nadons necessiten llars d'infants, amb infants necessiten escoles primàries i zones de joc, amb adolescents necessiten instituts i centres culturals.
+
+El grup d'estudiants representa dues o més persones joves que comparteixen habitatge mentre estudien. Tenen requisits molt específics: pressupost ajustat (repartit entre tots), habitatge moblat (per no haver d'invertir en mobles), proximitat a la universitat i transport públic, i tolerància al soroll (sovint viuen en zones d'ambient jove).
+
+La persona gran (>65 anys) té necessitats molt específiques relacionades amb la mobilitat i la salut. Requereixen accessibilitat (ascensor si no és planta baixa, absència de barreres arquitectòniques), proximitat a serveis de salut (hospitals, CAPs, farmàcies), i comerços propers per a compra diària (sovint no tenen vehicle). També valoren la tranquil·litat i la seguretat del barri.
+
+Per a tots els perfils, considerem atributs comuns que afecten les necessitats. El pressupost (màxim i mínim) és sempre un factor crític, així com si el marge és estricte o flexible. El nombre de persones determina l'espai mínim necessari. La possessió de mascotes (tipus i nombre) és un factor eliminator si l'habitatge no les permet. La possessió de vehicle fa valorar el parking inclòs. Les necessitats d'accessibilitat són crítiques per a persones amb mobilitat reduïda. La preferència per transport públic afecta la importància de la seva proximitat. El fet de treballar o estudiar a la ciutat condiciona la necessitat de bona connexió.
 
 \subsubsection{Oferta}
 
-Vincula un habitatge amb condicions de lloguer:
-\begin{itemize}
-    \item Habitatge associat
-    \item Preu mensual
-    \item Disponibilitat
-    \item Data de publicació
-    \item Grau de recomanació (calculat pel sistema)
-    \item Motius de recomanació
-\end{itemize}
+Una oferta vincula un habitatge concret amb condicions específiques de lloguer i amb l'avaluació que el sistema en fa per a cada sol·licitant.
 
-\subsection{Relacions entre Conceptes}
+Els atributs bàsics d'una oferta inclouen l'habitatge al qual fa referència (amb totes les seves característiques), el preu mensual de lloguer, la disponibilitat (si està llogada o disponible), i la data de publicació (opcionalment, per identificar ofertes antigues).
 
-\begin{itemize}
-    \item \texttt{teLocalitzacio}: Habitatge/Servei $\rightarrow$ Localització
-    \item \texttt{teHabitatge}: Oferta $\rightarrow$ Habitatge
-    \item \texttt{aPropDe}: Localització $\rightarrow$ Servei (i subpropietats: moltAPropDe, aDistanciaMitjana, llunyde)
-    \item \texttt{evitaServei}: Sol·licitant $\rightarrow$ ServeiMolest
-    \item \texttt{prefereixServei}: Sol·licitant $\rightarrow$ Servei
-    \item \texttt{requereixServei}: Sol·licitant $\rightarrow$ Servei
-\end{itemize}
+Els atributs calculats pel sistema són els més interessants. El grau de recomanació (Molt Recomanable, Adequat, Parcialment Adequat, Descartat) és l'avaluació principal que el sistema fa de l'oferta per a un sol·licitant concret. Els motius de recomanació expliquen per què s'ha assignat aquest grau: quins són els punts forts (per a Molt Recomanables), quins criteris no es compleixen (per a Parcialment Adequats), o per què s'ha descartat (per a Descartats).
 
-\section{Descomposició del Problema}
+És important notar que el grau de recomanació i els motius són específics per a cada parella sol·licitant-oferta: el mateix habitatge pot ser Molt Recomanable per a una família amb fills i Descartat per a estudiants, o viceversa.
 
-\subsection{Problemes i Subproblemes}
+\vspace{0.5cm}
 
-\subsubsection{Problema Principal}
-\textbf{Recomanar habitatges adequats a cada sol·licitant}
+\subsection{Relacions entre conceptes}
 
-Es descompon en tres subproblemes:
+Una vegada identificats els conceptes principals, cal definir com es relacionen entre ells. Aquestes relacions estructuren el coneixement del domini i determinaran la navegació i el raonament del sistema.
 
-\paragraph{Subproblema 1: Abstracció}
-\begin{itemize}
-    \item \textit{Entrada}: Perfil del sol·licitant (dades bàsiques)
-    \item \textit{Tasca}: Inferir necessitats no explícites
-    \item \textit{Sortida}: Requisits obligatoris i preferències inferides
-    \item \textit{Mètode}: Classificació heurística + regles d'inferència
-\end{itemize}
+\subsubsection{Relacions d'associació bàsiques}
 
-Exemple: Si sol·licitant és família amb fills $\Rightarrow$ necessita escoles a prop
+La relació més simple és teLocalitzacio, que connecta tant habitatges com serveis amb la seva localització geogràfica. És una relació funcional (cada habitatge/servei té exactament una localització) i obligatòria (no pot haver-hi habitatges o serveis sense localització).
 
-\paragraph{Subproblema 2: Resolució}
-\begin{itemize}
-    \item \textit{Entrada}: Ofertes, sol·licitant, requisits inferits
-    \item \textit{Tasca}: Avaluar cada oferta contra requisits
-    \item \textit{Sortida}: Ofertes descartades + avaluació de les restants
-    \item \textit{Mètode}: Filtratge per restriccions + scoring
-\end{itemize}
+La relació teHabitatge connecta cada oferta amb l'habitatge al qual fa referència. També és funcional i obligatòria: cada oferta referencia exactament un habitatge.
 
-Es subdivideix en:
-\begin{enumerate}
-    \item \textbf{Càlcul de proximitat}: Distància habitatge-serveis
-    \item \textbf{Filtratge obligatori}: Descartar ofertes inadequades
-    \item \textbf{Avaluació de criteris}: Detectar punts forts i febles
-\end{enumerate}
+\subsubsection{Relacions de proximitat}
 
-\paragraph{Subproblema 3: Refinació}
-\begin{itemize}
-    \item \textit{Entrada}: Ofertes avaluades
-    \item \textit{Tasca}: Classificar per grau d'adequació
-    \item \textit{Sortida}: Llista ordenada amb justificacions
-    \item \textit{Mètode}: Classificació per regles
-\end{itemize}
+La relació aPropDe connecta localitzacions amb serveis i és fonamental per al raonament del sistema. No és binària (proper/lluny), sinó que distingim tres nivells de proximitat basats en la distància: moltAPropDe (menys de 500 metres, caminable en 5-7 minuts), aDistanciaMitjana (500-1000 metres, caminable en 10-15 minuts), i llunyde (més de 1000 metres, generalment requereix transport).
 
-Categories finals:
-\begin{itemize}
-    \item Molt Recomanable: 0 negatius, 3+ positius
-    \item Adequat: 0 negatius, <3 positius
-    \item Parcialment Adequat: 1-2 negatius
-    \item Descartat: Incompleix requisit obligatori
-\end{itemize}
+Aquesta classificació en tres nivells permet un raonament més ric que una simple dicotomia. Per exemple, una escola a distància mitjana pot ser acceptable per a una família, mentre que un hospital lluny pot ser problemàtic per a una persona gran.
 
-\section{Coneixement Expert Extret}
+La relació de proximitat es calcula automàticament a partir de les coordenades de les localitzacions, utilitzant la distància de Manhattan o Euclidiana. No es pre-calcula per a totes les parelles possibles (seria ineficient), sinó que es computa dinàmicament quan es necessita.
 
-\subsection{Ús de Models de Llenguatge com a Expert}
+\subsubsection{Relacions de preferència i restricció}
 
-Per la fase de conceptualització, s'han utilitzat models de llenguatge (ChatGPT, Claude) com a experts del domini. Aquesta aproximació permet:
+Els sol·licitants poden expressar relacions amb serveis de tres tipus, que tenen interpretacions diferents en el raonament.
 
-\begin{itemize}
-    \item Accés ràpid a coneixement general sobre habitatge
-    \item Exploració de casos variats
-    \item Validació de regles heurístiques
-\end{itemize}
+La relació requereixServei indica que el sol·licitant necessita obligatòriament aquest tipus de servei proper. Si un habitatge no té aquest servei a distància proper o mitjana, quedarà descartat. Per exemple, una família amb fills petits requereix escoles; un estudiant requereix transport públic.
 
-\subsubsection{Prompt de Context}
+La relació prefereixServei indica que el sol·licitant valora positivament aquest servei, però no és eliminator si no està disponible. La seva proximitat millorarà la valoració de l'oferta, però la seva absència no la descartarà. Per exemple, una parella sense fills pot preferir zones verdes, però no és obligatori.
 
-\begin{lstlisting}[language=bash, basicstyle=\ttfamily\footnotesize]
+La relació evitaServei indica que el sol·licitant no vol viure prop d'aquest tipus de servei (generalment serveis molestos). Si un habitatge està molt a prop d'un servei evitat, quedarà descartat o severament penalitzat. Per exemple, una persona gran pot voler evitar discoteques; una família amb nadós pot voler evitar estadis.
+
+\subsubsection{Relacions espacials addicionals}
+
+Opcionalment, els sol·licitants poden especificar llocTreball i llocEstudi, que són localitzacions específiques on passen temps regularment. Si s'especifiquen, el sistema pot valorar positivament habitatges ben connectats amb aquests llocs, ja sigui per proximitat directa o per proximitat a transport públic que els connecti.
+
+\vspace{0.5cm}
+
+\subsection{Ús de models de llenguatge per a la conceptualització}
+
+Una de les innovacions metodològiques d'aquest projecte ha estat l'ús de models de llenguatge (ChatGPT 4 i Claude 3.5 Sonnet) com a "experts virtuals" per a la fase de conceptualització. Aquesta aproximació mereix una explicació detallada del procés, els resultats i les limitacions.
+
+\subsubsection{Metodologia d'ús dels models de llenguatge}
+
+Per utilitzar efectivament un model de llenguatge com a expert, cal primer posar-lo en context adequadament. Hem utilitzat el següent prompt de contextualització:
+
+\begin{lstlisting}[language=bash, basicstyle=\ttfamily\footnotesize, breaklines=true]
 You are an experienced real estate agent specializing in rental 
 properties in Barcelona. You help match different types of people 
 (families with children, students, couples, elderly) with suitable 
-homes based on their needs and the neighborhood characteristics. 
+homes based on their needs and the neighborhood characteristics.
 
-The knowledge engineer will ask about the characteristics, criteria, 
-and knowledge you use for making decisions. Your answers should be 
-direct and precise, helpful for building rules in an expert system.
+The knowledge engineer will ask you about the characteristics, 
+criteria, and knowledge you use for making decisions. Your answers 
+should be direct and precise, helpful for building rules in an 
+expert system. Focus on providing concrete, actionable knowledge 
+rather than general statements.
 \end{lstlisting}
 
-\subsubsection{Exemples de Preguntes i Respostes}
+Aquest prompt estableix clarament el rol (agent immobiliari expert), el domini (lloguer d'habitatges a Barcelona), l'audiència (enginyer del coneixement), i el format de resposta desitjat (coneixement concret i accionable).
 
-\paragraph{Pregunta 1:} \textit{What are the most important neighborhood characteristics for a family with two young children?}
+Un cop establert el context, hem fet preguntes progressivament més específiques per extreure coneixement estructurat. Aquest procés s'anomena "elicitació de coneixement" i segueix principis similars als utilitzats en entrevistes amb experts humans.
 
-\textbf{Resposta (sintetitzada):}
+\subsubsection{Exemples de preguntes i respostes}
+
+A continuació presentem alguns exemples representatius del diàleg amb el model, il·lustrant el tipus de coneixement extret.
+
+\paragraph{Pregunta 1: Característiques del barri per a famílies}
+
+\textit{Question: What are the most important neighborhood characteristics for a family with two young children (ages 3 and 6)?}
+
+\textbf{Resposta sintetitzada del model:}
 \begin{itemize}
-    \item Schools within 500m (walking distance)
-    \item Parks or green spaces nearby
-    \item Low noise levels
-    \item Pedestrian-friendly streets
-    \item Healthcare centers accessible
-    \item Avoid nightlife areas
+    \item Primary schools within 500 metres (walking distance)
+    \item Parks or playgrounds within 500 metres
+    \item Pedestrian-friendly streets (low traffic, wide sidewalks)
+    \item Healthcare centres (at least a CAP) within 1 km
+    \item Supermarkets for daily shopping within 500 metres
+    \item Low noise levels (avoid nightlife areas, stadiums, major roads)
+    \item Public transport accessible but not mandatory if they have a car
+    \item Daycare centres (llar d'infants) within 500 metres if both parents work
 \end{itemize}
 
-\paragraph{Pregunta 2:} \textit{What minimum space requirements would you recommend for different family sizes?}
+Aquesta resposta ens proporciona diversos inputs valuosos: distàncies concretes (500m per a serveis quotidians, 1km per a serveis menys freqüents), una jerarquia de necessitats (escola i zones verdes són prioritàries), i factors negatius a evitar (soroll, trànsit intens). També identifica factors condicionals (la llar d'infants només és rellevant si ambdós pares treballen).
 
-\textbf{Resposta:}
+\paragraph{Pregunta 2: Requisits d'espai segons composició familiar}
+
+\textit{Question: What minimum size requirements would you recommend for different household sizes?}
+
+\textbf{Resposta sintetitzada del model:}
 \begin{itemize}
-    \item Single person: 30-40 m²
-    \item Couple: 50-60 m²
-    \item Couple + 1 child: 65-80 m²
-    \item Couple + 2 children: 80-100 m²
-    \item 4+ people: 100+ m²
+    \item Single person: 30-40 m² (studio acceptable, 1 bedroom preferred)
+    \item Couple: 50-60 m² (1-2 bedrooms)
+    \item Couple + 1 child: 65-80 m² (minimum 2 bedrooms)
+    \item Couple + 2 children: 80-100 m² (minimum 3 bedrooms)
+    \item Family of 5+: 100+ m² (minimum 4 bedrooms)
+    \item Group of 3 students: 70-90 m² (3 bedrooms, shared spaces OK)
 \end{itemize}
 
-\paragraph{Pregunta 3:} \textit{How do you prioritize budget constraints vs. other requirements?}
+Aquestes xifres concretes són extremadament útils per definir regles de descart (un habitatge massa petit per al nombre de persones). També identifiquen diferències subtils: per exemple, estudiants toleren menys espai per persona que famílies perquè passen menys temps a casa.
 
-\textbf{Resposta:}
-Budget is a hard constraint for strict budgets. With flexibility (10-15\% margin), location and essential services take priority over amenities like parking or pool.
+\paragraph{Pregunta 3: Priorització amb pressupost ajustat}
 
-\subsection{Regles Heurístiques Identificades}
+\textit{Question: When a family has a strict budget and cannot afford everything they want, how do you advise them to prioritize between location, size, and amenities?}
 
-\subsubsection{Regles per Perfil Demogràfic}
+\textbf{Resposta sintetitzada del model:}
 
+The general priority order with tight budgets is:
 \begin{enumerate}
-    \item \textbf{Famílies amb fills}:
-    \begin{itemize}
-        \item Necessiten escoles a distància mitjana o propera
-        \item Prefereixen zones verdes
-        \item Eviten zones de soroll nocturn
-        \item Necessiten mínim 2 dormitoris + espai per fills
-    \end{itemize}
-    
-    \item \textbf{Estudiants}:
-    \begin{itemize}
-        \item Transport públic imprescindible
-        \item Pressupost ajustat (prioritat màxima)
-        \item Prefereixen zones amb ambient jove
-        \item Necessiten habitatge moblat
-    \end{itemize}
-    
-    \item \textbf{Persones grans}:
-    \begin{itemize}
-        \item Accessibilitat crítica (ascensor si >planta 0)
-        \item Serveis de salut propers
-        \item Comerços a distància caminable
-        \item Eviten zones amb escales o barreres
-    \end{itemize}
-    
-    \item \textbf{Parelles sense fills}:
-    \begin{itemize}
-        \item Flexibilitat en localització
-        \item Valoren qualitat de vida (terrassa, vistes)
-        \item Poden prioritzar preu vs. espai
-    \end{itemize}
+    \item Basic space requirements (minimum bedrooms and total size)
+    \item Essential services for their profile (schools for families, transport for students)
+    \item Location/neighborhood safety
+    \item Extras and amenities (these can wait)
 \end{enumerate}
 
-\subsubsection{Regles de Sentit Comú}
+Budget flexibility of 10-15\% is reasonable if location and essential services are significantly better. Beyond 15\%, the financial strain outweighs the benefits.
 
+Aquesta resposta ens dóna una jerarquia de prioritats que podem traduir en pesos relatius en la nostra funció d'avaluació. També proporciona un threshold concret (15\%) per a la flexibilitat de pressupost.
+
+\paragraph{Pregunta 4: Criteris per a persones grans}
+
+\textit{Question: What are the non-negotiable requirements for elderly people (65+) when renting?}
+
+\textbf{Resposta sintetitzada del model:}
 \begin{itemize}
-    \item Àtic millor que entresol (llum, vistes)
-    \item Orientació tot el dia millor que només matí/tarda
-    \item Exterior millor que interior
-    \item Edifici nou millor que antic (a igualtat de preu)
-    \item Terrassa és un plus sempre
-    \item Parking valuós si tens vehicle
+    \item Elevator if above ground floor (absolutely critical)
+    \item No architectural barriers (steps, narrow doors)
+    \item Healthcare centres within walking distance (500-700m max)
+    \item Daily shopping (small supermarket or market) within 500m
+    \item Ground floor or low floor with elevator strongly preferred
+    \item Quiet neighborhood (they're home more hours than working people)
+    \item Good natural light (affects mood and health)
+    \item Avoid: steep hills, stairs to building entrance, isolated areas
 \end{itemize}
 
-\subsubsection{Criteris de Distància}
+Aquesta resposta identifica requisits obligatoris (ascensor si no és planta baixa) versus preferències fortes (planta baixa), i també factors negatius específics per aquest col·lectiu (pendents pronunciats, escales a l'entrada).
 
+\subsubsection{Validació i integració del coneixement obtingut}
+
+El coneixement extret dels models de llenguatge no s'ha acceptat acríticament, sinó que s'ha validat i integrat seguint diverses estratègies.
+
+Primer, hem contrastat les respostes entre diferents models (ChatGPT i Claude) per identificar consens i discrepàncies. El coneixement consistent entre models té més probabilitats de ser correcte.
+
+Segon, hem comparat el coneixement extret amb fonts autoritzades: normatives d'accessibilitat per a persones grans, estudis sociològics sobre preferències habitacionals, i informació de plataformes immobiliàries reals.
+
+Tercer, hem aplicat el sentit comú i l'experiència personal per detectar recomanacions poc realistes o específiques d'altres contextos geogràfics (per exemple, alguns models donaven consells més adients per a ciutats americanes que per a Barcelona).
+
+Quart, hem simplificat i adaptat el coneixement al nivell de granularitat adequat per al nostre sistema. Per exemple, el model podria distingir entre 5 tipus de zones verdes, però nosaltres hem decidit treballar només amb 3 categories.
+
+Finalment, hem documentat clarament en l'informe quan una decisió prové d'un model de llenguatge, permetent la traçabilitat i facilitant futures revisions si es detecten errors.
+
+\subsubsection{Limitacions i consideracions crítiques}
+
+L'ús de models de llenguatge per a conceptualització té limitacions que cal reconèixer explícitament.
+
+Primer, els models poden "al·lucinar" (inventar) informació plausible però incorrecta. Per exemple, poden citar estudis inexistents o proporcionar estadístiques fabricades. Per això, tota informació factual o quantitativa s'ha de verificar amb fonts fiables.
+
+Segon, els models poden reflectir biaixos presents en les seves dades d'entrenament. Per exemple, poden assumir estructures familiars tradicionals o fer suposicions culturalment específiques. Hem estat atents a aquestes possibles biaixos i els hem corregit quan els hem detectat.
+
+Tercer, els models no tenen experiència real ni comprensió profunda del domini. Poden proporcionar coneixement "de llibre" que un expert real amb anys d'experiència matisaria o contradria. Per això, el coneixement extret s'ha complementat amb altres fonts.
+
+Quart, els models són millors proporcionant coneixement general que coneixement específic d'un context local. Per exemple, poden donar bones recomanacions sobre necessitats de famílies amb fills (universal), però ser menys fiables sobre característiques específiques de barris de Barcelona.
+
+Malgrat aquestes limitacions, l'ús de models de llenguatge ha estat valuós per a la fase de conceptualització, especialment per:
 \begin{itemize}
-    \item \textbf{Molt a prop}: < 500m (caminable 5-7 min)
-    \item \textbf{Distància mitjana}: 500-1000m (caminable 10-15 min)
-    \item \textbf{Lluny}: > 1000m (necessita transport)
+    \item Accelerar l'exploració inicial del domini
+    \item Identificar factors que podríem haver passat per alt
+    \item Proporcionar estructuracions alternatives del coneixement
+    \item Generar exemples concrets i casos d'ús
+    \item Validar la coherència de les regles proposades
 \end{itemize}
 
-\section{Exemples de Resolució Manual}
+\vspace{0.5cm}
 
-\subsection{Exemple 1: Família Garcia}
+\subsection{Regles heurístiques identificades}
 
-\textbf{Perfil}:
+A partir de l'elicitació de coneixement (tant de models de llenguatge com d'altres fonts), hem identificat un conjunt de regles heurístiques que guiaran la implementació del sistema. Aquestes regles es poden agrupar en diverses categories.
+
+\subsubsection{Regles basades en perfil demogràfic}
+
+Aquestes regles infereixen necessitats a partir de la tipologia i característiques del sol·licitant.
+
+\textbf{Regles per a famílies amb fills:}
 \begin{itemize}
-    \item Família biparental, 4 persones (2 adults + 2 fills de 6 i 10 anys)
-    \item Pressupost: 1500 EUR/mes (màx), 600 EUR (mín), marge NO estricte
-    \item Té gos, té vehicle propi
+    \item SI numeroFills > 0 LLAVORS necessita escoles a distància propera o mitjana (obligatori)
+    \item SI numeroFills > 0 LLAVORS prefereix zones verdes properes
+    \item SI edatFills conté valors < 3 LLAVORS necessita llar d'infants propera
+    \item SI numeroFills ≥ 2 LLAVORS evita zones de soroll nocturn
+    \item SI numeroFills > 0 LLAVORS necessita mínim (1 + numeroFills) dormitoris
+    \item SI numeroFills > 2 LLAVORS prefereix habitatge unifamiliar o dúplex
 \end{itemize}
 
-\textbf{Ofertes disponibles}:
+\textbf{Regles per a estudiants:}
+\begin{itemize}
+    \item SI és grup d'estudiants LLAVORS necessita transport públic molt proper (obligatori)
+    \item SI és grup d'estudiants LLAVORS necessita habitatge moblat (obligatori)
+    \item SI és grup d'estudiants LLAVORS prioritza pressupost per sobre d'altres factors
+    \item SI és grup d'estudiants LLAVORS prefereix zones amb ambient jove
+    \item SI és grup d'estudiants LLAVORS tolera nivell de soroll mitjà-alt
+\end{itemize}
+
+\textbf{Regles per a persones grans:}
+\begin{itemize}
+    \item SI edat > 65 I plantaPis > 0 LLAVORS necessita ascensor (obligatori)
+    \item SI edat > 65 LLAVORS necessita serveis de salut propers (obligatori)
+    \item SI edat > 65 LLAVORS necessita comerç d'alimentació proper (obligatori)
+    \item SI edat > 65 LLAVORS evita zones de soroll alt
+    \item SI edat > 65 LLAVORS prefereix planta baixa o primera
+    \item SI edat > 65 LLAVORS valora molt la llum natural
+\end{itemize}
+
+\textbf{Regles per a parelles sense fills:}
+\begin{itemize}
+    \item SI és parella sense fills LLAVORS flexibilitat en localització (no hi ha restriccions escolars)
+    \item SI és parella sense fills LLAVORS valora qualitat de vida (terrassa, vistes)
+    \item SI és parella sense fills LLAVORS pot prioritzar preu sobre espai
+\end{itemize}
+
+\textbf{Regles per a parelles amb plans de fills:}
+\begin{itemize}
+    \item SI és parella futurs fills LLAVORS prefereix escoles properes (no obligatori, però valora positivament)
+    \item SI és parella futurs fills LLAVORS prefereix mínim 3 dormitoris (espai per créixer)
+    \item SI és parella futurs fills LLAVORS prefereix zones verdes properes
+\end{itemize}
+
+\subsubsection{Regles de sentit comú sobre habitatges}
+
+Aquestes regles expressen coneixement general sobre la qualitat relativa dels habitatges, independent del perfil del sol·licitant.
+
+\textbf{Regles sobre tipologia i planta:}
+\begin{itemize}
+    \item Àtic > Pis alt > Pis intermedi > Pis baix > Entresòl (en termes de llum i vistes)
+    \item Habitatge amb ascensor > Sense ascensor (especialment en plantes altes)
+    \item Habitatge exterior > Interior (llum natural i ventilació)
+\end{itemize}
+
+\textbf{Regles sobre orientació i llum:}
+\begin{itemize}
+    \item Orientació tot el dia > Orientació tarda > Orientació matí
+    \item Habitatge amb terrassa/balcó > Sense terrassa
+    \item Habitatge amb vistes > Sense vistes
+\end{itemize}
+
+\textbf{Regles sobre estat i equipament:}
+\begin{itemize}
+    \item Habitatge nou o reformat > Bon estat > Necessita reformes
+    \item Amb calefacció i aire condicionat > Només un > Cap dels dos
+    \item Consum energètic A o B > C o D > E, F o G
+\end{itemize}
+
+\textbf{Regles sobre extras:}
+\begin{itemize}
+    \item SI teVehicle LLAVORS valora molt positivament parking inclòs
+    \item Piscina comunitària és un plus per a famílies amb fills
+    \item Traster és útil per a famílies grans o emmagatzematge
+\end{itemize}
+
+\subsubsection{Regles de proximitat i distància}
+
+Aquestes regles tradueixen distàncies físiques en qualificacions qualitatives.
+
+\textbf{Classificació de distàncies:}
+\begin{itemize}
+    \item Molt a prop: < 500 m (caminable en 5-7 minuts)
+    \item Distància mitjana: 500-1000 m (caminable en 10-15 minuts)
+    \item Lluny: > 1000 m (generalment requereix transport)
+\end{itemize}
+
+\textbf{Adequació segons tipus de servei i perfil:}
+\begin{itemize}
+    \item Per a famílies amb fills petits: escola ha d'estar molt a prop o distància mitjana
+    \item Per a persones grans: serveis bàsics (salut, comerç) han d'estar molt a prop
+    \item Per a estudiants: transport públic ha d'estar molt a prop
+    \item Serveis molestos: si estan molt a prop, descarten l'habitatge
+\end{itemize}
+
+\subsubsection{Regles de pressupost}
+
+\textbf{Gestió de pressupost estricte:}
+\begin{itemize}
+    \item SI margeEstricte = si I preu > pressupostMaxim LLAVORS descarta
+    \item SI margeEstricte = si I preu < pressupostMinim LLAVORS descarta (sospitós)
+\end{itemize}
+
+\textbf{Gestió de pressupost flexible:}
+\begin{itemize}
+    \item SI margeEstricte = no I preu ≤ pressupostMaxim * 1.15 LLAVORS acceptable amb advertència
+    \item SI margeEstricte = no I preu > pressupostMaxim * 1.15 LLAVORS descarta
+    \item SI preu < pressupostMaxim * 0.8 LLAVORS punt molt positiu (estalvi significatiu)
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsection{Descomposició del problema en subproblemes}
+
+Un cop identificats els conceptes, relacions i regles del domini, cal estructurar el procés de resolució del problema. Seguint la metodologia de sistemes experts, descomponem el problema principal en subproblemes més tractables que es resoldran seqüencialment.
+
+\subsubsection{Problema principal}
+
+\textbf{Entrada:} Conjunt de sol·licitants amb les seves característiques, conjunt d'ofertes d'habitatges amb les seves característiques, conjunt de serveis urbans amb les seves localitzacions.
+
+\textbf{Sortida:} Per a cada sol·licitant, una llista d'ofertes classificades segons el seu grau d'adequació (Molt Recomanable, Adequat, Parcialment Adequat, Descartat), amb explicacions detallades per a cada classificació.
+
+\textbf{Procés:} Avaluar cada parella (sol·licitant, oferta) considerant tots els factors rellevants i aplicant el coneixement expert codificat en forma de regles.
+
+\subsubsection{Subproblema 1: Abstracció (Inferència de necessitats)}
+
+\textbf{Entrada:} Perfil d'un sol·licitant amb les seves característiques bàsiques (edat, nombre de persones, fills, mascotes, vehicle, etc.)
+
+\textbf{Tasca:} Inferir necessitats i preferències implícites a partir del perfil demogràfic, aplicant regles heurístiques del domini.
+
+\textbf{Sortida:} Conjunt de requisits inferits, cadascun amb una categoria de servei, un nivell d'obligatorietat (obligatori vs preferent), i una justificació.
+
+\textbf{Mètode:} Aplicació de regles de classificació heurística seguida de regles d'inferència específiques per cada tipologia identificada.
+
+\textbf{Exemple:}
+\begin{itemize}
+    \item Entrada: Sol·licitant família biparental, 4 persones, 2 fills (edats 6 i 10 anys), té gos
+    \item Procés: Regla detecta numeroFills > 0 → infereix necessitat d'escoles (obligatori)
+    \item Procés: Regla detecta numeroFills > 0 → infereix preferència per zones verdes
+    \item Procés: Regla detecta teMascotes = si → afegeix restricció permetMascotes obligatori
+    \item Sortida: {(ServeiEducatiu, obligatori, "Família amb fills necessita escoles"), (ZonaVerda, preferent, "Família amb fills prefereix zones verdes"), (permetMascotes, obligatori, "Té mascota tipus Gos")}
+\end{itemize}
+
+\subsubsection{Subproblema 2: Resolució (Avaluació i filtratge)}
+
+\textbf{Entrada:} Una parella (sol·licitant amb requisits inferits, oferta), localitzacions de tots els serveis.
+
+\textbf{Tasca:} Avaluar l'oferta contra els requisits del sol·licitant, identificant incompatibilitats eliminadores, criteris no complerts, i punts positius destacables.
+
+\textbf{Sortida:} O bé un motiu de descart (si hi ha incompatibilitat eliminadora), o bé dues llistes: criteris no complerts (amb gravetat) i punts positius.
+
+\textbf{Mètode:} Aplicació seqüencial de tres tipus de regles:
 \begin{enumerate}
-    \item Pis 95m², 3 dorm, 1350 EUR, Eixample (escola 200m, parc 300m, permet mascotes)
-    \item Àtic 120m², 3 dorm, 1800 EUR, Gràcia (escola 600m, sense parking, NO mascotes)
-    \item Estudi 35m², 650 EUR, Sants (massa petit)
+    \item Regles de descart (eliminen ofertes clarament inadequades)
+    \item Regles de detecció de criteris no complerts (identifiquen febleses no eliminadores)
+    \item Regles de detecció de punts positius (identifiquen fortaleses)
 \end{enumerate}
 
-\textbf{Raonament expert}:
+Aquest subproblema es subdivideix en tres fases:
+
+\paragraph{Fase 2.1: Càlcul de proximitats}
 \begin{itemize}
-    \item Oferta 1: \textbf{MOLT RECOMANABLE}
-    \begin{itemize}
-        \item Dins pressupost
-        \item Espai adequat per 4 persones
-        \item Escola molt a prop (ideal per fills)
-        \item Parc proper (ideal per fills i gos)
-        \item Permet mascotes
-    \end{itemize}
-    
-    \item Oferta 2: \textbf{DESCARTADA}
-    \begin{itemize}
-        \item Supera pressupost >15\%
-        \item No permet mascotes (elimina automàticament)
-    \end{itemize}
-    
-    \item Oferta 3: \textbf{DESCARTADA}
-    \begin{itemize}
-        \item Superfície insuficient (35m² per 4 persones)
-    \end{itemize}
+    \item Calcular distàncies entre l'habitatge de l'oferta i tots els serveis rellevants
+    \item Classificar cada distància en: MoltAProp, DistanciaMitjana, Lluny
+    \item Emmagatzemar aquestes proximitats per a ús posterior
 \end{itemize}
 
-\subsection{Exemple 2: Estudiants Marc i companys}
-
-\textbf{Perfil}:
-\begin{itemize}
-    \item Grup de 3 estudiants
-    \item Pressupost: 900 EUR/mes màx, 300 mín, ESTRICTE
-    \item No tenen vehicle, prefereixen transport públic
-    \item Estudien a la ciutat
-\end{itemize}
-
-\textbf{Ofertes}:
+\paragraph{Fase 2.2: Filtratge obligatori}
+Aplicar regles de descart en aquest ordre de prioritat:
 \begin{enumerate}
-    \item Pis compartit 95m², 4 dorm, 1400 EUR, Gràcia (metro 200m, moblat)
-    \item Estudi 30m², 750 EUR, Gràcia (metro 150m, moblat)
+    \item Pressupost: Si el preu excedeix els límits establerts → descarta
+    \item Mascotes: Si el sol·licitant té mascotes i l'habitatge no les permet → descarta
+    \item Accessibilitat: Si el sol·licitant necessita accessibilitat i l'habitatge no la té → descarta
+    \item Superfície: Si l'habitatge és massa petit per al nombre de persones → descarta
+    \item Serveis obligatoris: Si falta algun servei requerit a distància adequada → descarta
+    \item Serveis evitats: Si hi ha algun servei evitat molt a prop → descarta
+    \item Mobilat: Si és grup d'estudiants i l'habitatge no està moblat → descarta
 \end{enumerate}
 
-\textbf{Raonament expert}:
+\paragraph{Fase 2.3: Avaluació de criteris}
+Per a ofertes no descartades, detectar:
 \begin{itemize}
-    \item Oferta 1: \textbf{DESCARTADA} (supera pressupost estricte)
-    \item Oferta 2: \textbf{ADEQUAT}
-    \begin{itemize}
-        \item Dins pressupost
-        \item Metro molt a prop
-        \item Moblat (necessari per estudiants)
-    \end{itemize}
+    \item Criteris no complerts: Preu lleugerament alt, soroll, sense ascensor (persona gran), servei preferent lluny, etc.
+    \item Punts positius: Bon preu, terrassa, assolellat, alta eficiència energètica, transport molt proper, compleix requisits inferits, etc.
 \end{itemize}
 
-\section{Organització de la Resolució}
+\textbf{Exemple:}
+\begin{itemize}
+    \item Entrada: Família Garcia (requisits inferits del Subproblema 1), Oferta Pis Eixample (95m², 3 dorm, 1350€, permite mascotes, escola a 300m, parc a 450m, metro a 250m)
+    \item Fase 2.1: Calcula proximitats → escola MoltAProp, parc MoltAProp, metro MoltAProp
+    \item Fase 2.2: Verifica descartos → Preu OK (1350 < 1500), Mascotes OK, Superfície OK, Serveis obligatoris OK → No descarta
+    \item Fase 2.3: Detecta criteris → Cap negatiu
+    \item Fase 2.3: Detecta positius → {Escola molt propera (compleix requisit inferit), Zona verda molt propera (compleix requisit inferit), Transport molt proper, Terrassa, Preu bo}
+    \item Sortida: CriterisNoComplerts=[], PuntsPositius=[5 elements]
+\end{itemize}
 
-El procés de resolució segueix un \textit{pipeline} de tres fases:
+\subsubsection{Subproblema 3: Refinació (Classificació final)}
 
+\textbf{Entrada:} Una parella (sol·licitant, oferta) amb el resultat de l'avaluació (criteris no complerts i punts positius).
+
+\textbf{Tasca:} Assignar un grau de recomanació global basant-se en l'evidència acumulada.
+
+\textbf{Sortida:} Grau de recomanació (Molt Recomanable, Adequat, Parcialment Adequat) i puntuació numèrica opcional per ordenació dins de cada categoria.
+
+\textbf{Mètode:} Aplicació de regles de classificació basades en comptadors d'evidència positiva i negativa.
+
+\textbf{Regles de classificació:}
+\begin{itemize}
+    \item SI (criteris no complerts = 0) I (punts positius ≥ 3) LLAVORS Molt Recomanable
+    \item SI (criteris no complerts = 0) I (punts positius < 3) LLAVORS Adequat
+    \item SI (criteris no complerts ≥ 1) I (criteris no complerts ≤ 2) LLAVORS Parcialment Adequat
+    \item SI (criteris no complerts > 2) LLAVORS Descartat (reclassificat)
+\end{itemize}
+
+\textbf{Exemple:}
+\begin{itemize}
+    \item Entrada: Família Garcia + Oferta Eixample + Avaluació (0 criteris negatius, 5 punts positius)
+    \item Procés: Aplica regla: 0 negatius I 5 positius (≥3) → Molt Recomanable
+    \item Sortida: (MoltRecomanable, puntuació=100)
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsection{Exemples de resolució manual}
+
+Per validar la conceptualització i il·lustrar com funciona el raonament expert, presentem dos exemples de resolució manual completa seguint la descomposició en subproblemes.
+
+\subsubsection{Exemple 1: Família Garcia}
+
+\textbf{Perfil del sol·licitant:}
+\begin{itemize}
+    \item Nom: Família Garcia
+    \item Tipologia: FamíliaBiparental
+    \item Nombre de persones: 4 (2 adults + 2 fills edats 6 i 10 anys)
+    \item Pressupost: màxim 1500 EUR/mes, mínim 600 EUR/mes, marge no estricte
+    \item Mascotes: sí, 1 gos
+    \item Vehicle: sí
+\end{itemize}
+
+\textbf{Ofertes disponibles:}
 \begin{enumerate}
-    \item \textbf{ABSTRACCIÓ} (Inferència)
-    \begin{itemize}
-        \item Analitza perfil del sol·licitant
-        \item Genera requisits implícits
-        \item Calcula proximitats
-    \end{itemize}
-    
-    \item \textbf{RESOLUCIÓ} (Avaluació)
-    \begin{itemize}
-        \item Descarta ofertes inadequades
-        \item Avalua punts positius i negatius
-        \item Acumula evidència
-    \end{itemize}
-    
-    \item \textbf{REFINACIÓ} (Classificació)
-    \begin{itemize}
-        \item Assigna grau de recomanació
-        \item Genera explicacions
-        \item Ordena resultats
-    \end{itemize}
+    \item Pis Eixample: 95m², 3 dorm, 2 banys, 1350 EUR, permet mascotes, escola 300m, parc 400m, metro 250m
+    \item Àtic Gràcia: 120m², 3 dorm, 2 banys, 1800 EUR, NO permet mascotes, escola 600m
+    \item Estudi Sants: 35m², 1 dorm, 650 EUR, permet mascotes
 \end{enumerate}
 
-Aquesta organització permet separació de responsabilitats i facilita manteniment.
+\textbf{Resolució Oferta 1 (Pis Eixample):}
+
+\textit{Subproblema 1 - Abstracció:}
+\begin{itemize}
+    \item Detecta: numeroFills = 2 > 0 → Infereix: {(ServeiEducatiu, obligatori, "Fills necessiten escola"), (ZonaVerda, preferent, "Fills prefereixen zones verdes")}
+    \item Detecta: teMascotes = si → Afegeix: (permetMascotes, obligatori, "Té gos")
+\end{itemize}
+
+\textit{Subproblema 2 - Resolució:}
+\begin{itemize}
+    \item Fase 2.1: Calcula proximitats → escola MoltAProp (300m), parc MoltAProp (400m), metro MoltAProp (250m)
+    \item Fase 2.2: Verifica descartos:
+    \begin{itemize}
+        \item Preu: 1350 < 1500 → OK
+        \item Mascotes: permet = si → OK
+        \item Superfície: 95m² ≥ 4*10 = 40m² → OK (àmpliament suficient)
+        \item Serveis obligatoris: escola MoltAProp → OK
+    \end{itemize}
+    \item Fase 2.3: Detecta punts positius:
+    \begin{itemize}
+        \item Escola molt propera (compleix requisit obligatori inferit)
+        \item Zona verda molt propera (compleix preferència inferida)
+        \item Transport molt proper
+        \item Té terrassa (assumit per la descripció)
+        \item Preu bo (1350 / 1500 = 90\%, estalvi del 10\%)
+    \end{itemize}
+    \item No detecta criteris negatius
+\end{itemize}
+
+\textit{Subproblema 3 - Refinació:}
+\begin{itemize}
+    \item Avaluació: 0 criteris negatius, 5 punts positius
+    \item Regla: 0 negatius I 5 ≥ 3 → Molt Recomanable
+    \item Resultat: (MoltRecomanable, 100)
+\end{itemize}
+
+\textbf{Resolució Oferta 2 (Àtic Gràcia):}
+
+\textit{Subproblema 2 - Resolució (usa els mateixos requisits inferits):}
+\begin{itemize}
+    \item Fase 2.2: Verifica descartos:
+    \begin{itemize}
+        \item Preu: 1800 > 1500, però marge no estricte. 1800/1500 = 1.2 (20\% excés). Si límit flexible és 15\%, 1500*1.15 = 1725 < 1800 → Supera límit flexible → DESCARTA
+        \item [Alternativament, si arribés aquí] Mascotes: NO permet i sol·licitant té gos → DESCARTA
+    \end{itemize}
+    \item Motiu de descart: "Preu supera en un 20\% el pressupost màxim (límit flexible 15\%)" o "No permet mascotes i el sol·licitant té un gos"
+\end{itemize}
+
+\textit{No cal Subproblema 3 perquè ja està descartada.}
+
+\textbf{Resolució Oferta 3 (Estudi Sants):}
+
+\textit{Subproblema 2 - Resolució:}
+\begin{itemize}
+    \item Fase 2.2: Verifica descartos:
+    \begin{itemize}
+        \item Superfície: 35m² < 4*10 = 40m² → MASSA PETIT → DESCARTA
+    \end{itemize}
+    \item Motiu de descart: "Superfície insuficient per a 4 persones (35m² < 40m² mínim estimat)"
+\end{itemize}
+
+\textbf{Resultats finals per Família Garcia:}
+\begin{itemize}
+    \item Molt Recomanable: Pis Eixample (100 punts)
+    \item Descartades: Àtic Gràcia (preu excessiu i no mascotes), Estudi Sants (massa petit)
+\end{itemize}
+
+\subsubsection{Exemple 2: Grup d'estudiants Marc i companys}
+
+\textbf{Perfil del sol·licitant:}
+\begin{itemize}
+    \item Nom: Marc i companys
+    \item Tipologia: GrupEstudiants
+    \item Nombre de persones: 3
+    \item Pressupost: màxim 900 EUR/mes, marge estricte
+    \item Vehicle: no
+    \item Prefereix transport públic: sí
+    \item Estudia a la ciutat: sí
+\end{itemize}
+
+\textbf{Ofertes disponibles:}
+\begin{enumerate}
+    \item Pis compartit Gràcia: 95m², 4 dorm, 1400 EUR, moblat, metro 200m
+    \item Estudi Gràcia: 30m², 1 dorm, 750 EUR, moblat, metro 150m
+\end{enumerate}
+
+\textbf{Resolució Oferta 1 (Pis compartit):}
+
+\textit{Subproblema 1 - Abstracció:}
+\begin{itemize}
+    \item Detecta: GrupEstudiants → Infereix: {(Transport, obligatori, "Estudiants necessiten transport"), (moblat, obligatori, "Estudiants necessiten moblat")}
+\end{itemize}
+
+\textit{Subproblema 2 - Resolució:}
+\begin{itemize}
+    \item Fase 2.2: Verifica descartos:
+    \begin{itemize}
+        \item Preu: 1400 > 900 i marge estricte → DESCARTA
+    \end{itemize}
+    \item Motiu: "Preu supera pressupost màxim amb marge estricte"
+\end{itemize}
+
+\textbf{Resolució Oferta 2 (Estudi):}
+
+\textit{Subproblema 2 - Resolució:}
+\begin{itemize}
+    \item Fase 2.1: metro MoltAProp (150m)
+    \item Fase 2.2: Verifica descartos:
+    \begin{itemize}
+        \item Preu: 750 < 900 → OK
+        \item Moblat: sí → OK
+        \item Superfície: 30m² vs 3 persones. Mínim estimat: 3*10=30m² → JUST però OK
+        \item Transport: metro MoltAProp → OK
+    \end{itemize}
+    \item Fase 2.3: Punts positius:
+    \begin{itemize}
+        \item Transport molt proper (compleix requisit)
+        \item Moblat (compleix requisit)
+        \item Preu bo (750/900 = 83\%, dins pressupost)
+    \end{itemize}
+    \item Possible criteri negatiu: Espai just per 3 persones (30m² és el mínim)
+\end{itemize}
+
+\textit{Subproblema 3 - Refinació:}
+\begin{itemize}
+    \item Avaluació: 0-1 criteris negatius (segons si considerem l'espai just com a negatiu), 3 punts positius
+    \item Si 0 negatius: Molt Recomanable
+    \item Si 1 negatiu (espai just): Parcialment Adequat
+    \item Decisió: Considerem que 30m² per 3 estudiants és acceptable (passen poc temps a casa) → 0 negatius → Adequat (3 punts positius, però no excepcionals per Molt Recomanable)
+\end{itemize}
+
+\textbf{Resultats finals per Marc i companys:}
+\begin{itemize}
+    \item Adequat: Estudi Gràcia (70 punts)
+    \item Descartades: Pis compartit (preu excessiu amb marge estricte)
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsection{Organització de la resolució}
+
+Hem establert que el procés de resolució segueix una estructura en pipeline de tres fases seqüencials: Abstracció, Resolució i Refinació. Aquesta organització no és arbitrària, sinó que respon a principis d'enginyeria del coneixement que faciliten el desenvolupament, manteniment i comprensió del sistema.
+
+\subsubsection{Avantatges de l'organització en fases}
+
+La separació en fases proporciona diversos beneficis tècnics i metodològics.
+
+Primer, cada fase té una responsabilitat clarament delimitada, seguint el principi de separació de responsabilitats. L'Abstracció infereix necessitats, la Resolució avalua ofertes, i la Refinació classifica resultats. Aquesta separació fa que cada fase sigui més senzilla de desenvolupar i depurar.
+
+Segon, les fases són seqüencials i unidireccionals, evitant dependències circulars complexes. L'Abstracció genera requisits que usa la Resolució, i la Resolució genera avaluacions que usa la Refinació, però no hi ha retroalimentació inversa. Això simplifica el flux de control i el raonament sobre el comportament del sistema.
+
+Tercer, cada fase pot desenvolupar-se i provar-se de manera independent. Podem validar que l'Abstracció infereix correctament les necessitats sense haver implementat encara la Resolució. Podem provar la Resolució amb requisits manuals sense dependre de l'Abstracció. Aquest desenvolupament incremental redueix la complexitat.
+
+Quart, la modularitat facilita el manteniment i l'extensió. Si volem afegir una nova regla d'inferència, només cal modificar l'Abstracció. Si volem canviar els criteris de classificació, només cal modificar la Refinació. Les altres fases no es veuen afectades.
+
+\subsubsection{Flux de dades entre fases}
+
+El flux de dades és clarament definit i traceable:
+
+\textbf{Fase 1 (Abstracció):}
+\begin{itemize}
+    \item Entrada: Sol·licitant amb atributs bàsics
+    \item Sortida: Requisits inferits (serveis obligatoris, serveis preferents, restriccions)
+\end{itemize}
+
+\textbf{Fase 2 (Resolució):}
+\begin{itemize}
+    \item Entrada: Sol·licitant + Requisits inferits + Oferta + Serveis
+    \item Sortida: O descart amb motiu, o (CriterisNoComplerts, PuntsPositius)
+\end{itemize}
+
+\textbf{Fase 3 (Refinació):}
+\begin{itemize}
+    \item Entrada: (CriterisNoComplerts, PuntsPositius)
+    \item Sortida: (GrauRecomanació, Puntuació)
+\end{itemize}
+
+Aquesta estructura en pipeline assegura que la informació flueix de manera predictible i que cada fase afegeix valor de manera incremental.
+
+\vspace{0.5cm}
+
+\subsection{Conclusions de la fase de conceptualització}
+
+La fase de conceptualització ha permès transformar el problema inicial (recomanar habitatges) en una estructura conceptual clara i implementable. Hem identificat els conceptes principals del domini (Habitatge, Sol·licitant, Servei, Oferta, Localització), les seves característiques rellevants, i les relacions que els connecten.
+
+Hem extret coneixement expert de diverses fonts, incloent models de llenguatge utilitzats com a experts virtuals, que hem validat i integrat de manera crítica. Aquest coneixement s'ha estructurat en forma de regles heurístiques organitzades per categories: regles basades en perfil demogràfic, regles de sentit comú, regles de proximitat, i regles de pressupost.
+
+Hem descompost el problema principal en tres subproblemes seqüencials (Abstracció, Resolució, Refinació), cadascun amb entrada, sortida i mètode clarament definits. Aquesta descomposició facilita tant la implementació com el raonament sobre el comportament del sistema.
+
+Hem validat la conceptualització mitjançant exemples de resolució manual, demostrant que el coneixement estructurat permet arribar a conclusions raonables i justificades per a casos concrets.
+
+Amb aquesta base conceptual sòlida, estem preparats per avançar a la fase de formalització, on crearem una ontologia explícita que capturi tot aquest coneixement de manera precisa i computacionalment tractable.

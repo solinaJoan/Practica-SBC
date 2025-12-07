@@ -1,23 +1,36 @@
-\documentclass[12pt,a4paper]{report}
+\documentclass[12pt]{article} 
+
 \usepackage[utf8]{inputenc}
 \usepackage[catalan]{babel}
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{xcolor}
-\usepackage{geometry}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
+\usepackage{geometry}
+\usepackage{amsmath}
 
-% Configuració de la pàgina
-\geometry{left=3cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
 
-% Configuració dels capçals i peus
+\usepackage{float}         % Permet usar [H] per fixar figures
+\usepackage{caption}       % Control de llegendes
+\usepackage{subcaption}    % Figures múltiples en una sola (si ho necessites)
+\usepackage{xcolor}        % Colors millorats
+
+% Configuració de la geometria
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=3cm,
+    bottom=3cm
+}
+% Configuració de capçaleres i peus
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\leftmark}
 \fancyhead[R]{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{15.5pt}
 
 % Configuració de listings per codi CLIPS
 \lstdefinestyle{clips}{
@@ -46,7 +59,6 @@
 
 \lstset{style=clips}
 
-% Informació del document
 \title{
     \includegraphics[width=0.3\textwidth]{fotos/upc-logo.png}\\[1cm]
     {\LARGE Pràctica de Sistemes Basats en el Coneixement}\\[0.5cm]
@@ -69,45 +81,32 @@
 
 \date{14 de desembre de 2025}
 
+\pagestyle{plain}
+\setlength{\parindent}{0pt}
+
 \begin{document}
-
-% Portada
+\sloppy
 \maketitle
-\thispagestyle{empty}
 \newpage
-
-% Índex
 \tableofcontents
-\newpage
 
-% Capítols
-\chapter{Identificació}
+
+\newpage
 \input{chapters/01_identificacio}
 
-\chapter{Conceptualització}
-%\input{chapters/02_conceptualitzacio}
+\newpage
+\input{chapters/02_conceptualitzacio}
 
-\chapter{Formalització}
-%\input{chapters/03_formalitzacio}
+\newpage
+\input{chapters/03_formalitzacio}
 
-\chapter{Implementació}
-%\input{chapters/04_implementacio}
+\newpage
+\input{chapters/04_implementacio}
 
-\chapter{Proves i Validació}
-%\input{chapters/05_proves}
+\newpage
+\input{chapters/05_proves}
 
-\chapter{Conclusions}
-%\input{chapters/06_conclusions}
-
-% Annexos
-%\appendix
-%\chapter{Codi Font Complet}
-%\input{annexa_codi}
-
-%\chapter{Ontologia Detallada}
-%\input{annexb_ontologia}
-
-%\chapter{Jocs de Prova Addicionals}
-%\input{annexc_proves_extra}
+\newpage
+\input{chapters/06_conclusions}
 
 \end{document}

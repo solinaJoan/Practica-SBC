@@ -1,166 +1,195 @@
 % 01_identificacio.tex
 % Capítol 1: Identificació del problema
 
-\section{Descripció del Problema}
+\section{Identificació}
+\label{sec:identificacio}
 
-El problema aborda la necessitat de trobar l'habitatge de lloguer més adequat per a persones amb diferents perfils i necessitats. En un mercat immobiliari amb milers d'ofertes i característiques diverses, trobar l'opció òptima requereix avaluar múltiples factors simultàniament:
+\vspace{0.5cm}
 
-\begin{itemize}
-    \item Característiques de l'habitatge (preu, superfície, nombre d'habitacions, equipament)
-    \item Localització i serveis propers (transport, escoles, centres de salut, zones verdes)
-    \item Perfil del sol·licitant (família, estudiants, persones grans, parelles)
-    \item Necessitats específiques (accessibilitat, mascotes, vehicle propi)
-\end{itemize}
+\subsection{Descripció del problema}
 
-Aquest procés implica coneixement expert sobre criteris de qualitat d'habitatge, necessitats segons perfils demogràfics i sentit comú sobre preferències habitacionals.
+El mercat immobiliari de lloguer a Barcelona es caracteritza per una elevada complexitat: milers d'ofertes amb característiques heterogènies, sol·licitants amb necessitats diverses i una àmplia gamma de serveis urbans distribuïts per la ciutat. En aquest context, trobar l'habitatge més adequat per a cada perfil de sol·licitant no és trivial, ja que cal considerar simultàniament múltiples factors que interactuen entre ells.
 
-\section{Anàlisi de Viabilitat}
+El problema que abordem consisteix en desenvolupar un sistema capaç de recomanar habitatges de lloguer a diferents tipus de sol·licitants (famílies amb fills, estudiants, persones grans, parelles, etc.) considerant no només les característiques intrínseques de cada habitatge (preu, superfície, nombre d'habitacions, equipament), sinó també factors externs com la proximitat a serveis urbans rellevants (transport públic, escoles, centres de salut, zones verdes) i les preferències específiques de cada perfil demogràfic.
 
-\subsection{És adequat un Sistema Basat en Coneixement?}
+La complexitat del problema radica en diversos aspectes. En primer lloc, les característiques rellevants per a un sol·licitant poden ser completament diferents de les rellevants per a un altre: mentre que una família amb fills petits prioritzarà la proximitat a escoles i zones verdes, un grup d'estudiants valorarà més el transport públic i un preu econòmic. En segon lloc, no existeix una única "millor" solució, sinó que cal proporcionar recomanacions graduades que ajudin el sol·licitant a prendre decisions informades. Finalment, el sistema ha de ser capaç d'explicar les seves recomanacions de manera transparent, no només indicant quins habitatges són adequats, sinó també per què ho són i què els manca als que no compleixen tots els requisits.
 
-Un Sistema Basat en Coneixement (SBC) és adequat per aquest problema per les següents raons:
+\vspace{0.5cm}
 
-\begin{enumerate}
-    \item \textbf{Existeix coneixement expert}: Agents immobiliaris experimentats utilitzen regles heurístiques per recomanar habitatges segons perfils.
-    
-    \item \textbf{El problema no té solució algorítmica simple}: La recomanació òptima depèn de múltiples factors qualitatius que interactuen de manera complexa.
-    
-    \item \textbf{Raonable complexitat}: El problema és prou complex per necessitar IA però no tant com per requerir aprenentatge automàtic.
-    
-    \item \textbf{Coneixement estructurable}: Es poden identificar clarament conceptes (habitatge, sol·licitant, servei) i relacions entre ells.
-    
-    \item \textbf{Explicabilitat important}: Els usuaris necessiten entendre per què se'ls recomana o descarta un habitatge.
-\end{enumerate}
+\subsection{Anàlisi de viabilitat}
 
-\subsection{Limitacions d'altres aproximacions}
+\subsubsection{Adequació d'un Sistema Basat en Coneixement}
 
-\begin{itemize}
-    \item \textbf{Cerca simple per filtres}: No captura preferències complexes ni coneixement expert sobre adequació.
-    \item \textbf{Machine Learning}: Requereix grans quantitats de dades d'usuaris reals i no proporciona explicabilitat transparent.
-    \item \textbf{Sistemes de puntuació numèrics}: No capturen adequadament les restriccions obligatòries vs. preferències opcionals.
-\end{itemize}
+Abans d'emprendre el desenvolupament del sistema, cal analitzar si l'enfocament de Sistemes Basats en Coneixement (SBC) és apropiat per aquest problema. Diversos factors justifiquen aquesta elecció.
 
-\section{Identificació de Fonts de Coneixement}
+En primer lloc, existeix coneixement expert clarament identificable. Els agents immobiliaris experimentats apliquen regles heurístiques ben establertes quan recomanen habitatges: saben que les famílies necessiten escoles properes, que les persones grans requereixen accessibilitat, que els estudiants prioritzen el transport públic i el preu. Aquest coneixement és articulable, estructurable i pot formalitzar-se en forma de regles.
 
-\subsection{Fonts Primàries}
+En segon lloc, el problema no té una solució algorítmica directa. No es tracta simplement d'ordenar ofertes per preu o filtrar per nombre d'habitacions, sinó d'avaluar múltiples factors qualitatius que interactuen de manera complexa. Un habitatge pot ser excel·lent per a un perfil i completament inadequat per a un altre, i aquesta adequació depèn de regles expertes més que de càlculs matemàtics simples.
 
-\begin{enumerate}
-    \item \textbf{Experts del domini}:
-    \begin{itemize}
-        \item Agents immobiliaris amb experiència en lloguer d'habitatges
-        \item Consultors d'habitatge social
-        \item Gestors de propietats
-    \end{itemize}
-    
-    \item \textbf{Lleis i normatives}:
-    \begin{itemize}
-        \item Llei d'Arrendaments Urbans (LAU)
-        \item Normatives d'accessibilitat
-        \item Regulacions locals de lloguer
-    \end{itemize}
-\end{enumerate}
+En tercer lloc, la complexitat del problema és moderada. És prou complex per necessitar intel·ligència artificial (no es pot resoldre amb simples filtres), però no tant com per requerir tècniques d'aprenentatge automàtic que necessitarien milers de dades d'entrenament. La quantitat de coneixement és manejable i pot estructurar-se adequadament.
 
-\subsection{Fonts Secundàries}
+Finalment, l'explicabilitat és un requisit fonamental. Els usuaris no només volen saber quins habitatges se'ls recomana, sinó entendre per què. Un SBC permet proporcionar justificacions clares i traçables de cada decisió, cosa que seria molt difícil amb aproximacions de caixa negra com les xarxes neuronals.
 
-\begin{enumerate}
-    \item \textbf{Plataformes immobiliàries}:
-    \begin{itemize}
-        \item Idealista.com
-        \item Fotocasa.es
-        \item Habitaclia.com
-    \end{itemize}
-    Anàlisi de característiques ofertes i sistemes de cerca.
-    
-    \item \textbf{Estudis demogràfics i sociològics}:
-    \begin{itemize}
-        \item Necessitats habitacionals per grups d'edat
-        \item Patrons de mobilitat urbana
-        \item Preferències per tipologia familiar
-    \end{itemize}
-    
-    \item \textbf{Models de llenguatge (LLM)}:
-    \begin{itemize}
-        \item ChatGPT, Claude, Gemini
-        \item Utilitzats com a "expert virtual" per elicitació de coneixement
-        \item Validació posterior amb fonts reals
-    \end{itemize}
-\end{enumerate}
+\subsubsection{Limitacions d'altres aproximacions}
 
-\section{Objectius del Sistema}
+Per reforçar la justificació de l'ús d'un SBC, considerem breument les limitacions d'altres aproximacions possibles.
 
-\subsection{Objectius Funcionals}
+Una cerca simple per filtres, com la que ofereixen moltes plataformes immobiliàries actuals, no captura el coneixement expert sobre adequació. L'usuari pot filtrar per preu, número d'habitacions i barri, però el sistema no li dirà que aquell habitatge és inadequat perquè està lluny d'escoles tot i tenir el nombre d'habitacions correcte, ni li suggerirà alternatives millors considerant el seu perfil global.
 
-\begin{enumerate}
-    \item \textbf{Recomanar habitatges adequats}: Generar una llista ordenada d'ofertes segons grau d'adequació (Molt Recomanable, Adequat, Parcialment Adequat).
-    
-    \item \textbf{Descartar ofertes inadequades}: Identificar i filtrar habitatges que no compleixen requisits obligatoris.
-    
-    \item \textbf{Justificar decisions}: Proporcionar explicacions clares sobre per què un habitatge és recomanat o descartat.
-    
-    \item \textbf{Inferir necessitats}: Deduir requisits no explícits basant-se en el perfil del sol·licitant.
-\end{enumerate}
+Les tècniques de Machine Learning, tot i ser potents, presenten diversos inconvenients per aquest problema. Primer, requeririen grans quantitats de dades de preferències reals d'usuaris, que no sempre estan disponibles. Segon, són menys transparents: és difícil explicar per què un model neuronal recomana un habitatge concret. Tercer, poden perpetuar biaixos presents en les dades d'entrenament. Finalment, són més costoses computacionalment i més complexes de mantenir i actualitzar quan canvien les regles del domini.
 
-\subsection{Objectius No Funcionals}
+Els sistemes de puntuació numèrics simples, on cada característica suma o resta punts, tampoc són adequats. No capturen adequadament la diferència entre restriccions obligatòries (que descarten completament un habitatge) i preferències opcionals (que el fan més o menys atractiu). A més, assignar pesos numèrics a cada característica és arbitrari i no reflecteix com realment raonen els experts.
 
-\begin{enumerate}
-    \item \textbf{Cobertura exhaustiva}: Considerar la majoria de casos reals d'habitatge i perfils d'usuari.
-    
-    \item \textbf{Mantenibilitat}: Estructura modular que permeti afegir noves regles fàcilment.
-    
-    \item \textbf{Rendiment adequat}: Processar desenes d'ofertes i sol·licitants en temps raonable.
-    
-    \item \textbf{Transparència}: Regles comprensibles i traçables.
-\end{enumerate}
+\vspace{0.5cm}
 
-\section{Abast del Sistema}
+\subsection{Identificació de fonts de coneixement}
 
-\subsection{Dins de l'abast}
+El desenvolupament d'un SBC requereix identificar clarament d'on provè el coneixement que codificarem al sistema. Distingim entre fonts primàries (contacte directe amb experts) i fonts secundàries (coneixement publicat o sistemes existents).
 
-\begin{itemize}
-    \item Recomanació d'habitatges de lloguer a Barcelona (ciutat fictícia simplificada)
-    \item Avaluació de proximitat a serveis urbans
-    \item Perfils: individus, parelles, famílies, estudiants, persones grans
-    \item Restriccions de preu, accessibilitat, mascotes
-    \item Inferència de necessitats segons perfil demogràfic
-\end{itemize}
+\subsubsection{Fonts primàries}
 
-\subsection{Fora de l'abast}
+Les fonts primàries proporcionen coneixement directe i especialitzat del domini. En el nostre cas, identificem tres tipus principals d'experts.
 
-\begin{itemize}
-    \item Habitatge en propietat (compra)
-    \item Anàlisi financer detallat (hipoteques, impostos)
-    \item Predicció de preus futurs
-    \item Recomanacions personalitzades amb aprenentatge d'usuari
-    \item Integració amb bases de dades reals d'ofertes
-    \item Gestió de reserves o contractes
-\end{itemize}
+Els agents immobiliaris amb experiència en lloguer d'habitatges són la font més valuosa. Aquests professionals han desenvolupat heurístiques implícites a través de l'experiència: saben instantàniament si un habitatge és adequat per a una família amb fills petits o per a un grup d'estudiants. Poden articular no només què recomanarien, sinó també per què, i quins factors compensatoris existeixen (per exemple, quan un preu lleugerament més alt es compensa amb una localització excel·lent).
 
-\section{Resultats Esperats}
+Els consultors d'habitatge social i gestors de polítiques públiques aporten una perspectiva complementària. Coneixen les necessitats específiques de col·lectius vulnerables (persones grans, famílies monoparentals), les normatives d'accessibilitat, i els criteris objectius per determinar si un habitatge és adequat per a un perfil determinat.
 
-El sistema ha de produir per cada sol·licitant:
+Finalment, els gestors de propietats i administradors de finques tenen coneixement pràctic sobre les característiques tècniques dels habitatges, les seves limitacions reals (més enllà del què diu l'anunci), i com aquestes característiques afecten la vida quotidiana dels residents.
 
-\begin{enumerate}
-    \item \textbf{Llista d'ofertes recomanades} amb tres nivells:
-    \begin{itemize}
-        \item Molt Recomanable: Compleix tot i té característiques excepcionals
-        \item Adequat: Compleix tots els requisits
-        \item Parcialment Adequat: Acceptable amb alguns criteris no complerts
-    \end{itemize}
-    
-    \item \textbf{Llista d'ofertes descartades} amb justificació de cada descart.
-    
-    \item \textbf{Explicacions detallades} per cada recomanació:
-    \begin{itemize}
-        \item Punts positius destacables
-        \item Criteris no complerts (per ofertes parcials)
-        \item Serveis propers rellevants
-    \end{itemize}
-\end{enumerate}
+\subsubsection{Fonts secundàries}
 
-\section{Beneficis Esperats}
+Les fonts secundàries complementen i validen el coneixement obtingut dels experts. Hem identificat diverses categories rellevants.
 
-\begin{itemize}
-    \item \textbf{Per usuaris}: Estalvi de temps, recomanacions més adequades, transparència en decisions
-    \item \textbf{Per agents immobiliaris}: Automatització de pre-filtratge, més eficiència
-    \item \textbf{Per propietaris}: Millor matching amb llogaters adequats
-\end{itemize}
+Les plataformes immobiliàries online (Idealista, Fotocasa, Habitaclia) no només proporcionen dades sobre l'estructura dels anuncis i les característiques més rellevants del mercat, sinó que també ofereixen sistemes de cerca i filtres que reflecteixen implícitament criteris d'adequació. Analitzar aquestes plataformes ens permet entendre quines característiques es consideren suficientment importants com per ser filtres de cerca.
+
+Els estudis demogràfics i sociològics sobre necessitats habitacionals proporcionen coneixement validat científicament sobre les preferències de diferents grups d'edat, tipologies familiars i perfils socioeconòmics. Aquests estudis ajuden a objectivar el coneixement expert i a identificar patrons sistemàtics.
+
+Les normatives legals, especialment la Llei d'Arrendaments Urbans (LAU) i les regulacions d'accessibilitat, estableixen criteris objectius que el sistema ha de respectar. Per exemple, els requisits d'accessibilitat per a persones amb mobilitat reduïda no són opinables, sinó que estan legalment definits.
+
+Finalment, i de manera innovadora, els models de llenguatge actuals (ChatGPT, Claude, Gemini) poden actuar com a "experts virtuals" per a la fase de conceptualització. Tot i que no substitueixen el coneixement d'experts reals, permeten explorar ràpidament diferents escenaris, obtenir estructuracions inicials del coneixement, i validar la coherència de les regles proposades. És important, però, contrastar aquest coneixement amb fonts autoritzades.
+
+\vspace{0.5cm}
+
+\subsection{Objectius del sistema}
+
+\subsubsection{Objectius funcionals}
+
+El sistema ha de complir quatre objectius funcionals principals, cadascun amb requisits específics que detallarem.
+
+El primer objectiu és generar recomanacions graduades d'habitatges. No n'hi ha prou amb dir "aquest habitatge és bo" o "aquest és dolent", sinó que cal proporcionar una classificació en tres nivells: Molt Recomanable (compleix tots els requisits i té característiques excepcionals), Adequat (compleix tots els requisits), i Parcialment Adequat (acceptable però amb alguns criteris no complerts). Aquesta gradació permet a l'usuari prendre decisions informades segons la seva flexibilitat i urgència.
+
+El segon objectiu és descartar de manera justificada els habitatges clarament inadequats. Si un habitatge no permet mascotes i el sol·licitant en té, o si és inaccessible per a algú amb mobilitat reduïda, no només s'ha d'excloure de les recomanacions, sinó explicar clarament per què. Aquestes justificacions han de ser concises i comprensibles per a usuaris no experts.
+
+El tercer objectiu és proporcionar explicacions detallades de les recomanacions. Per als habitatges recomanats, cal indicar quins són els seus punts forts (proximitat a escola, preu excel·lent, terrassa gran). Per als parcialment adequats, cal especificar què els manca o quins criteris no compleixen completament. Aquesta transparència és essencial per a la confiança de l'usuari i per permetre que prengui decisions informades.
+
+El quart objectiu és inferir necessitats implícites a partir del perfil del sol·licitant. Si una família indica que té fills petits, el sistema ha de deduir automàticament que necessitarà escoles properes i zones verdes, sense que l'usuari ho hagi d'especificar explícitament. Aquesta capacitat d'inferència demostra la intel·ligència del sistema i millora significativament l'experiència d'usuari.
+
+\subsubsection{Objectius no funcionals}
+
+Més enllà de la funcionalitat, el sistema ha de complir diversos requisits de qualitat que determinaran la seva utilitat pràctica.
+
+La cobertura ha de ser exhaustiva. El sistema ha de poder gestionar la majoria de casos reals: diferents tipologies d'habitatge (pisos, àtics, dúplex, habitatges unifamiliars), diversos perfils de sol·licitants (des de persones soles fins a famílies nombroses), i múltiples categories de serveis urbans. No es tracta de cobrir tots els casos possibles del món real, però sí els més freqüents i rellevants.
+
+La mantenibilitat és crucial per a la viabilitat a llarg termini. L'estructura del sistema ha de ser modular, amb regles clarament separades per funcionalitat, de manera que afegir noves regles o modificar les existents sigui senzill i no requereixi reescriure grans parts del codi. La documentació del codi i de les regles ha de ser suficient perquè un nou desenvolupador pugui entendre i modificar el sistema.
+
+El rendiment ha de ser adequat. Tot i que no es tracta d'un sistema de temps real crític, processar desenes d'ofertes per a diversos sol·licitants hauria de prendre segons, no minuts. Això implica que les regles han de ser eficients i que l'arquitectura del sistema no ha de tenir colls d'ampolla evidents.
+
+Finalment, la transparència és un requisit essencial. Totes les decisions del sistema han de ser traçables: ha de ser possible seguir el raonament que ha portat a una recomanació concreta, identificar quines regles s'han activat, i entendre per què. Aquesta traçabilitat no només facilita la depuració i el manteniment, sinó que també és essencial per a la confiança dels usuaris.
+
+\vspace{0.5cm}
+
+\subsection{Abast del sistema}
+
+\subsubsection{Dins de l'abast}
+
+Per definir clarament les expectatives i centrar l'esforç de desenvolupament, delimitem explícitament què està dins de l'abast del sistema.
+
+El sistema gestionarà habitatges de lloguer (no de compra) en un àmbit geogràfic simplificat. Per facilitar el desenvolupament i les proves, treballarem amb una ciutat fictícia amb coordenades simplificades, tot i que el disseny permetrà adaptar-lo fàcilment a dades reals de Barcelona utilitzant latitud i longitud.
+
+Els perfils de sol·licitants coberts inclouen les tipologies més comunes: individus sols, parelles (amb fills, sense fills, o amb plans de tenir-ne), famílies (monoparentals o biparentals), grups d'estudiants, i persones grans. Per a cada perfil, considerarem les variables més rellevants: nombre de persones, pressupost, necessitats d'accessibilitat, mascotes, vehicle propi, etc.
+
+Pel que fa als serveis urbans, considerarem sis categories principals: transport públic (metro, bus, tren), serveis educatius (escoles, instituts, universitats, llars d'infants), serveis de salut (hospitals, centres de salut, farmàcies), serveis comercials (supermercats, hipermercats, mercats), zones verdes (parcs, jardins), i serveis d'oci. També identificarem serveis potencialment molestos (discoteques, estadis, autopistes) que alguns perfils voldran evitar.
+
+El sistema calcularà automàticament la proximitat entre habitatges i serveis utilitzant distàncies simplificades (Manhattan o Euclidiana), i classificarà aquesta proximitat en tres categories: molt a prop (menys de 500m, caminable en 5-7 minuts), a distància mitjana (500-1000m, caminable en 10-15 minuts), i lluny (més de 1000m, requereix transport).
+
+Finalment, el sistema serà capaç d'inferir necessitats basant-se en el perfil demogràfic i aplicar regles heurístiques de sentit comú sobre la qualitat dels habitatges (per exemple, que un àtic sol ser millor que un entresòl, o que l'orientació solar a tot el dia és preferible).
+
+\subsubsection{Fora de l'abast}
+
+És igualment important delimitar què queda explícitament fora de l'abast del sistema, per evitar expectatives no realistes i centrar l'esforç en els objectius principals.
+
+El sistema no gestionarà habitatges de compra, només de lloguer. Això simplifica significativament el problema, ja que no cal considerar hipoteques, impostos de compravenda, plusvàlues, ni anàlisis d'inversió a llarg termini.
+
+No es farà anàlisi financer detallat més enllà de la verificació de pressupost. No calcularem la quota hipotecària òptima, ni analitzarem l'estalvi a llarg termini, ni farem previsions de preus futurs. El sistema es limita a verificar que el preu de lloguer estigui dins del pressupost del sol·licitant.
+
+Tampoc implementarem recomanacions personalitzades amb aprenentatge d'usuari. El sistema no recordarà preferències d'usuaris anteriors, ni ajustarà els seus criteris basant-se en el feedback rebut. Cada consulta es tracta de manera independent aplicant sempre les mateixes regles expertes.
+
+La integració amb bases de dades reals d'ofertes queda fora de l'abast. Treballarem amb dades sintètiques o introducció manual d'ofertes. Un sistema real requeriria integració amb APIs de plataformes immobiliàries, actualització constant de la disponibilitat, i gestió de l'obsolescència de les dades.
+
+Finalment, no implementarem funcionalitats de gestió de reserves o contractes. El sistema es limita a recomanar; la gestió posterior del lloguer (visites, negociació, signatura de contracte, pagaments) queda fora del seu abast.
+
+\vspace{0.5cm}
+
+\subsection{Resultats esperats}
+
+\subsubsection{Format de sortida}
+
+Per a cada sol·licitant que consulti el sistema, s'espera obtenir una sortida estructurada amb diversos components clarament diferenciats.
+
+El primer component és una llista d'ofertes recomanades, classificades en tres nivells segons el seu grau d'adequació. Les ofertes Molt Recomanables són aquelles que compleixen tots els requisits obligatoris i, a més, destaquen per característiques excepcionals com un preu excel·lent, equipament superior, o localització privilegiada. Les ofertes Adequades compleixen tots els requisits sense excepcions, tot i que no tenen elements destacables addicionals. Les ofertes Parcialment Adequades són acceptables però presenten algun criteri no complert que, tot i no ser eliminator, suposa un compromís (preu lleugerament superior, transport a distància mitjana en lloc de molt proper, etc.).
+
+El segon component és una llista d'ofertes descartades amb la justificació de cada descart. És important no només excloure habitatges, sinó explicar per què: "No permet mascotes i el sol·licitant té un gos", "Preu supera el pressupost màxim establert", "No té ascensor i el sol·licitant requereix accessibilitat". Aquestes justificacions ajuden l'usuari a entendre les decisions del sistema i a modificar els seus criteris si ho considera oportú.
+
+El tercer component són explicacions detallades per a cada recomanació. Per a les ofertes Molt Recomanables, cal llistar explícitament què les fa destacar: "Preu 20% inferior al pressupost màxim", "Escola a 250 metres", "Transport públic a 100 metres", "Terrassa de 15m²". Per a les Adequades, n'hi ha prou amb confirmar que compleixen tots els requisits. Per a les Parcialment Adequades, cal detallar quins criteris no es compleixen i amb quina gravetat: "El preu supera en un 8% el pressupost màxim (acceptable amb marge flexible)", "L'escola més propera està a 850 metres (distància mitjana)".
+
+\subsubsection{Informació per oferta}
+
+Per a cada oferta recomanada o descartada, el sistema proporcionarà informació estructurada que inclou les característiques principals de l'habitatge (tipus, superfície, nombre i tipus de dormitoris, banys, planta, ascensor), la localització (adreça, districte, barri, coordenades), el preu mensual, l'equipament (moblat, electrodomèstics, calefacció, aire condicionat, terrassa, parking), i els serveis propers rellevants per al perfil del sol·licitant (escoles, transport, salut, comerç, zones verdes).
+
+\vspace{0.5cm}
+
+\subsection{Beneficis esperats}
+
+\subsubsection{Per als usuaris}
+
+El sistema aportarà diversos beneficis tangibles als sol·licitants d'habitatge que el utilitzin.
+
+L'estalvi de temps és potser el més immediat i valuós. En lloc de revisar manualment desenes o centenars d'anuncis, filtrant per preu i després verificant un per un la localització i els serveis propers, l'usuari rep directament una llista curada d'opcions adequades al seu perfil. Això pot reduir el temps de cerca de setmanes a hores.
+
+La qualitat de les recomanacions serà superior a la que l'usuari obtindria per si mateix, especialment si no coneix bé la ciutat o no és expert en el mercat immobiliari. El sistema aplica coneixement expert acumulat i considera factors que l'usuari podria passar per alt (per exemple, que un barri concret no té escoles properes malgrat semblar ideal en altres aspectes).
+
+La transparència de les decisions permet a l'usuari entendre per què se li recomana cada habitatge i què li manca als que s'han descartat. Això no només genera confiança en el sistema, sinó que també educa l'usuari sobre els factors rellevants que hauria de considerar, millorant la seva capacitat de prendre decisions informades.
+
+Finalment, la capacitat d'inferència automàtica de necessitats millora significativament l'experiència d'usuari. No cal que l'usuari sigui exhaustiu especificant cada requisit; el sistema dedueix intel·ligentment què necessita basant-se en el seu perfil, estalviant-li temps i assegurant que no oblidi factors importants.
+
+\subsubsection{Per als agents immobiliaris}
+
+El sistema també aporta valor als professionals del sector immobiliari, tot i que amb un enfocament diferent.
+
+L'automatització del pre-filtratge és el benefici més evident. Els agents reben diàriament múltiples consultes que requereixen temps per analitzar. El sistema pot fer una primera criba automàtica, identificant les ofertes més prometedores per a cada client i deixant que l'agent dediqui el seu temps a afegir valor en les fases posteriors (negociació, visites, aspectes legals).
+
+La millora de l'eficiència es tradueix en capacitat per atendre més clients simultàniament sense comprometre la qualitat del servei. El sistema actua com un assistent intel·ligent que aplica de manera consistent els criteris de l'agent, alliberant-lo per a tasques que requereixen el seu toc humà.
+
+La consistència en els criteris és un altre avantatge. Mentre que un agent humà pot aplicar criteris lleugerament diferents segons l'estat d'ànim, la fatiga o la càrrega de treball, el sistema aplica sempre els mateixos estàndards, assegurant un servei homogeni a tots els clients.
+
+\subsubsection{Per als propietaris}
+
+Indirectament, els propietaris també es beneficien del sistema a través d'un millor matching amb llogaters adequats.
+
+Si els habitatges es recomanen a perfils realment adequats, augmenta la probabilitat que la relació de lloguer sigui satisfactòria i duradora per a ambdues parts. Una família que lloga un habitatge ben situat respecte a escoles i serveis rellevants té menys probabilitats de canviar de pis al cap de pocs mesos.
+
+La reducció de vacants és un altre benefici potencial. Si el sistema facilita que els llogaters adequats trobin ràpidament els habitatges que els convenen, es redueix el temps que aquests estan buits esperant inquilí.
+
+\vspace{0.5cm}
+
+\subsection{Conclusions de la fase d'identificació}
+
+L'anàlisi realitzada en aquesta fase d'identificació demostra que el problema de recomanació d'habitatges de lloguer és adequat per ser abordat mitjançant un Sistema Basat en Coneixement. Hem identificat clarament l'existència de coneixement expert articulable, la complexitat moderada que justifica l'ús d'IA, i la necessitat d'explicabilitat que fa preferibles els SBC sobre altres aproximacions.
+
+Les fonts de coneixement estan ben identificades, combinant experts humans (agents immobiliaris, consultors d'habitatge), fonts documentals (plataformes online, estudis demogràfics, normatives legals), i eines modernes (models de llenguatge per a conceptualització inicial). Aquesta diversitat de fonts assegurarà que el coneixement codificat sigui robust i validat.
+
+Els objectius, tant funcionals com no funcionals, estan clarament definits i són assolibles amb la tecnologia i metodologia proposades. L'abast del sistema està delimitat de manera realista, centrant-se en els aspectes essencials i deixant per a futures extensions funcionalitats més avançades.
+
+Els beneficis esperats justifiquen l'esforç de desenvolupament: el sistema aportarà valor real a usuaris, agents immobiliaris i propietaris, millorant l'eficiència del mercat de lloguer.
+
+Amb aquesta base sòlida, podem avançar a la fase de conceptualització, on començarem a estructurar el coneixement identificat i a definir els conceptes, relacions i regles que conformaran el sistema.

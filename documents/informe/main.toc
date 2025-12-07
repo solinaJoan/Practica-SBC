@@ -1,22 +1,214 @@
 \babel@toc {catalan}{}\relax 
-\contentsline {chapter}{\numberline {1}Identificació}{2}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Descripció del Problema}{2}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Anàlisi de Viabilitat}{2}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1}És adequat un Sistema Basat en Coneixement?}{2}{subsection.1.2.1}%
-\contentsline {subsection}{\numberline {1.2.2}Limitacions d'altres aproximacions}{3}{subsection.1.2.2}%
-\contentsline {section}{\numberline {1.3}Identificació de Fonts de Coneixement}{3}{section.1.3}%
-\contentsline {subsection}{\numberline {1.3.1}Fonts Primàries}{3}{subsection.1.3.1}%
-\contentsline {subsection}{\numberline {1.3.2}Fonts Secundàries}{3}{subsection.1.3.2}%
-\contentsline {section}{\numberline {1.4}Objectius del Sistema}{4}{section.1.4}%
-\contentsline {subsection}{\numberline {1.4.1}Objectius Funcionals}{4}{subsection.1.4.1}%
-\contentsline {subsection}{\numberline {1.4.2}Objectius No Funcionals}{4}{subsection.1.4.2}%
-\contentsline {section}{\numberline {1.5}Abast del Sistema}{4}{section.1.5}%
-\contentsline {subsection}{\numberline {1.5.1}Dins de l'abast}{4}{subsection.1.5.1}%
-\contentsline {subsection}{\numberline {1.5.2}Fora de l'abast}{4}{subsection.1.5.2}%
-\contentsline {section}{\numberline {1.6}Resultats Esperats}{5}{section.1.6}%
-\contentsline {section}{\numberline {1.7}Beneficis Esperats}{5}{section.1.7}%
-\contentsline {chapter}{\numberline {2}Conceptualització}{6}{chapter.2}%
-\contentsline {chapter}{\numberline {3}Formalització}{7}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Implementació}{8}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Proves i Validació}{9}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Conclusions}{10}{chapter.6}%
+\contentsline {section}{\numberline {1}Identificació}{6}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Descripció del problema}{6}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Anàlisi de viabilitat}{6}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}Adequació d'un Sistema Basat en Coneixement}{6}{subsubsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.2}Limitacions d'altres aproximacions}{7}{subsubsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.3}Identificació de fonts de coneixement}{7}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}Fonts primàries}{7}{subsubsection.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.2}Fonts secundàries}{8}{subsubsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.4}Objectius del sistema}{8}{subsection.1.4}%
+\contentsline {subsubsection}{\numberline {1.4.1}Objectius funcionals}{8}{subsubsection.1.4.1}%
+\contentsline {subsubsection}{\numberline {1.4.2}Objectius no funcionals}{9}{subsubsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.5}Abast del sistema}{10}{subsection.1.5}%
+\contentsline {subsubsection}{\numberline {1.5.1}Dins de l'abast}{10}{subsubsection.1.5.1}%
+\contentsline {subsubsection}{\numberline {1.5.2}Fora de l'abast}{10}{subsubsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.6}Resultats esperats}{11}{subsection.1.6}%
+\contentsline {subsubsection}{\numberline {1.6.1}Format de sortida}{11}{subsubsection.1.6.1}%
+\contentsline {subsubsection}{\numberline {1.6.2}Informació per oferta}{11}{subsubsection.1.6.2}%
+\contentsline {subsection}{\numberline {1.7}Beneficis esperats}{12}{subsection.1.7}%
+\contentsline {subsubsection}{\numberline {1.7.1}Per als usuaris}{12}{subsubsection.1.7.1}%
+\contentsline {subsubsection}{\numberline {1.7.2}Per als agents immobiliaris}{12}{subsubsection.1.7.2}%
+\contentsline {subsubsection}{\numberline {1.7.3}Per als propietaris}{12}{subsubsection.1.7.3}%
+\contentsline {subsection}{\numberline {1.8}Conclusions de la fase d'identificació}{13}{subsection.1.8}%
+\contentsline {section}{\numberline {2}Conceptualització}{14}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Introducció a la fase de conceptualització}{14}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Conceptes principals del domini}{14}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Habitatge}{14}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Localització}{15}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Servei}{15}{subsubsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.4}Sol·licitant}{16}{subsubsection.2.2.4}%
+\contentsline {subsubsection}{\numberline {2.2.5}Oferta}{17}{subsubsection.2.2.5}%
+\contentsline {subsection}{\numberline {2.3}Relacions entre conceptes}{18}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Relacions d'associació bàsiques}{18}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Relacions de proximitat}{18}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Relacions de preferència i restricció}{18}{subsubsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.4}Relacions espacials addicionals}{19}{subsubsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.4}Ús de models de llenguatge per a la conceptualització}{19}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Metodologia d'ús dels models de llenguatge}{19}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Exemples de preguntes i respostes}{19}{subsubsection.2.4.2}%
+\contentsline {paragraph}{Pregunta 1: Característiques del barri per a famílies}{19}{subsubsection.2.4.2}%
+\contentsline {paragraph}{Pregunta 2: Requisits d'espai segons composició familiar}{20}{subsubsection.2.4.2}%
+\contentsline {paragraph}{Pregunta 3: Priorització amb pressupost ajustat}{20}{subsubsection.2.4.2}%
+\contentsline {paragraph}{Pregunta 4: Criteris per a persones grans}{21}{Item.4}%
+\contentsline {subsubsection}{\numberline {2.4.3}Validació i integració del coneixement obtingut}{21}{subsubsection.2.4.3}%
+\contentsline {subsubsection}{\numberline {2.4.4}Limitacions i consideracions crítiques}{22}{subsubsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.5}Regles heurístiques identificades}{22}{subsection.2.5}%
+\contentsline {subsubsection}{\numberline {2.5.1}Regles basades en perfil demogràfic}{23}{subsubsection.2.5.1}%
+\contentsline {subsubsection}{\numberline {2.5.2}Regles de sentit comú sobre habitatges}{24}{subsubsection.2.5.2}%
+\contentsline {subsubsection}{\numberline {2.5.3}Regles de proximitat i distància}{25}{subsubsection.2.5.3}%
+\contentsline {subsubsection}{\numberline {2.5.4}Regles de pressupost}{25}{subsubsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.6}Descomposició del problema en subproblemes}{25}{subsection.2.6}%
+\contentsline {subsubsection}{\numberline {2.6.1}Problema principal}{26}{subsubsection.2.6.1}%
+\contentsline {subsubsection}{\numberline {2.6.2}Subproblema 1: Abstracció (Inferència de necessitats)}{26}{subsubsection.2.6.2}%
+\contentsline {subsubsection}{\numberline {2.6.3}Subproblema 2: Resolució (Avaluació i filtratge)}{26}{subsubsection.2.6.3}%
+\contentsline {paragraph}{Fase 2.1: Càlcul de proximitats}{27}{Item.7}%
+\contentsline {paragraph}{Fase 2.2: Filtratge obligatori}{27}{Item.7}%
+\contentsline {paragraph}{Fase 2.3: Avaluació de criteris}{27}{Item.14}%
+\contentsline {subsubsection}{\numberline {2.6.4}Subproblema 3: Refinació (Classificació final)}{28}{subsubsection.2.6.4}%
+\contentsline {subsection}{\numberline {2.7}Exemples de resolució manual}{28}{subsection.2.7}%
+\contentsline {subsubsection}{\numberline {2.7.1}Exemple 1: Família Garcia}{29}{subsubsection.2.7.1}%
+\contentsline {subsubsection}{\numberline {2.7.2}Exemple 2: Grup d'estudiants Marc i companys}{31}{subsubsection.2.7.2}%
+\contentsline {subsection}{\numberline {2.8}Organització de la resolució}{32}{subsection.2.8}%
+\contentsline {subsubsection}{\numberline {2.8.1}Avantatges de l'organització en fases}{32}{subsubsection.2.8.1}%
+\contentsline {subsubsection}{\numberline {2.8.2}Flux de dades entre fases}{33}{subsubsection.2.8.2}%
+\contentsline {subsection}{\numberline {2.9}Conclusions de la fase de conceptualització}{33}{subsection.2.9}%
+\contentsline {section}{\numberline {3}Formalització}{35}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Construcció de l'ontologia}{35}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Procés de construcció}{35}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Jerarquia de classes}{36}{subsubsection.3.1.2}%
+\contentsline {paragraph}{Jerarquia d'Habitatge}{36}{subsubsection.3.1.2}%
+\contentsline {paragraph}{Jerarquia de Sol·licitant}{36}{subsubsection.3.1.2}%
+\contentsline {paragraph}{Jerarquia de Servei}{37}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Atributs de les classes}{38}{subsubsection.3.1.3}%
+\contentsline {paragraph}{Atributs de la classe Habitatge}{38}{subsubsection.3.1.3}%
+\contentsline {paragraph}{Atributs de la classe Sol·licitant}{39}{subsubsection.3.1.3}%
+\contentsline {paragraph}{Atributs de la classe Oferta}{40}{subsubsection.3.1.3}%
+\contentsline {paragraph}{Atributs de la classe Localitzacio}{40}{subsubsection.3.1.3}%
+\contentsline {subsubsection}{\numberline {3.1.4}Relacions entre classes}{40}{subsubsection.3.1.4}%
+\contentsline {paragraph}{Relació teLocalitzacio}{41}{subsubsection.3.1.4}%
+\contentsline {paragraph}{Relació aPropDe}{41}{subsubsection.3.1.4}%
+\contentsline {paragraph}{Relació teHabitatge}{41}{subsubsection.3.1.4}%
+\contentsline {paragraph}{Relacions de preferència del sol·licitant}{41}{subsubsection.3.1.4}%
+\contentsline {subsection}{\numberline {3.2}Metodologia de resolució de problemes}{42}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Paradigma escollit: Forward Chaining amb fases}{42}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Justificació del Forward Chaining}{42}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Justificació de l'organització en fases}{43}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Templates auxiliars per al raonament}{43}{subsubsection.3.2.4}%
+\contentsline {paragraph}{proximitat}{44}{subsubsection.3.2.4}%
+\contentsline {paragraph}{requisit-inferit}{44}{lstnumber.-4.6}%
+\contentsline {paragraph}{oferta-descartada}{44}{lstnumber.-5.5}%
+\contentsline {paragraph}{criteri-no-cumplit}{45}{lstnumber.-6.4}%
+\contentsline {paragraph}{punt-positiu}{45}{lstnumber.-7.5}%
+\contentsline {paragraph}{recomanacio}{45}{lstnumber.-8.4}%
+\contentsline {subsection}{\numberline {3.3}Justificació de decisions de disseny}{45}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Per què no Backward Chaining?}{45}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Per què Templates en lloc de només Objects?}{46}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Per què tres fases en lloc de dues o més?}{46}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}Per què pre-calcular les proximitats?}{47}{subsubsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.4}Cobertura de l'ontologia}{47}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Implementació}{49}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Arquitectura del sistema}{49}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Estructura de fitxers}{49}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Flux d'execució}{50}{subsubsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.2}Traducció de l'ontologia a CLIPS}{50}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Procés de generació}{50}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Estructura de les classes generades}{51}{subsubsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.3}Metodologia de desenvolupament}{52}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Iteració 1: Prototip mínim funcional}{52}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Iteració 2: Ampliació de l'ontologia i millora de regles}{53}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.3}Iteració 3: Refinament i optimització}{54}{subsubsection.4.3.3}%
+\contentsline {subsubsection}{\numberline {4.3.4}Iteració 4: Proves exhaustives i correcció d'errors}{55}{subsubsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.4}Modularització del codi}{56}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}Estratègies de modularització}{56}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}Organització de les fases}{57}{subsubsection.4.4.2}%
+\contentsline {paragraph}{Fase d'Abstracció}{57}{subsubsection.4.4.2}%
+\contentsline {paragraph}{Fase de Resolució}{57}{subsubsection.4.4.2}%
+\contentsline {paragraph}{Fase de Refinació}{58}{subsubsection.4.4.2}%
+\contentsline {paragraph}{Mòdul de Presentació}{59}{subsubsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.5}Implementació de regles clau}{59}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Càlcul de distàncies i proximitats}{59}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Inferència de requisits}{60}{subsubsection.4.5.2}%
+\contentsline {subsubsection}{\numberline {4.5.3}Descart amb justificació}{61}{subsubsection.4.5.3}%
+\contentsline {subsubsection}{\numberline {4.5.4}Classificació multi-criteri}{62}{subsubsection.4.5.4}%
+\contentsline {subsection}{\numberline {4.6}Control de flux amb salience}{62}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Jocs de prova}{64}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Estratègia de selecció dels jocs de prova}{64}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Criteris de selecció}{64}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Cobertura de regles}{65}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}Descripció dels jocs de prova principals}{66}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Prova 1: Família amb fills i mascota}{66}{subsubsection.5.2.1}%
+\contentsline {paragraph}{Perfil del sol·licitant}{66}{subsubsection.5.2.1}%
+\contentsline {paragraph}{Oferta adequada: Pis a l'Eixample}{67}{lstnumber.8.14}%
+\contentsline {paragraph}{Oferta descartada: Àtic que no permet mascotes}{68}{Item.66}%
+\contentsline {paragraph}{Oferta descartada: Estudi massa petit}{69}{lstnumber.10.12}%
+\contentsline {subsubsection}{\numberline {5.2.2}Prova 2: Grup d'estudiants amb pressupost estricte}{70}{subsubsection.5.2.2}%
+\contentsline {paragraph}{Perfil del sol·licitant}{70}{subsubsection.5.2.2}%
+\contentsline {paragraph}{Oferta adequada: Estudi a Gràcia}{70}{lstnumber.12.11}%
+\contentsline {subsubsection}{\numberline {5.2.3}Prova 3: Persona gran amb necessitat d'accessibilitat}{71}{subsubsection.5.2.3}%
+\contentsline {paragraph}{Perfil del sol·licitant}{71}{subsubsection.5.2.3}%
+\contentsline {paragraph}{Oferta ideal: Pis planta baixa}{72}{lstnumber.14.7}%
+\contentsline {paragraph}{Oferta descartada: Pis primer sense ascensor}{73}{lstnumber.15.12}%
+\contentsline {subsubsection}{\numberline {5.2.4}Prova 4: Persona que evita soroll}{74}{subsubsection.5.2.4}%
+\contentsline {paragraph}{Perfil del sol·licitant}{74}{subsubsection.5.2.4}%
+\contentsline {subsubsection}{\numberline {5.2.5}Prova 5: Parella amb plans de tenir fills}{75}{subsubsection.5.2.5}%
+\contentsline {paragraph}{Perfil del sol·licitant}{75}{subsubsection.5.2.5}%
+\contentsline {paragraph}{Oferta recomanada: Pis de 3 dormitoris}{76}{lstnumber.18.7}%
+\contentsline {subsubsection}{\numberline {5.2.6}Error 2: Conflicte de salience entre fases}{83}{subsubsection.5.2.6}%
+\contentsline {subsubsection}{\numberline {5.2.7}Error 3: Tractament incorrecte de pressupost flexible}{83}{subsubsection.5.2.7}%
+\contentsline {subsubsection}{\numberline {5.2.8}Error 4: No detecció d'ofertes sospitosament barates}{84}{subsubsection.5.2.8}%
+\contentsline {subsection}{\numberline {5.3}Casos extrems i límits}{85}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Cas extrem 1: Cap oferta adequada}{85}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Cas extrem 2: Preu exactament igual al màxim}{86}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Cas extrem 3: Superfície mínima justa}{86}{subsubsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.4}Eficiència i escalabilitat}{86}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Conclusions de les proves}{87}{subsection.5.5}%
+\contentsline {section}{\numberline {6}Conclusions}{88}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Assoliment dels objectius}{88}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Objectius funcionals}{88}{subsubsection.6.1.1}%
+\contentsline {paragraph}{Recomanar habitatges adequats}{88}{subsubsection.6.1.1}%
+\contentsline {paragraph}{Descartar ofertes inadequades}{88}{subsubsection.6.1.1}%
+\contentsline {paragraph}{Justificar decisions}{89}{subsubsection.6.1.1}%
+\contentsline {paragraph}{Inferir necessitats implícites}{89}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}Objectius no funcionals}{90}{subsubsection.6.1.2}%
+\contentsline {paragraph}{Cobertura exhaustiva del domini}{90}{subsubsection.6.1.2}%
+\contentsline {paragraph}{Mantenibilitat i extensibilitat}{90}{subsubsection.6.1.2}%
+\contentsline {paragraph}{Rendiment adequat}{90}{subsubsection.6.1.2}%
+\contentsline {paragraph}{Transparència i traçabilitat}{91}{subsubsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.2}Aprenentatges principals}{91}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Sobre sistemes basats en el coneixement}{91}{subsubsection.6.2.1}%
+\contentsline {paragraph}{La importància d'una bona ontologia}{91}{subsubsection.6.2.1}%
+\contentsline {paragraph}{Forward vs Backward Chaining}{91}{subsubsection.6.2.1}%
+\contentsline {paragraph}{El valor de l'organització en fases}{91}{subsubsection.6.2.1}%
+\contentsline {paragraph}{Templates vs Objects}{92}{subsubsection.6.2.1}%
+\contentsline {paragraph}{La potència i limitacions de la salience}{92}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Sobre metodologia de desenvolupament}{92}{subsubsection.6.2.2}%
+\contentsline {paragraph}{El valor del prototipatge incremental}{92}{subsubsection.6.2.2}%
+\contentsline {paragraph}{La importància de les proves contínues}{92}{subsubsection.6.2.2}%
+\contentsline {paragraph}{L'elicitació amb models de llenguatge}{93}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}Sobre CLIPS i programació basada en regles}{93}{subsubsection.6.2.3}%
+\contentsline {paragraph}{Pattern matching i eficiència}{93}{subsubsection.6.2.3}%
+\contentsline {paragraph}{La importància dels missatges de traça}{93}{subsubsection.6.2.3}%
+\contentsline {paragraph}{Limitacions de CLIPS}{93}{subsubsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.3}Limitacions del sistema}{93}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Limitacions funcionals}{94}{subsubsection.6.3.1}%
+\contentsline {paragraph}{Coneixement estàtic}{94}{subsubsection.6.3.1}%
+\contentsline {paragraph}{Preferències genèriques}{94}{subsubsection.6.3.1}%
+\contentsline {paragraph}{Absència de context temporal}{94}{subsubsection.6.3.1}%
+\contentsline {paragraph}{Model geogràfic simplificat}{94}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}Limitacions tècniques}{94}{subsubsection.6.3.2}%
+\contentsline {paragraph}{Escalabilitat}{94}{subsubsection.6.3.2}%
+\contentsline {paragraph}{Interfície d'usuari}{95}{subsubsection.6.3.2}%
+\contentsline {paragraph}{Integració amb sistemes reals}{95}{subsubsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.3}Limitacions de cobertura}{95}{subsubsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.4}Treball futur}{95}{subsection.6.4}%
+\contentsline {subsubsection}{\numberline {6.4.1}Millores a curt termini}{96}{subsubsection.6.4.1}%
+\contentsline {paragraph}{Ordenació dins de categories}{96}{subsubsection.6.4.1}%
+\contentsline {paragraph}{Pesos configurables}{96}{subsubsection.6.4.1}%
+\contentsline {paragraph}{Anàlisi de trade-offs}{96}{subsubsection.6.4.1}%
+\contentsline {paragraph}{Comparació explícita d'ofertes}{96}{subsubsection.6.4.1}%
+\contentsline {subsubsection}{\numberline {6.4.2}Extensions funcionals}{96}{subsubsection.6.4.2}%
+\contentsline {paragraph}{Aprenentatge de preferències}{96}{subsubsection.6.4.2}%
+\contentsline {paragraph}{Predicció de disponibilitat}{96}{subsubsection.6.4.2}%
+\contentsline {paragraph}{Recomanacions proactives}{97}{subsubsection.6.4.2}%
+\contentsline {paragraph}{Anàlisi de mercat}{97}{subsubsection.6.4.2}%
+\contentsline {subsubsection}{\numberline {6.4.3}Integració amb dades reals}{97}{subsubsection.6.4.3}%
+\contentsline {paragraph}{Web scraping}{97}{subsubsection.6.4.3}%
+\contentsline {paragraph}{API de Google Maps}{97}{subsubsection.6.4.3}%
+\contentsline {paragraph}{Base de dades}{98}{subsubsection.6.4.3}%
+\contentsline {paragraph}{Interfície web}{98}{subsubsection.6.4.3}%
+\contentsline {subsubsection}{\numberline {6.4.4}Hibridació amb Machine Learning}{98}{subsubsection.6.4.4}%
+\contentsline {paragraph}{ML per inferir preferències}{98}{subsubsection.6.4.4}%
+\contentsline {paragraph}{ML per predicció de preus}{98}{subsubsection.6.4.4}%
+\contentsline {paragraph}{Mantenir explicabilitat}{99}{subsubsection.6.4.4}%
+\contentsline {subsection}{\numberline {6.5}Reflexió final}{99}{subsection.6.5}%
