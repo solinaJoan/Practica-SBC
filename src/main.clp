@@ -186,6 +186,8 @@
         (numeroMascotes ?num-mascotes)
         (tipusMascota ?tipus-mascota)
         (treballaACiutat ?treballa-ciutat)
+        (evitaServei $?serveis-molestos)
+        (prefereixServei $?prefereix-servei)
     )
 
     (printout t crlf)

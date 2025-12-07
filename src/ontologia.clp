@@ -17,6 +17,9 @@
     (multislot evitaServei
         (type INSTANCE)
         (create-accessor read-write))
+    (multislot prefereixServei
+        (type INSTANCE)
+        (create-accessor read-write))
     (multislot requereixServei
         (type INSTANCE)
         (create-accessor read-write))
@@ -70,61 +73,91 @@
         (create-accessor read-write))
 )
 
-(defclass Familia
+(defclass PersonaGran
+    (is-a Solicitant)
+    (role concrete)
+    (pattern-match reactive)
+) 
+
+(defclass Joves
     (is-a Solicitant)
     (role concrete)
     (pattern-match reactive)
 )
 
-(defclass FamiliaBiparental
-    (is-a Familia)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass FamiliaMonoparental
-    (is-a Familia)
+(defclass ParellaJove
+    (is-a Joves)
     (role concrete)
     (pattern-match reactive)
 )
 
 (defclass GrupEstudiants
+    (is-a Joves)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass Adults
     (is-a Solicitant)
     (role concrete)
     (pattern-match reactive)
 )
 
-(defclass Individu
-    (is-a Solicitant)
+(defclass Individual
+    (is-a Adults)
     (role concrete)
     (pattern-match reactive)
 )
 
-(defclass Parella
-    (is-a Solicitant)
+(defclass ParellaAdulta
+    (is-a Adults)
     (role concrete)
     (pattern-match reactive)
 )
 
 (defclass ParellaAmbFills
-    (is-a Parella)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass ParellaFutursFills
-    (is-a Parella)
+    (is-a ParellaAdulta)
     (role concrete)
     (pattern-match reactive)
 )
 
 (defclass ParellaSenseFills
-    (is-a Parella)
+    (is-a ParellaAdulta)
     (role concrete)
     (pattern-match reactive)
 )
 
-(defclass PersonaGran
+(defclass ParellaFutursFills
+    (is-a ParellaAdulta)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass Individu
+    (is-a Adults)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass IndividuAmbFills
+    (is-a Individu)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass IndividuSenseFills
+    (is-a Individu)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass IndividuFutursFills
+    (is-a Individu)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass SegonaResidencia
     (is-a Solicitant)
     (role concrete)
     (pattern-match reactive)
@@ -514,23 +547,4 @@
         (create-accessor read-write))
 )
 
-(defclass Recomanacio
-    (is-a USER)
-    (role concrete)
-    (pattern-match reactive)
-    (slot Habitatge
-        (type INSTANCE)
-        (create-accessor read-write))
-    (slot Puntuacio
-        (type INTEGER)
-        (create-accessor read-write))
-    ;;; Valors: Parcialment, Adequat, MoltRecomanable, Cap
-    (slot grauRecomanacio
-        (type STRING)
-        (create-accessor read-write))
-)
-
-
-
-(definstances instances
-)
+(definstances instances)

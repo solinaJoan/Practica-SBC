@@ -1,6 +1,6 @@
 (definstances solicitants
     ;;; FAMILIA BIPARENTAL amb fills i mascota
-    ([familia-garcia] of FamiliaBiparental
+    ([familia-garcia] of ParellaAmbFills
         (nom "Familia Garcia")
         (edat 38)
         (numeroPersones 4)

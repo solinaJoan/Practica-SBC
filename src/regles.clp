@@ -8,6 +8,8 @@
 ;;; TEMPLATES AUXILIARS
 ;;; ============================================================
 
+(defglobal ?*DEBUG* = TRUE)
+
 (deftemplate proximitat
     (slot habitatge (type INSTANCE))
     (slot servei (type INSTANCE))
@@ -46,7 +48,33 @@
     (slot solicitant (type INSTANCE))
     (slot oferta (type INSTANCE))
     (slot grau (type SYMBOL))
-    (slot puntuacio (type INTEGER))
+    (slot puntuacio (type INTEGER) (default 0))
+)
+
+
+;;; Versió amb puntuacions
+;; De moment lo de la puntuacio funcionaria amb aquests deftemplates
+(deftemplate proximitat
+    (slot habitatge (type INSTANCE))
+    (slot servei (type INSTANCE))
+    (slot categoria (type SYMBOL))
+    (slot distancia (type SYMBOL))  ; MoltAProp, DistanciaMitjana, Lluny
+    (slot metres (type FLOAT))
+)
+
+; Per no executar la mateixa regla i que entri en bucle infinit
+(deftemplate criteriAplicat
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot criteri (type SYMBOL))
+)
+
+; Estructura de dades que guarda la puntuacio per cada 
+(deftemplate Recomanacio
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot puntuacio (type INTEGER) (default 0))
+    (slot grau (type STRING) (default "neutre"))
 )
 
 (deftemplate fase-completada
@@ -76,6 +104,13 @@
 ;;; FUNCIONS AUXILIARS
 ;;; ============================================================
 
+(deffunction debug-print ($?msg)
+   (if ?*DEBUG*
+      then
+         (printout t $?msg crlf)
+   )
+)
+
 (deffunction calcular-distancia (?x1 ?y1 ?x2 ?y2)
     (sqrt (+ (** (- ?x2 ?x1) 2) (** (- ?y2 ?y1) 2)))
 )
@@ -88,7 +123,7 @@
 
 (defrule abstraccio-calcular-proximitats
     "Calcula la proximitat entre cada habitatge i cada servei"
-    (declare (salience 100))
+    (declare (salience 110))
     ?hab <- (object (is-a Habitatge) (teLocalitzacio ?locH))
     ?locHab <- (object (is-a Localitzacio) (name ?locH) (coordenadaX ?x1) (coordenadaY ?y1))
     ?serv <- (object (is-a Servei) (teLocalitzacio ?locS))
@@ -99,6 +134,35 @@
     (bind ?dist (classificar-distancia ?metres))
     (bind ?cat (class ?serv))
     (assert (proximitat (habitatge ?hab) (servei ?serv) (categoria ?cat) (distancia ?dist) (metres ?metres)))
+)
+
+(defrule crear-recomanacions-inicials
+    (declare (salience 106))
+    ?sol <- (object (is-a Solicitant))
+    ?of  <- (object (is-a Oferta) (disponible si))
+    (not (Recomanacio (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (Recomanacio (solicitant ?sol) (oferta ?of)))
+)
+
+(defrule persona-gran-accessibilitat
+    (declare (salience 105))
+    ?sol <- (object (is-a PersonaGran))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (teAscensor ?a) (plantaPis ?p))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri accessibilitat)))
+    =>
+    ;; CAS ACCESSIBLE
+    (if (or (eq ?p 0) (eq ?a si))
+    then
+        (modify ?rec (puntuacio (+ ?pts 20)) (grau "accessibilitat_alta"))
+        (debug-print (instance-name ?sol) " -> " (instance-name ?of) " [-10 accessibilitat BAIXA]")
+    else
+        (modify ?rec (puntuacio (- ?pts 10)) (grau "accessibilitat_baixa"))
+        (debug-print (instance-name ?sol) " -> " (instance-name ?of) " [-10 accessibilitat BAIXA]")
+    )
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri accessibilitat)))
 )
 
 
@@ -574,12 +638,13 @@
     (printout t crlf "=== FASE REFINACIO COMPLETADA ===" crlf crlf)
 )
 
+
+
 ;;; ============================================================
-;;; PRESENTACIÓ DE RESULTATS
+;;; FASE 5: PRESENTACIÓ (AMB NOMS REALS I FILTRES)
 ;;; ============================================================
 
 (defrule presentacio-inici
-    "Mostra l'encapcalament dels resultats"
     (declare (salience -10))
     (fase-completada (nom refinacio))
     (not (fase-completada (nom presentacio)))
@@ -589,68 +654,52 @@
     (printout t "================================================================" crlf)
     (printout t "          RESULTATS DEL SISTEMA DE RECOMANACIO                  " crlf)
     (printout t "================================================================" crlf)
+    (printout t crlf)
 )
 
 (defrule presentacio-recomanacio
-    "Mostra cada recomanacio amb detalls"
     (declare (salience -20))
     (fase-completada (nom presentacio))
-    (recomanacio (solicitant ?sol) (oferta ?of) (grau ?grau) (puntuacio ?punt))
-    ?oferta <- (object (is-a Oferta) (name ?of) (preuMensual ?preu) (teHabitatge ?hab))
-    ?habitatge <- (object (is-a Habitatge) (name ?hab)
-            (superficieHabitable ?sup)
-            (numeroDormitoris ?dorm)
-            (numeroBanys ?banys)
-            (teLocalitzacio ?loc))
-    ?localitzacio <- (object (is-a Localitzacio) (name ?loc) (adreca ?adreca) (barri ?barri))
+    ?rec <- (recomanacio (solicitant ?sol) (oferta ?of) (grau ?grau) (puntuacio ?punt))
+    (not (and (mostrar-nomes ?target) (test (neq ?target ?sol))))
     =>
+    (bind ?nom-real (send ?sol get-nom))
+    (bind ?habitatge (send ?of get-teHabitatge))
+    (bind ?localitzacio (send ?habitatge get-teLocalitzacio))
+    (bind ?preu (send ?of get-preuMensual))
+    (bind ?tipus (class ?habitatge))
+    (bind ?sup (send ?habitatge get-superficieHabitable))
+    (bind ?dorm (send ?habitatge get-numeroDormitoris))
+    (bind ?banys (send ?habitatge get-numeroBanys))
+    (bind ?adreca (send ?localitzacio get-adreca))
+    (bind ?districte (send ?localitzacio get-districte))
+    
     (printout t crlf)
     (printout t "----------------------------------------------------------------" crlf)
-    (printout t "SOLLICITANT: " (instance-name ?sol) crlf)
-    (printout t "OFERTA: " (instance-name ?of) crlf)
+    (printout t "SOL·LICITANT: " ?nom-real crlf)
+    (printout t "OFERTA: " ?of crlf)
     (printout t "----------------------------------------------------------------" crlf)
     (printout t "*** GRAU: " ?grau " *** (Puntuacio: " ?punt ")" crlf)
     (printout t "----------------------------------------------------------------" crlf)
-    (printout t "Tipus: " (class ?hab) crlf)
+    (printout t "Tipus: " ?tipus crlf)
     (printout t "Superficie: " ?sup " m2" crlf)
     (printout t "Dormitoris: " ?dorm " | Banys: " ?banys crlf)
     (printout t "Preu: " ?preu " EUR/mes" crlf)
     (printout t "Adreca: " ?adreca crlf)
-    (printout t "Barri: " ?barri crlf)
+    (printout t "Districte: " ?districte crlf)
     (printout t "----------------------------------------------------------------" crlf)
-)
-
-(defrule presentacio-punts-positius
-    "Mostra els punts positius de cada recomanacio"
-    (declare (salience -21))
-    (fase-completada (nom presentacio))
-    (recomanacio (solicitant ?sol) (oferta ?of))
-    (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?desc))
-    =>
-    (printout t "  [+] " ?desc crlf)
-)
-
-(defrule presentacio-criteris-negatius
-    "Mostra els criteris no complerts per ofertes parcials"
-    (declare (salience -22))
-    (fase-completada (nom presentacio))
-    (recomanacio (solicitant ?sol) (oferta ?of) (grau Parcialment))
-    (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri ?crit) (gravetat ?grav))
-    =>
-    (printout t "  [-] " ?crit " (" ?grav ")" crlf)
-)
-
-(defrule presentacio-descartades
-    "Mostra les ofertes descartades"
-    (declare (salience -30))
-    (fase-completada (nom presentacio))
-    (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu ?motiu))
-    =>
-    (printout t crlf "[DESCARTADA] " (instance-name ?of) " per " (instance-name ?sol) ": " ?motiu crlf)
+    
+    (do-for-all-facts ((?pp punt-positiu)) 
+        (and (eq ?pp:solicitant ?sol) (eq ?pp:oferta ?of))
+        (printout t "  [+] " ?pp:descripcio crlf))
+    (if (eq ?grau Parcialment) then
+        (do-for-all-facts ((?cn criteri-no-complert)) 
+            (and (eq ?cn:solicitant ?sol) (eq ?cn:oferta ?of))
+            (printout t "  [-] " ?cn:criteri " (" ?cn:gravetat ")" crlf)))
+    (printout t crlf)
 )
 
 (defrule presentacio-fi
-    "Mostra el final del proces"
     (declare (salience -100))
     (fase-completada (nom presentacio))
     (not (fase-completada (nom fi)))

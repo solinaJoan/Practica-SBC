@@ -24,17 +24,23 @@ HABITATGE
     ├── Àtic
     └── Estudi
 
-SOLICITANT
-    ├── Individu
-    ├── Parella
-    │     ├── Parella Sense Fills
-    │     ├── Parella Amb Fills
-    │     └── Parella Futurs Fills
-    ├── Família
-    │     ├── Família Monoparental
-    │     └── Família Biparental
-    ├── Grup Estudiants
-    └── Persona gran
+
+SOL·LICITANT
+    ├── Joves
+    │     ├── ParellaJove
+    │     └── Grup Estudiants
+    ├── Adults
+    │     ├── Individu
+    │     │     ├── Individu Amb Fills
+    │     │     ├── Individu Sense Fills
+    │     │     └── Individu Futurs Fills
+    │     └── ParellaAdulta
+    │           ├── Parella Amb Fills
+    │           ├── Parella Sense Fills
+    │           └── Parella Futurs Fills
+    ├── Persona Gran
+    └── Segona Residència
+
 
 SERVEI
     ├── Transport

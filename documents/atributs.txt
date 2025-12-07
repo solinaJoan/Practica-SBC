@@ -84,3 +84,4 @@ Qui busca habitatge i les seves necessitats.
 | evitaServei              | instance (multi)  | Serveis que vol evitar                       |
 | requereixServei          | instance (multi)  | Serveis que necessita                        |
 
+
