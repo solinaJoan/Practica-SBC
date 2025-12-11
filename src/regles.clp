@@ -77,6 +77,12 @@
     (slot puntuacio (type INTEGER) (default 0))
 )
 
+(deftemplate RecomanacioCategoria
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot categoria (type SYMBOL)) ; MoltRecomanable, Adequat, ParcialmentRecomanable
+)
+
 (deftemplate fase-completada
     (slot nom (type SYMBOL))
 )
@@ -134,29 +140,31 @@
 ;;; ============================================================
 
 (defrule abstraccio-familia-amb-fills
-    "Les families amb fills necessiten escoles i zones verdes"
+    "Les families amb fills puntuen escoles i zones verdes"
     (declare (salience 95))
     ?sol <- (object (is-a Solicitant) (numeroFills ?fills))
     (test (> ?fills 0))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)
-            (obligatori si) (motiu "Familia amb fills necessita escoles")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu) (obligatori si) (motiu "Familia amb fills necessita escoles")))
+
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ZonaVerda)
-            (obligatori no) (motiu "Familia amb fills prefereix zones verdes")))
+    (obligatori no) (motiu "Familia amb fills prefereix zones verdes")))
+
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita escoles (te fills)" crlf)
 )
 
 (defrule abstraccio-persona-gran
-    "Les persones grans necessiten serveis de salut i comercos"
+    "Les persones grans necessiten serveis de salut"
     (declare (salience 95))
     ?sol <- (object (is-a PersonaGran))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiSalut)))
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiSalut)
-            (obligatori si) (motiu "Persona gran necessita serveis de salut")))
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiComercial)
-            (obligatori si) (motiu "Persona gran necessita comercos a prop")))
+    (obligatori si) (motiu "Persona gran necessita serveis de salut")))
+    
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiComercial) (obligatori si) (motiu "Persona gran necessita comercos a prop")))
+
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita salut i comerc" crlf)
 )
 
@@ -166,10 +174,10 @@
     ?sol <- (object (is-a GrupEstudiants))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)
-            (obligatori si) (motiu "Estudiant necessita transport public")))
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiOci)
-            (obligatori no) (motiu "Estudiant prefereix zones oci")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori si) (motiu "Estudiant necessita transport public")))
+    
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiOci) (obligatori no) (motiu "Estudiant prefereix zones oci")))
+    
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita transport" crlf)
 )
 
@@ -179,8 +187,8 @@
     ?sol <- (object (is-a Solicitant) (requereixTransportPublic si))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)
-            (obligatori si) (motiu "Prefereix transport public")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori si) (motiu "Prefereix transport public")))
+    
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita transport public" crlf)
 )
 
@@ -190,10 +198,10 @@
     ?sol <- (object (is-a ParellaFutursFills))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)
-            (obligatori no) (motiu "Parella amb plans de fills prefereix escoles")))
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ZonaVerda)
-            (obligatori no) (motiu "Parella amb plans de fills prefereix parcs")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu) (obligatori no) (motiu "Parella amb plans de fills prefereix escoles")))
+    
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ZonaVerda) (obligatori no) (motiu "Parella amb plans de fills prefereix parcs")))
+    
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " prefereix zones per futurs fills" crlf)
 )
 
@@ -203,8 +211,7 @@
     ?sol <- (object (is-a Solicitant) (teVehicle si))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei Parking)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei Parking)
-            (obligatori no) (motiu "Te vehicle, prefereix parking")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei Parking) (obligatori no) (motiu "Te vehicle, prefereix parking")))
 )
 
 (defrule abstraccio-fi
@@ -291,17 +298,16 @@
     "Descartar si falta un servei que s'ha inferit com OBLIGATORI (i no n'hi ha cap a prop)"
     (declare (salience 42))
     (fase-completada (nom abstraccio))
-    ;; Recuperem el requisit inferit (ex: obligatori escola per tenir fills)
+    ;; Recuperem el requisit inferit obligatori
     (requisit-inferit (solicitant ?sol) (categoria-servei ?cat) (obligatori si) (motiu ?motiuTxt))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ;; Comprovem que NO existeixi cap proximitat d'aquesta categoria (ni a prop ni mitjana)
     (not (proximitat (habitatge ?hab) (categoria ?cat) (distancia MoltAProp|DistanciaMitjana)))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
-            (motiu (str-cat "Falta servei obligatori (" ?cat "): " ?motiuTxt))))
-    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
-              " - Falta requisit inferit: " ?cat crlf)
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu (str-cat "Falta servei obligatori (" ?cat "): " ?motiuTxt))))
+
+    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per "  (instance-name ?sol) " - Falta requisit inferit: " ?cat crlf)
 )
 
 (defrule resolucio-descartar-superficie-insuficient
@@ -314,8 +320,7 @@
     (test (< ?sup (* ?npers 10)))  ; Mínim 10 m² per persona
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
-            (motiu "Superficie insuficient per al nombre de persones")))
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Superficie insuficient per al nombre de persones")))
 
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Massa petita" crlf)
 )
@@ -330,8 +335,7 @@
     (test (eq ?ec AReformar))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
-            (motiu "Estudiants necessiten habitatge moblat")))
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Estudiants necessiten habitatge moblat")))
 
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Pis a reformar" crlf)
 )
@@ -345,8 +349,7 @@
     ?h <- (object (is-a Habitatge) (name ?hab) (tePlacaAparcament no))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
-            (motiu "Persones amb vehicle necessiten aparcament")))
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Persones amb vehicle necessiten aparcament")))
 
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Necessita aparcament" crlf)
 )
@@ -361,8 +364,7 @@
     (test(eq ?cat ServeiSalut))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
-            (motiu "Salut molt lluny de persones grans")))
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Salut molt lluny de persones grans")))
 
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Necessita salut no lluny" crlf)
 )
@@ -376,8 +378,7 @@
     ?h <- (object (is-a Estudi) (name ?hab))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
-            (motiu "Descartem estudis per compradors de segones residencies")))
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Descartem estudis per compradors de segones residencies")))
 
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Estudi per compradors de segones residencies" crlf)
 )
@@ -564,6 +565,241 @@
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri a-reformar)))
 )
 
+(defrule resolucio-puntuar-moblats
+    "Habitatge amb mobles"
+    (declare (salience 35))
+    ?sol <- (object (is-a GrupEstudiants))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (moblat si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri ja-moblat)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge ja moblat)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri ja-moblat)))
+)
+
+(defrule resolucio-puntuar-aire-acondicionat
+    (declare (salience 35))
+    ?sol <- (object (is-a Adults))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (teAireCondicionat si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri aire-acondicionat)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb aire acondicionat)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri aire-acondicionat)))
+)
+
+(defrule resolucio-puntuar-calefaccio
+    (declare (salience 35))
+    ?sol <- (object (is-a ?tipus))
+    (test (or (eq ?tipus Adults) (eq ?tipus PersonaGran)))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (teCalefaccio si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-calefaccio)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb calefaccio)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-calefaccio)))
+)
+
+(defrule resolucio-puntuar-electrodomestics
+    (declare (salience 35))
+    ?sol <- (object (is-a Joves))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (ambElectrodomestics si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-electrodomestics)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb calefaccio)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-electrodomestics)))
+)
+
+(defrule resolucio-puntuar-nombre-banys
+    (declare (salience 35))
+    ?sol <- (object (is-a ?tipus))
+    (test (or (eq ?tipus ParellaAmbFills) (eq ?tipus ParellaFutursFills) (eq ?tipus IndividuAmbFills) (eq ?tipus IndividuFutursFills) (eq ?tipus GrupEstudiants)))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (numeroBanys ?numBanys))
+    (test (> ?numBanys 1))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri nombre-banys)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb nombre de banys minim)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri nombre-banys)))
+)
+
+(defrule resolucio-puntuar-dormitoris-individuals-estudiants
+    (declare (salience 35))
+    ?sol <- (object (is-a ?tipus) (numeroPersones ?numPersones))
+    (test (or (eq ?tipus GrupEstudiants) (eq ?tipus Individu)))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (numeroDormitorisSimples ?dorm-simples))
+    ; Mirem si el nombre de dormitoris simple es mes gran o igual que el nombre de persones quan son Individus (no parelles) o grups d'estudiants
+    (test (or (< ?numPersones ?dorm-simples ) (eq ?numPersones ?dorm-simples)))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri nombre-dormitoris-simples)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb nombre de dormitoris suficicient)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri nombre-dormitoris-simples)))
+)
+
+(defrule resolucio-puntuar-universitat
+    (declare (salience 35))
+    ?sol <- (object (is-a Joves))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab))
+    (proximitat (habitatge ?hab) (categoria ?cat) (distancia ?dist))
+    (test (eq ?cat Universitat))
+    (test (or (eq ?dist MoltAProp) (eq ?dist DistanciaMitjana)))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-universitat)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'una Universitat)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-universitat)))
+)
+
+(defrule resolucio-puntuar-autopista
+    ;; De moment agafa tots els solicitants. Mirar si es pot afegr un requisit-inferit d'autopista
+    (declare (salience 35))
+    ?sol <- (object (is-a Solicitant))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab))
+    (proximitat (habitatge ?hab) (categoria ?cat) (distancia ?dist))
+    (test (eq ?cat Autopista))
+    (test (or (eq ?dist MoltAProp) (eq ?dist DistanciaMitjana)))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-autopista)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'una Autopista)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-autopista)))
+)
+
+(defrule resolucio-puntuar-comerços
+    (declare (salience 35))
+    ?sol <- (object (is-a Adults))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab))
+    (proximitat (habitatge ?hab) (categoria ?cat) (distancia ?dist))
+    (test (eq ?cat ServeiComercial))
+    (test (or (eq ?dist MoltAProp) (eq ?dist DistanciaMitjana)))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-comerç)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'un servei comercial)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-comerç)))
+)
+
+(defrule resolucio-puntuar-oci-joves
+    (declare (salience 35))
+    ?sol <- (object (is-a Joves))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab))
+    (proximitat (habitatge ?hab) (categoria ?cat) (distancia ?dist))
+    (test ( or (eq ?cat TransportPublic) (eq ?cat Bar) (eq ?cat Discoteca) (eq ?cat Gimnas)))
+    (test (or (eq ?dist MoltAProp) (eq ?dist DistanciaMitjana)))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-oci-joves)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 10)))
+    (debug-print [RESOLUCIO] PUNTUADA +10 A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'un servei de salut)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-oci-joves)))
+)
+
+(defrule resolucio-puntuar-oci-adults
+    (declare (salience 35))
+    ?sol <- (object (is-a Adults))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab))
+    (proximitat (habitatge ?hab) (categoria ?cat) (distancia ?dist))
+    (test ( or (eq ?cat Cinema) (eq ?cat Teatre) (eq ?cat Restaurants)))
+    (test (or (eq ?dist MoltAProp) (eq ?dist DistanciaMitjana)))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-oci-adults)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 10)))
+    (debug-print [RESOLUCIO] PUNTUADA +10 A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'oci per adults)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-oci-adults)))
+)
+
+(defrule resolucio-puntuar-oci-avis
+    (declare (salience 35))
+    ?sol <- (object (is-a PersonaGran))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab))
+    (proximitat (habitatge ?hab) (categoria ?cat) (distancia ?dist))
+    (test ( or (eq ?cat Teatre) (eq ?cat Restaurants)))
+    (test (or (eq ?dist MoltAProp) (eq ?dist DistanciaMitjana)))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-oci-avis)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 10)))
+    (debug-print [RESOLUCIO] PUNTUADA +10 A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'oci per persones grans)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-oci-avis)))
+)
+
+(defrule resolucio-puntuar-molta-proximitat-salut
+    (declare (salience 35))
+    ?sol <- (object (is-a PersonaGran))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab))
+    (proximitat (habitatge ?hab) (categoria ?cat) (distancia MoltAProp))
+    (test (eq ?cat ServeiSalut))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri molta-proximitat-salut)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 10)))
+    (debug-print [RESOLUCIO] PUNTUADA +10 A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'un servei de salut)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri molta-proximitat-salut)))
+)
+
+(defrule resolucio-puntuar-servei-preferit
+    (declare (salience 35))
+    ?sol <- (object (is-a Solicitant) (prefereixServei $? ?serveiPreferit $?))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab))
+    (proximitat (habitatge ?hab) (servei ?serveiPreferit) (distancia ?dist))
+    (test (or (eq ?dist MoltAProp) (eq ?dist DistanciaMitjana)))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-serveis-preferits)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 10)))
+    (debug-print [RESOLUCIO] PUNTUADA +10 A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'un servei de salut)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-serveis-preferits)))
+)
+
+(defrule resolucio-fi-scoring
+    "Marca el final de la fase de scoring"
+    (declare (salience 10))
+    (fase-completada (nom abstraccio))
+    =>
+    (assert (fase-completada (nom scoring)))
+    (printout t crlf "=== FASE DE SCORING COMPLETADA ===" crlf crlf)
+)
+
 ;;; --- REGLES DE CRITERIS NO COMPLERTS ---
 
 (defrule resolucio-criteri-preu-alt
@@ -743,7 +979,7 @@
     (fase-completada (nom abstraccio))
     (not (fase-completada (nom resolucio)))
     =>
-    ;(assert (fase-completada (nom resolucio)))
+    (assert (fase-completada (nom resolucio)))
     (printout t crlf "=== FASE RESOLUCIO COMPLETADA ===" crlf crlf)
 )
 

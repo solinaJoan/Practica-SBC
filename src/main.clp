@@ -187,6 +187,7 @@
         (numeroMascotes ?num-mascotes)
         (tipusMascota ?tipus-mascota)
         (treballaACiutat ?treballa-ciutat)
+        (estudiaACiutat ?estudia-ciutat)
         (evitaServei $?serveis-molestos)
         (prefereixServei $?prefereix-servei)
         (segonaResidencia ?seg-residencia)
