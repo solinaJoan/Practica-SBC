@@ -162,7 +162,7 @@
         (teTraster si)
         (consumEnergetic B)
         (esExterior si)
-        (nivellSoroll Baix)
+        (nivellSoroll "Baix")
         (estatConservacio BonEstat))
 
     ;;; HABITATGE 2: Atic de luxe Gracia
@@ -192,7 +192,7 @@
         (teTraster no)
         (consumEnergetic A)
         (esExterior si)
-        (nivellSoroll Baix)
+        (nivellSoroll "Baix")
         (estatConservacio Nou))
 
     ;;; HABITATGE 3: Estudi economic Sants - NO MASCOTES
@@ -221,7 +221,7 @@
         (teTraster no)
         (consumEnergetic D)
         (esExterior no)
-        (nivellSoroll Mitja)
+        (nivellSoroll "Baix")
         (estatConservacio BonEstat))
 
     ;;; HABITATGE 4: Pis al Born - SOROLLOS
@@ -251,7 +251,7 @@
         (teTraster no)
         (consumEnergetic C)
         (esExterior si)
-        (nivellSoroll Alt)
+        (nivellSoroll "Alt")
         (estatConservacio BonEstat))
 
     ;;; HABITATGE 5: Casa unifamiliar Sarria - LUXE
@@ -282,7 +282,7 @@
         (teTraster si)
         (consumEnergetic B)
         (esExterior si)
-        (nivellSoroll Baix)
+        (nivellSoroll "Baix")
         (estatConservacio BonEstat))
 
     ;;; HABITATGE 6: Pis planta baixa accessible
@@ -311,7 +311,7 @@
         (teTraster no)
         (consumEnergetic C)
         (esExterior si)
-        (nivellSoroll Mitja)
+        (nivellSoroll "Mitja")
         (estatConservacio BonEstat))
 )
 

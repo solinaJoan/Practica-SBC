@@ -119,5 +119,12 @@
         (pressupostMaxim 1500.0)
         (margeEstricte no))
 
+    ;;; 3. EL HATER DEL SOROLL
+    ([especulador-fastigos] of CompradorSegonaResidencia
+        (nom "Especulador")
+        (edat 40)
+        (pressupostMaxim 6000.0)
+        (margeEstricte no))
+
 )
 

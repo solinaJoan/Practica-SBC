@@ -71,6 +71,9 @@
     (slot tipusMascota
         (type STRING)
         (create-accessor read-write))
+    (slot segonaResidencia
+        (type SYMBOL)
+        (create-accessor read-write))
 )
 
 (defclass PersonaGran
@@ -157,7 +160,7 @@
     (pattern-match reactive)
 )
 
-(defclass SegonaResidencia
+(defclass CompradorSegonaResidencia
     (is-a Solicitant)
     (role concrete)
     (pattern-match reactive)

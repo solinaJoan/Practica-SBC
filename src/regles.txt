@@ -1,0 +1,59 @@
+Abstracció:
+
+Mirar si estan bé les proximitats, crec que ara amb que hi hagi un Hospital Lluny ja descarta la casa, tot i que tambe en tingui un d'aprop. Potser el test ja ho fa be de comprovar-ho pero molaria poder-ho testejar
+
+
+Resolució:
+Descartar pressupost estricte
+Descartar no mascotes
+Descartar no accessible   - Fa servir necessitaAccessibilitat
+Descartar servei evitat
+- Falta requisit inferit
+Descartar superficie insuficient  - Mira que hi hagi 10m^2 pp
+Descartar aReformar per estudiants
+Descartar no garatge
++ Descartar habitatge molt gran per joves - Falta
+Descartar personagran lluny salut
+Descartar segona residencia estudi petit
+
+
+Puntuar pressupost dins el marge
+Puntuar silenci per segones residencies o avis
+Puntuar vistes a mar o muntanya per segonesresidencies
+Puntuar bones vistes
+Puntuar terrassa
+Puntuar terrassa extra per joves
+
+Puntuar piscina 
+Puntuar piscina extra per joves o adults amb fills
+
+Puntuar eficiencia per segones residencies
+Puntuar traster per adults i avis
+Puntuar a reformar per segones residencies
+Puntuar moblat per estudiants
+Puntuar aireacondicionatper per adults
+Puntuar calefaccio per avis i adults
+
+Puntuar ambElectrodomestics per estudiants
+Puntuar nombre banys>2 per families amb fills i grup estudiants
+Puntuar dormitoris simples per estudiants o individus sense fills
+Puntuar dormitoris dobles per parelles, adults amb fills o futurs fills i avis
+
+Puntuar universitat a prop per estudiants
+Puntuar autopista per solicitants que no estudien ni treballen a la ciutat i tenen cotxe
+
+Puntuar comerços per adults
+Puntuar families amb fills i futurs fills a prop de zones verdes, educacio i serveis comercials
+Puntuar salut a prop per avis
+Puntuar proximitat a transport public, bar, discoteca, gimnas a prop de joves
+Puntuar cinema, teatre i restaurant per adults amb fills
+Puntuar restaurants i teatre per avis
+
+Puntuar les preferencies d'usuaris
+
+
+
+
+
+
+

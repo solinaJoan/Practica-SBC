@@ -94,6 +94,7 @@
     (printout t crlf "--- IDENTIFICACIÓ ---" crlf)
     (bind ?nom (pregunta-text "Nom o identificador"))
     (bind ?edat (pregunta-numero "Edat" 18 99))
+    (bind ?seg-residencia (pregunta-si-no "Es tracta de la compra d'una primera residència?"))
 
     ;;; Situació familiar
     (printout t crlf "--- SITUACIÓ FAMILIAR ---" crlf)
@@ -134,7 +135,7 @@
     (bind ?te-vehicle (pregunta-si-no "Tens vehicle propi?"))
 
     ; Potser aquesta preguntaria me l'evitaria i faria que si no te vehicle propi i treballa o estudia a la ciutat es posi automàticament a cert
-    (bind ?req-transport (pregunta-si-no "Necessites transport públic?"))
+    (bind ?req-transport (pregunta-si-no "Es imprec?"))
     
     ;;; Accessibilitat
     (bind ?nec-reformes (pregunta-si-no "T'interessen cases per reformar"))
@@ -188,6 +189,7 @@
         (treballaACiutat ?treballa-ciutat)
         (evitaServei $?serveis-molestos)
         (prefereixServei $?prefereix-servei)
+        (segonaResidencia ?seg-residencia)
     )
 
     (printout t crlf)

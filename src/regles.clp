@@ -54,6 +54,7 @@
 
 ;;; Versió amb puntuacions
 ;; De moment lo de la puntuacio funcionaria amb aquests deftemplates
+
 (deftemplate proximitat
     (slot habitatge (type INSTANCE))
     (slot servei (type INSTANCE))
@@ -73,7 +74,6 @@
 (deftemplate Recomanacio
     (slot solicitant (type INSTANCE))
     (slot oferta (type INSTANCE))
-    (slot grau (type STRING) (default "neutre"))
     (slot puntuacio (type INTEGER) (default 0))
 )
 
@@ -125,26 +125,6 @@
     (not (Recomanacio (solicitant ?sol) (oferta ?of)))
     =>
     (assert (Recomanacio (solicitant ?sol) (oferta ?of)))
-)
-
-(defrule persona-gran-accessibilitat
-    (declare (salience 105))
-    ?sol <- (object (is-a PersonaGran))
-    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ?h <- (object (is-a Habitatge) (name ?hab) (teAscensor ?a) (plantaPis ?p))
-    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
-    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri accessibilitat)))
-    =>
-    ;; CAS ACCESSIBLE
-    (if (or (eq ?p 0) (eq ?a si))
-    then
-        (modify ?rec (puntuacio (+ ?pts 20)) (grau "accessibilitat_alta"))
-        (debug-print (instance-name ?sol) -> (instance-name ?of) [+20p] Bona Accessibilitat)
-    else
-        (modify ?rec (puntuacio (- ?pts 10)) (grau "accessibilitat_baixa"))
-        (debug-print (instance-name ?sol) -> (instance-name ?of) [-10p] Mala Accessibilitat)
-    )
-    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri accessibilitat)))
 )
 
 
@@ -253,23 +233,9 @@
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu "Preu supera pressupost maxim (estricte)")))
+            
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
               " - Preu " ?preu " > " ?max " EUR" crlf)
-)
-
-(defrule resolucio-descartar-preu-marge-flexible
-    "Descartar si preu supera maxim mes del 15% (marge flexible)"
-    (declare (salience 40))
-    (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max) (pressupostMinim ?min) (margeEstricte no))
-    ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
-    (test (or (> ?preu (* ?max 1.15)) (< ?preu (* ?min 0.85))))
-    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    =>
-    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
-            (motiu "Preu supera pressupost maxim mes del 15%")))
-    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
-              " - Preu massa alt" crlf)
 )
 
 (defrule resolucio-descartar-no-mascotes
@@ -283,6 +249,7 @@
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu "No permet mascotes")))
+
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
               " - No permet mascotes" crlf)
 )
@@ -299,6 +266,7 @@
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu "No accessible: sense ascensor i planta alta")))
+
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
               " - No accessible" crlf)
 )
@@ -307,15 +275,14 @@
     "Descartar si un servei que es vol evitar està Molt A Prop"
     (declare (salience 45))
     (fase-completada (nom abstraccio))
-    ;; Busquem un sol·licitant que tingui un servei a la llista d'evitar
     ?sol <- (object (is-a Solicitant) (evitaServei $? ?serveiEvitat $?))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ;; Comprovem si aquest habitatge té aquest servei concret Molt A Prop
     (proximitat (habitatge ?hab) (servei ?serveiEvitat) (distancia MoltAProp))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu (str-cat "Està massa a prop d'un servei evitat: " (instance-name ?serveiEvitat)))))
+
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol)
               " - A prop de servei evitat" crlf)
 )
@@ -349,21 +316,252 @@
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu "Superficie insuficient per al nombre de persones")))
+
     (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Massa petita" crlf)
 )
 
-(defrule resolucio-descartar-estudiant-sense-mobles
-    "Els estudiants necessiten habitatge moblat"
+(defrule resolucio-descartar-estudiant-a-reformar
+    "Els estudiants necessiten habitatge llestos"
     (declare (salience 40))
     (fase-completada (nom abstraccio))
     ?sol <- (object (is-a GrupEstudiants))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ?h <- (object (is-a Habitatge) (name ?hab) (moblat no))
+    ?h <- (object (is-a Habitatge) (name ?hab) (estatConservacio ?ec))
+    (test (eq ?ec AReformar))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
             (motiu "Estudiants necessiten habitatge moblat")))
-    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - No moblat" crlf)
+
+    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Pis a reformar" crlf)
+)
+
+(defrule resolucio-descartar-no-garatge
+    "Les persones amb vehicle necessiten garatge"
+    (declare (salience 40))
+    (fase-completada (nom abstraccio))
+    ?sol <- (object (is-a Solicitant) (teVehicle si))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (tePlacaAparcament no))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
+            (motiu "Persones amb vehicle necessiten aparcament")))
+
+    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Necessita aparcament" crlf)
+)
+
+(defrule resolucio-descartar-avis-lluny-salut
+    "Salut molt lluny de persones grans"
+    (declare (salience 40))
+    (fase-completada (nom abstraccio))
+    ?sol <- (object (is-a PersonaGran))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    (proximitat (habitatge ?hab) (categoria ?cat) (distancia Lluny))
+    (test(eq ?cat ServeiSalut))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
+            (motiu "Salut molt lluny de persones grans")))
+
+    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Necessita salut no lluny" crlf)
+)
+
+(defrule resolucio-descartar-estudi-per-segona-residencia
+    "Salut molt lluny de persones grans"
+    (declare (salience 40))
+    (fase-completada (nom abstraccio))
+    ?sol <- (object (is-a CompradorSegonaResidencia))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Estudi) (name ?hab))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (oferta-descartada (solicitant ?sol) (oferta ?of)
+            (motiu "Descartem estudis per compradors de segones residencies")))
+
+    (printout t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " - Estudi per compradors de segones residencies" crlf)
+)
+
+;;; --- REGLES DE PUNTUACIÓ ---
+
+(defrule resolucio-puntuar-pressupost-dins-marge
+    "Pressupost dins el marge"
+    (declare (salience 35))
+    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max) (pressupostMinim ?min))
+    ?of <- (object (is-a Oferta) (disponible si) (preuMensual ?preu))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri pressupost-dins-marge)))
+    (test (and (< ?preu (* ?max 1.15)) (> ?preu (* ?min 0.85))))
+    =>
+    (if (and (< ?preu ?max) (> ?preu ?min))
+    then 
+        (modify ?rec (puntuacio (+ ?pts 40)))
+        (debug-print [RESOLUCIO] PUNTUADA +40p A (instance-name ?of) per (instance-name ?sol) - Pressupost dins el marge)
+    else 
+        (modify ?rec (puntuacio (+ ?pts 20)))
+        (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Pressupost dins el marge flexible)
+    )
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri pressupost-dins-marge)))
+)
+
+
+(defrule resolucio-puntuar-silencios
+    "Habitatge silenciós per avis i segones residencies"
+    (declare (salience 35))
+    ?sol <- (object (is-a ?tipus)) 
+    (test (or (eq ?tipus PersonaGran) (eq ?tipus CompradorSegonaResidencia)))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (nivellSoroll "Baix"))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri silencios-avis)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge silenciós per avis i segones residencies)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri silencios-avis)))
+)
+
+(defrule resolucio-puntuar-vistes-segones-residencies
+    "Habitatge amb vistes al mar o muntanya per a segones residencies"
+    (declare (salience 35))
+    ?sol <- (object (is-a CompradorSegonaResidencia)) 
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (tipusVistes ?vist))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri vistes-segones-residencies)))
+    (test (or (eq ?vist "Mar") (eq ?vist "Muntanya")))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb vistes al mar o muntanya per segones residencies)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri vistes-segones-residencies)))
+)
+
+(defrule resolucio-puntuar-bones-vistes
+    "Habitatge amb vistes al mar o muntanya per a segones residencies"
+    (declare (salience 35))
+    ?sol <- (object (is-a Solicitant)) 
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (teVistes si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri bones-vistes)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb bones vistes)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri bones-vistes)))
+)
+
+(defrule resolucio-puntuar-terrassa
+    "Habitatge amb terrassa"
+    (declare (salience 35))
+    ?sol <- (object (is-a Solicitant)) 
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (teTerrassaOBalco si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-terrassa)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb terrassa)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-terrassa)))
+)
+
+(defrule resolucio-puntuar-extra-terrassa-per-joves
+    "Habitatge amb terrassa per joves puntua extra"
+    (declare (salience 35))
+    ?sol <- (object (is-a Joves)) 
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (teTerrassaOBalco si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-terrassa-joves)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 5)))
+    (debug-print [RESOLUCIO] PUNTUADA +5p A (instance-name ?of) per (instance-name ?sol) - Puntuació extra per terrassa i ser jove)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-terrassa-joves)))
+)
+
+(defrule resolucio-puntuar-piscina
+    "Habitatge amb piscina"
+    (declare (salience 35))
+    ?sol <- (object (is-a Solicitant)) 
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (tePiscinaComunitaria si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-piscina)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb terrassa)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-piscina)))
+)
+
+
+(defrule resolucio-puntuar-piscina-joves-i-adults-fills
+    "Habitatge amb piscina per joves"
+    (declare (salience 35))
+    ?sol <- (object (is-a ?tipus))
+    (test (or (eq ?tipus Joves) (eq ?tipus ParellaAmbFills) (eq ?tipus ParellaFutursFills) (eq ?tipus IndividuAmbFills) (eq ?tipus IndividuFutursFills)))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (tePiscinaComunitaria si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-piscina-joves-i-fills)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 5)))
+    (debug-print [RESOLUCIO] PUNTUADA +5p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb piscina)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-piscina-joves-i-fills)))
+)
+
+
+(defrule resolucio-puntuar-habitatge-eficient
+    "Habitatge amb consum enerètic eficient"
+    (declare (salience 35))
+    ?sol <- (object (is-a CompradorSegonaResidencia))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (consumEnergetic ?ce))
+    (test (or (eq ?ce A) (eq ?ce B)))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri consum-eficient)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb consum energètic eficient)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri consum-eficient)))
+)
+
+(defrule resolucio-puntuar-traster-adults-avis
+    "Habitatge amb traster"
+    (declare (salience 35))
+    ?sol <- (object (is-a ?tipus))
+    (test (or (eq ?tipus Adults) (eq ?tipus PersonaGran)))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (teTraster si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-traster-adults-avis)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb traster)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-traster-adults-avis)))
+)
+
+(defrule resolucio-puntuar-areformar-segones-residencies
+    "Habitatge a reformar ideal per compradors amb poder econòmic i que es volen fer la casa a mida"
+    (declare (salience 35))
+    ?sol <- (object (is-a CompradorSegonaResidencia))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (estatConservacio ?ec))
+    (test (eq ?ec AReformar))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri a-reformar)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge a reformar)
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri a-reformar)))
 )
 
 ;;; --- REGLES DE CRITERIS NO COMPLERTS ---
@@ -493,18 +691,7 @@
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te bones vistes")))
 )
 
-(defrule resolucio-punt-parking
-    "Te parking i el solicitant te vehicle"
-    (declare (salience 30))
-    (fase-completada (nom abstraccio))
-    ?sol <- (object (is-a Solicitant) (teVehicle si))
-    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ?h <- (object (is-a Habitatge) (name ?hab) (tePlacaAparcament si))
-    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te parking")))
-    =>
-    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te parking")))
-)
+
 
 (defrule resolucio-punt-piscina
     "Te piscina comunitaria"
@@ -556,7 +743,7 @@
     (fase-completada (nom abstraccio))
     (not (fase-completada (nom resolucio)))
     =>
-    (assert (fase-completada (nom resolucio)))
+    ;(assert (fase-completada (nom resolucio)))
     (printout t crlf "=== FASE RESOLUCIO COMPLETADA ===" crlf crlf)
 )
 
