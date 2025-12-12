@@ -8,12 +8,12 @@
 ;;; TEMPLATES AUXILIARS
 ;;; ============================================================
 
-(defglobal ?*DEBUG* = TRUE)
+(defglobal ?*DEBUG* = FALSE)
 
 (deftemplate proximitat
     (slot habitatge (type INSTANCE))
-    (slot servei (type INSTANCE))
-    (slot categoria (type SYMBOL))
+    (slot servei (type INSTANCE)) ; Nom del servei, p.e [metro-pg]
+    (slot categoria (type SYMBOL))  ; Classe del servei 
     (slot distancia (type SYMBOL))  ; MoltAProp, DistanciaMitjana, Lluny
     (slot metres (type FLOAT))
 )
@@ -35,7 +35,6 @@
     (slot solicitant (type INSTANCE))
     (slot oferta (type INSTANCE))
     (slot criteri (type STRING))
-    (slot gravetat (type SYMBOL))
 )
 
 (deftemplate punt-positiu
@@ -115,7 +114,7 @@
     (declare (salience -10))
     ?f <- (fase (actual descart))
     =>
-    (modify ?f (actual scoring))   ; pas a la següent fase
+    ;(modify ?f (actual scoring))   ; pas a la següent fase
     (printout t crlf "=== FASE DESCART COMPLETADA ===" crlf crlf)
 )
 
@@ -156,7 +155,7 @@
     (bind ?dist (classificar-distancia ?metres))
     (bind ?cat (class ?serv))
     (assert (proximitat (habitatge ?hab) (servei ?serv) (categoria ?cat) (distancia ?dist) (metres ?metres)))
-    (printout t "[DISTANCIES] " (instance-name ?hab) " i " (instance-name ?serv) " distancia: " ?dist crlf)
+    (printout t "[DISTANCIES] " (instance-name ?hab) " i " (instance-name ?serv) " amb categoria " ?cat ", el servei " (instance-name ?serv) " i distancia: " ?dist  crlf)
 )
 
 (defrule crear-recomanacions-inicials
@@ -777,7 +776,7 @@
     (debug-print [RESOLUCIO] PUNTUADA -10 A (instance-name ?of) per (instance-name ?sol) - Habitatge amb preu superior al pressupost)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri preu-lleugerament-superior)))
 
-    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Preu lleugerament superior al pressupost") (gravetat Lleu)))
+    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Preu lleugerament superior al pressupost")))
 )
 
 (defrule resolucio-criteri-soroll-alt
@@ -794,7 +793,7 @@
     (debug-print [RESOLUCIO] PUNTUADA -10 A (instance-name ?of) per (instance-name ?sol) - Habitatge amb molt soroll)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri molt-soroll)))
 
-    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Nivell de soroll alt") (gravetat Lleu)))
+    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Nivell de soroll alt")))
 )
 
 (defrule resolucio-criteri-sense-ascensor
@@ -814,7 +813,7 @@
     (debug-print [RESOLUCIO] PUNTUADA -10 A (instance-name ?of) per (instance-name ?sol) - Habitatge sense ascensor)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri planta-alta-sense-ascensor)))
 
-    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Planta alta sense ascensor") (gravetat Moderat)))
+    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Planta alta sense ascensor")))
 )
 
 ;;; --- REGLES DE PUNTS POSITIUS ---
@@ -996,7 +995,7 @@
     (if (eq ?grau Parcialment) then
         (do-for-all-facts ((?cn criteri-no-complert)) 
             (and (eq ?cn:solicitant ?sol) (eq ?cn:oferta ?of))
-            (printout t "  [-] " ?cn:criteri " (" ?cn:gravetat ")" crlf)))
+            (printout t "  [-] " ?cn:criteri crlf)))
     (printout t crlf)
 )
 

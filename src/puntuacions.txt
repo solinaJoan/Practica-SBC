@@ -1,19 +1,58 @@
-Abstracció:
+Document explicatiu de regles.clp
 
-Mirar si estan bé les proximitats, crec que ara amb que hi hagi un Hospital Lluny ja descarta la casa, tot i que tambe en tingui un d'aprop. Potser el test ja ho fa be de comprovar-ho pero molaria poder-ho testejar
+    Degub: TRUE o FALSE, per si volem la sortida o no
+Només funciona per la funció debug-print, per els printouts no.
+
+    Templates: Estructures de dades per guardar info variada
+Proximitat: Per guardar la proximitat. Mes info directament al fitxer
+
+Requisit-inferit: Guardem serveis i tipus de solicitants, que marquem com obligatoris o preferencies
+Oferta descartada per descartar ofertes
+
+Punt positiu: Info bona que ensenyem com a caracteristiques principals de l'habitatge
+
+Criteri no complert: El mateix pero per punts negatius. Es podria unificar si es volgues amb un slot de bo o dolent
+
+CriteriAplicat: Per evitar un bucle infinit 
+Recomanacio: Per guardar la puntuacio per cada oferta i solicitant 
+
+Fase: Per saber en quina fase del problema estem. Els valors son: init, abstraccio, descart, scoring, classificacio i presentacio
 
 
-Requisits inferits:
+    Inicialitzacio:
+XXX-fi: Les regles que fan passar de fase. S'executen quan no queda cap regla de la fase per executar-se, ja que tenen salience negativa. La resta de regles tenen salience 0 per defecte
+
+Dos regles per calcular totes les proximitats i tota parella de oferta solicitant
+
+Les regles amb un (+) davant falten per fer
+
+    Abstracció:
+!!! FALTA: Hauriem de crear una regla per cada tipus de solicitant tal que si tens un usuari creat nou, el classifiqui.
+
+    Requisits inferits:
 Valorar significa que no marquem el requisit inferit com obligatori, i necessitar com a obligatori
 
-Les families amb fills necessiten les escoles i valoren les zones verdes 
+Les families amb fills necessiten les escoles i valoren les zones verdes
+
 Les persones grans necessiten serveis de salut i comerços a prop
-Els estudiants necessiten transport public i valoren zones d'oci
+
+Els estudiants valoren transport public i zones d'oci
+
 Els futurs fills valoren escoles i parcs - falta canviar lo de futurs fills, esta amb les classes anteriors
-Si te-vehicle, valora parking
+
++ Les persones que no estudien ni treballen a la ciutat pero tenen edat per treballar i tenen cotxe(vamos que treballen fora entenc) necessiten una Autopista a prop
+
+    Resolució:
+Hi ha descarts, puntuacio, criteris no complerts i punts positius. Els descarts descarten,a resta puntuen.
+
+Els criteris no complerts i punts positius són aspectes destacats que ensenyem a l'oferta
+
+Els criteris no complerts resten puntuació
 
 
-Resolució:
+        Descarts: 
+!!! Comprovar que per molt que una casa per molt que tingui un hospital lluny, si en te un d'aprop no el descarta
+
 Descartar pressupost estricte
 Descartar no mascotes
 Descartar no accessible
@@ -26,6 +65,7 @@ Descartar no garatge
 Descartar personagran lluny salut
 Descartar segona residencia estudi petit
 
+        Puntuació
 Puntuar pressupost dins el marge
 Puntuar silenci per segones residencies o avis
 Puntuar vistes a mar o muntanya per segonesresidencies (per normal ja esta a punts-positius)
@@ -57,14 +97,12 @@ Puntuar salut molt a prop dels avis
 Puntuar les preferencies d'usuaris
 
 
-Criteris no complerts i punts positius és la info que ensenyem quan es veu la recomanació 
-
-Criteris no complerts: Resten puntuació
+        Criteris no complerts
 Preu lleugerament superior
 Nivell de soroll alt
-Planta alta sense ascensor (sense importar l'edat, si te >2 pisos ja he fet que baixi la puntuacio. No faria servir l'edat perque estariem mirant un atribut concret de la persona, i en fase de resolucio no es del tot correcte, hauriam de fer servir una abstraccio del tipus is-a PersonaGran)
+Planta alta sense ascensor (sense importar l'edat, si te >2 pisos ja he fet que baixi la puntuacio. No faria servir l'edat perque estariem mirant un atribut concret de la persona, i en fase de resolucio no es del tot correcte, hauriam de fer servir una abstraccio del tipus Solicitant is-a PersonaGran)
 
-Punts positius: Sumen puntuacio
+        Punts positius
 Bon preu (estalvi del 20%) per joves
 Te terrassa o balcó
 Assolellat
