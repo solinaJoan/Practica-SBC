@@ -8,7 +8,7 @@
 ;;; TEMPLATES AUXILIARS
 ;;; ============================================================
 
-(defglobal ?*DEBUG* = FALSE)
+(defglobal ?*DEBUG* = TRUE)
 
 (deftemplate proximitat
     (slot habitatge (type INSTANCE))
@@ -110,7 +110,7 @@
     (declare (salience -10))
     ?f <- (fase (actual descart))
     =>
-    ;(modify ?f (actual scoring))   ; pas a la següent fase
+    (modify ?f (actual scoring))   ; pas a la següent fase
     (printout t crlf "=== FASE DESCART COMPLETADA ===" crlf crlf)
 )
 
