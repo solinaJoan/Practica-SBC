@@ -9,7 +9,7 @@ Proximitat: Per guardar la proximitat. Mes info directament al fitxer
 Requisit-inferit: Guardem serveis i tipus de solicitants, que marquem com obligatoris o preferencies
 Oferta descartada per descartar ofertes
 
-Punt positiu: Info bona que ensenyem com a caracteristiques principals de l'habitatge
+Punt positiu: Info destacada que ensenyem a la recomanacio fnial
 
 Criteri no complert: El mateix pero per punts negatius. Es podria unificar si es volgues amb un slot de bo o dolent
 
@@ -43,7 +43,7 @@ Els futurs fills valoren escoles i parcs - falta canviar lo de futurs fills, est
 + Les persones que no estudien ni treballen a la ciutat pero tenen edat per treballar i tenen cotxe(vamos que treballen fora entenc) necessiten una Autopista a prop
 
     Resolució:
-Hi ha descarts, puntuacio, criteris no complerts i punts positius. Els descarts descarten,a resta puntuen.
+Hi ha descarts, puntuacio, criteris no complerts, punts positius i classificació. Els descarts descarten,a resta puntuen.
 
 Els criteris no complerts i punts positius són aspectes destacats que ensenyem a l'oferta
 
@@ -110,6 +110,14 @@ AmbVistes
 Punt piscina
 Requisit inferit a prop
 
+        Classificació
+Segons la puntuació, classifica segons MoltRecomanable, Adequat, ParcialmentRecomanat
+
+
+    Presentació
+Fa la presentació de les ofertes que tenen com a minim grau parcialmentrecomanat. Jo ho canviaria per un top3 com va dir el Carles
+
+Apunts: Ens surt un fitxer de 1000 linies de codi, crec que podriem dividir el fitxer en init i config, regles de scoring i presentacio de resultats, pero com veieu
 
 
 

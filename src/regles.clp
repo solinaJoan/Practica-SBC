@@ -55,11 +55,7 @@
     (slot solicitant (type INSTANCE))
     (slot oferta (type INSTANCE))
     (slot puntuacio (type INTEGER) (default 0))
-    (slot grau (type SYMBOL) (default NULL))
-)
-
-(deftemplate fase-completada
-    (slot nom (type SYMBOL))
+    (slot grau (type SYMBOL) (default NULL)) ; MoltRecomanable, Adequat, ParcialmentRecomanat
 )
 
 (deftemplate fase
@@ -176,7 +172,6 @@
 
 (defrule abstraccio-familia-amb-fills
     "Les families amb fills puntuen escoles i zones verdes"
-    
     (fase (actual abstraccio))
     ?sol <- (object (is-a Solicitant) (numeroFills ?fills))
     (test (> ?fills 0))
@@ -192,7 +187,6 @@
 
 (defrule abstraccio-persona-gran
     "Les persones grans necessiten serveis de salut"
-    
     (fase (actual abstraccio))
     ?sol <- (object (is-a PersonaGran))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiSalut)))
@@ -207,33 +201,19 @@
 
 (defrule abstraccio-estudiants
     "Els estudiants necessiten transport i prefereixen oci"
-    
     (fase (actual abstraccio))
     ?sol <- (object (is-a GrupEstudiants))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori si) (motiu "Estudiant necessita transport public")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori no) (motiu "Estudiant prefereix transport public")))
     
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiOci) (obligatori no) (motiu "Estudiant prefereix zones oci")))
     
-    (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita transport" crlf)
-)
-
-(defrule abstraccio-requereix-transport
-    "Si necessita transport public, el necessita a prop"
-    
-    (fase (actual abstraccio))
-    ?sol <- (object (is-a Solicitant) (requereixTransportPublic si))
-    (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
-    =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori si) (motiu "Prefereix transport public")))
-    
-    (printout t "[ABSTRACCIO] " (instance-name ?sol) " necessita transport public" crlf)
+    (printout t "[ABSTRACCIO] " (instance-name ?sol) " prefereix oci a prop" crlf)
 )
 
 (defrule abstraccio-parella-futurs-fills
     "Parelles que planegen tenir fills prefereixen zones adequades"
-    
     (fase (actual abstraccio))
     ?sol <- (object (is-a ParellaFutursFills))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)))
@@ -245,15 +225,7 @@
     (printout t "[ABSTRACCIO] " (instance-name ?sol) " prefereix zones per futurs fills" crlf)
 )
 
-(defrule abstraccio-te-vehicle
-    "Si te vehicle, prefereix parking"
-    
-    (fase (actual abstraccio))
-    ?sol <- (object (is-a Solicitant) (teVehicle si))
-    (not (requisit-inferit (solicitant ?sol) (categoria-servei Parking)))
-    =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei Parking) (obligatori no) (motiu "Te vehicle, prefereix parking")))
-)
+
 
 ;;; ============================================================
 ;;; FASE 2: RESOLUCIÓ
