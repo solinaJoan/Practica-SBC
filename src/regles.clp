@@ -943,6 +943,7 @@
     (debug-print [CLASSIFICACIO] (instance-name ?of) classificat-com ?nouGrau per (instance-name ?sol) amb-puntuacio ?pts)
 )
 
+
 ;;; ============================================================
 ;;; FASE 3: REFINACIÓ I PRESENTACIÓ 
 ;;; ============================================================
@@ -961,7 +962,6 @@
     (declare (salience -5))
     (fase (actual presentacio))
     ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (grau ?grau&:(neq ?grau NULL)) (puntuacio ?punt))
-
     =>
     (bind ?nom-real (send ?sol get-nom))
     (bind ?habitatge (send ?of get-teHabitatge))
