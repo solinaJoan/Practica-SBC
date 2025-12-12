@@ -77,7 +77,7 @@
 (deffunction debug-print ($?msg)
    (if ?*DEBUG*
       then
-         (printout t $?msg crlf)
+        (printout t $?msg crlf)
    )
 )
 
@@ -87,7 +87,7 @@
 
 
 ;;; ============================================================
-;;; REGLES DE INICIALITZACIÓ I CONFIGURACIÓ
+;;; REGLES D'INICIALITZACIÓ I CONFIGURACIÓ
 ;;; ============================================================
 
 ;; Regles per passar a la seguent fase. Si no es vol passar a la segent comenteu el modify
@@ -906,7 +906,7 @@
 
 (defrule resolucio-punt-requisit-inferit-molt-a-prop
     "Dona punts si l'habitatge satisfà una necessitat inferida (ex: parc per nens)"
-    (fase (actual classificacio))
+    (fase (actual scoring))
     ;; Si tenim un requisit inferit (encara que no sigui obligatori)
     (requisit-inferit (solicitant ?sol) (categoria-servei ?cat) (motiu ?motiuTxt))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
@@ -923,14 +923,7 @@
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio (str-cat "Preferència detectada molt a prop"))))
 )
 
-
-;;; ============================================================
-;;; FASE 3: REFINACIÓ
-;;; Classificació final de les ofertes
-;;; ============================================================
-
 (defrule classificacio-assignar-grau
-    (declare (salience -5))
     (fase (actual classificacio))
     ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts) (grau NULL))
     =>
@@ -950,9 +943,8 @@
     (debug-print [CLASSIFICACIO] (instance-name ?of) classificat-com ?nouGrau per (instance-name ?sol) amb-puntuacio ?pts)
 )
 
-
 ;;; ============================================================
-;;; FASE 5: PRESENTACIÓ 
+;;; FASE 3: REFINACIÓ I PRESENTACIÓ 
 ;;; ============================================================
 
 (defrule presentacio-inici
