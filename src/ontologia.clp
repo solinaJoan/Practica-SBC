@@ -1,8 +1,13 @@
 ;;; ---------------------------------------------------------
-;;; ontologiaSBC.clp
+;;; ontologiaSBC.clp - VERSIÓ UNIFICADA
 ;;; Translated by owl2clips
 ;;; Translated to CLIPS from ontology ontologiaSBC.owl
-;;; :Date 01/12/2025 19:05:34
+;;; Compatible amb regles.clp unificat
+;;; ---------------------------------------------------------
+
+;;; ============================================================
+;;; JERARQUIA DE SOLICITANTS
+;;; ============================================================
 
 (defclass Solicitant
     (is-a USER)
@@ -15,6 +20,9 @@
         (type INTEGER)
         (create-accessor read-write))
     (multislot evitaServei
+        (type INSTANCE)
+        (create-accessor read-write))
+    (multislot prefereixServei
         (type INSTANCE)
         (create-accessor read-write))
     (multislot requereixServei
@@ -68,67 +76,109 @@
     (slot tipusMascota
         (type STRING)
         (create-accessor read-write))
+    (slot segonaResidencia
+        (type SYMBOL)
+        (create-accessor read-write))
 )
 
-(defclass Familia
-    (is-a Solicitant)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass FamiliaBiparental
-    (is-a Familia)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass FamiliaMonoparental
-    (is-a Familia)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass GrupEstudiants
-    (is-a Solicitant)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass Individu
-    (is-a Solicitant)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass Parella
-    (is-a Solicitant)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass ParellaAmbFills
-    (is-a Parella)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass ParellaFutursFills
-    (is-a Parella)
-    (role concrete)
-    (pattern-match reactive)
-)
-
-(defclass ParellaSenseFills
-    (is-a Parella)
-    (role concrete)
-    (pattern-match reactive)
-)
+;;; --- PERSONES GRANS ---
 
 (defclass PersonaGran
     (is-a Solicitant)
     (role concrete)
     (pattern-match reactive)
 )
+
+;;; --- JOVES ---
+
+(defclass Joves
+    (is-a Solicitant)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass ParellaJove
+    (is-a Joves)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass GrupEstudiants
+    (is-a Joves)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+;;; --- ADULTS ---
+
+(defclass Adults
+    (is-a Solicitant)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+;;; --- PARELLES ADULTES ---
+
+(defclass ParellaAdulta
+    (is-a Adults)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass ParellaAmbFills
+    (is-a ParellaAdulta)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass ParellaSenseFills
+    (is-a ParellaAdulta)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass ParellaFutursFills
+    (is-a ParellaAdulta)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+;;; --- INDIVIDUS ADULTS ---
+
+(defclass Individu
+    (is-a Adults)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass IndividuAmbFills
+    (is-a Individu)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass IndividuSenseFills
+    (is-a Individu)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass IndividuFutursFills
+    (is-a Individu)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+
+(defclass CompradorSegonaResidencia
+    (is-a Solicitant)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+;;; ============================================================
+;;; SERVEIS
+;;; ============================================================
 
 (defclass Servei
     (is-a USER)
@@ -147,6 +197,8 @@
         (type INSTANCE)
         (create-accessor read-write))
 )
+
+;;; --- SERVEIS COMERCIALS ---
 
 (defclass ServeiComercial
     (is-a Servei)
@@ -178,6 +230,8 @@
     (pattern-match reactive)
 )
 
+;;; --- SERVEIS EDUCATIUS ---
+
 (defclass ServeiEducatiu
     (is-a Servei)
     (role concrete)
@@ -207,6 +261,8 @@
     (role concrete)
     (pattern-match reactive)
 )
+
+;;; --- SERVEIS D'OCI ---
 
 (defclass ServeiOci
     (is-a Servei)
@@ -256,6 +312,8 @@
     (pattern-match reactive)
 )
 
+;;; --- SERVEIS DE SALUT ---
+
 (defclass ServeiSalut
     (is-a Servei)
     (role concrete)
@@ -280,6 +338,8 @@
     (pattern-match reactive)
 )
 
+;;; --- TRANSPORT ---
+
 (defclass Transport
     (is-a Servei)
     (role concrete)
@@ -298,23 +358,31 @@
     (pattern-match reactive)
 )
 
-(defclass EstacioMetro
+(defclass TransportPublic
     (is-a Transport)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass EstacioMetro
+    (is-a TransportPublic)
     (role concrete)
     (pattern-match reactive)
 )
 
 (defclass EstacioTren
-    (is-a Transport)
+    (is-a TransportPublic)
     (role concrete)
     (pattern-match reactive)
 )
 
 (defclass ParadaBus
-    (is-a Transport)
+    (is-a TransportPublic)
     (role concrete)
     (pattern-match reactive)
 )
+
+;;; --- ZONES VERDES ---
 
 (defclass ZonaVerda
     (is-a Servei)
@@ -339,6 +407,10 @@
     (role concrete)
     (pattern-match reactive)
 )
+
+;;; ============================================================
+;;; HABITATGES
+;;; ============================================================
 
 (defclass Habitatge
     (is-a USER)
@@ -460,6 +532,10 @@
     (pattern-match reactive)
 )
 
+;;; ============================================================
+;;; LOCALITZACIÓ
+;;; ============================================================
+
 (defclass Localitzacio
     (is-a USER)
     (role concrete)
@@ -487,6 +563,10 @@
         (create-accessor read-write))
 )
 
+;;; ============================================================
+;;; OFERTES
+;;; ============================================================
+
 (defclass Oferta
     (is-a USER)
     (role concrete)
@@ -500,10 +580,6 @@
     (slot disponible
         (type SYMBOL)
         (create-accessor read-write))
-    ;;; Valors: Parcialment, Adequat, MoltRecomanable, Cap
-    (slot grauRecomanacio
-        (type STRING)
-        (create-accessor read-write))
     (multislot motiusRecomanacio
         (type STRING)
         (create-accessor read-write))
@@ -512,5 +588,4 @@
         (create-accessor read-write))
 )
 
-(definstances instances
-)
+(definstances instances)

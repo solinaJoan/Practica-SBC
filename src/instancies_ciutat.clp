@@ -13,7 +13,7 @@
     ;;; ============================================================
 
     ;;; CAS 1: FAMÍLIA GARCIA (Busca escola i parc al Centre)
-    ([sol-test-familia] of FamiliaBiparental
+    ([sol-test-familia] of ParellaAmbFills
         (nom "Familia Garcia")
         (edat 40)
         (numeroPersones 4)
