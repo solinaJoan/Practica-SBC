@@ -772,43 +772,41 @@
     (debug-print "[SCORING] +20p " (instance-name ?of) " - Servei preferit")
 )
 
-(defrule resolucio-puntuar-pressupost-dins-marge
-    "Pressupost dins el marge"
+(defrule resolucio-puntuar-pressupost
+    "Puntua segons si el preu esta dins el pressupost (amb bonus per preus molt bons)"
     (fase (actual scoring))
     ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max) (pressupostMinim ?min))
     ?of <- (object (is-a Oferta) (disponible si) (preuMensual ?preu))
     ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri pressupost-dins-marge)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri pressupost)))
     (test (and (< ?preu (* ?max 1.15)) (> ?preu (* ?min 0.85))))
     =>
-    (if (and (< ?preu ?max) (> ?preu ?min))
+    ;; Calcula puntuacio segons relacio preu/pressupost
+    (bind ?punts 0)
+    (bind ?missatge "")
+    
+    (if (< ?preu (* ?max 0.7))
     then 
-        (modify ?rec (puntuacio (+ ?pts 30)))
-        (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Pressupost perfecte") (punts 30)))
-        (debug-print "[SCORING] +" 30 "p " (instance-name ?of) " - Pressupost perfecte")
-    else 
-        (modify ?rec (puntuacio (+ ?pts 20)))
-        (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Pressupost adequat") (punts 20)))
-        (debug-print "[SCORING] +" 20 "p " (instance-name ?of) " - Pressupost adequat")
-    )
-    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri pressupost-dins-marge)))
-)
-
-(defrule resolucio-puntuar-bon-preu
-    "El preu es molt bo (menys del 80% del pressupost)"
-    (fase (actual scoring))
-    ?sol <- (object (is-a Solicitant) (pressupostMaxim ?max))
-    ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
-    (test (< ?preu (* ?max 0.8)))
-    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
-    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri preu-molt-bo)))
-    =>
-    (modify ?rec (puntuacio (+ ?pts 40)))
-    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Preu molt bo (>20% estalvi)") (punts 40)))
-    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri preu-molt-bo)))
-    (debug-print "[SCORING] +40p " (instance-name ?of) " - Preu molt bo")
+        (bind ?punts 50)
+        (bind ?missatge "Preu excepcional (>30% estalvi)")
+    else (if (< ?preu (* ?max 0.8))
+    then
+        (bind ?punts 40)
+        (bind ?missatge "Preu molt bo (>20% estalvi)")
+    else (if (and (<= ?preu ?max) (>= ?preu ?min))
+    then
+        (bind ?punts 30)
+        (bind ?missatge "Pressupost perfecte")
+    else
+        (bind ?punts 20)
+        (bind ?missatge "Pressupost adequat")
+    )))
+    
+    (modify ?rec (puntuacio (+ ?pts ?punts)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?missatge) (punts ?punts)))
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri pressupost)))
+    (debug-print "[SCORING] +" ?punts "p " (instance-name ?of) " - " ?missatge)
 )
 
 (defrule resolucio-puntuar-silencios
