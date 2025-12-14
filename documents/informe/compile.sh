@@ -1,0 +1,1 @@
+lualatex -output-directory=out main.tex
