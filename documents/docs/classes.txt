@@ -24,25 +24,31 @@ HABITATGE
     ├── Àtic
     └── Estudi
 
-SOLICITANT
-    ├── Individu
-    ├── Parella
-    │     ├── Parella Sense Fills
-    │     ├── Parella Amb Fills
-    │     └── Parella Futurs Fills
-    ├── Família
-    │     ├── Família Monoparental
-    │     └── Família Biparental
-    ├── Grup Estudiants
-    └── Persona gran
+SOL·LICITANT
+    ├── Joves
+    │     ├── ParellaJove
+    │     └── Grup Estudiants
+    ├── Adults
+    │     ├── Individu
+    │     │     ├── Individu Amb Fills
+    │     │     ├── Individu Sense Fills
+    │     │     └── Individu Futurs Fills
+    │     └── ParellaAdulta
+    │           ├── Parella Amb Fills
+    │           ├── Parella Sense Fills
+    │           └── Parella Futurs Fills
+    ├── Persona Gran
+    └── Segona Residència
+
 
 SERVEI
     ├── Transport
-    │     ├── Estació Metro
+    │     ├── Autopista
     │     ├── Aeroport
-    │     ├── Parada Bus
-    │     ├── Estació Tren
-    │     └── Autopista
+    │     └── Transport Public
+    │          ├── Parada Bus
+    │          ├── Estació Tren
+    │          └── Estació Metro
     ├── Servei Salut
     │     ├── Centre Salut
     │     ├── Hospital
@@ -69,7 +75,3 @@ SERVEI
           ├── Restaurant
           ├── Estadi
           └── Bar
-
-
-
-
