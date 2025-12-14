@@ -57,11 +57,6 @@
             (bind ?punt (fact-slot-value ?rec puntuacio))
             
             (bind ?habitatge (send ?of get-teHabitatge))
-
-            (printout t "Habitatge = " ?habitatge crlf)
-            (printout t "Classe = " (class ?habitatge) crlf)
-            (ppdefclass (class ?habitatge))
-            
             (bind ?localitzacio (send ?habitatge get-teLocalitzacio))
             (bind ?preu (send ?of get-preuMensual))
             (bind ?tipus (class ?habitatge))

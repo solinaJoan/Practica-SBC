@@ -101,8 +101,8 @@
 )
 
 (deffunction classificar-distancia (?metres)
-    (if (< ?metres 500.0) then MoltAProp
-    else (if (< ?metres 1000.0) then DistanciaMitjana
+    (if (< ?metres 200.0) then MoltAProp
+    else (if (< ?metres 400.0) then DistanciaMitjana
     else Lluny))
 )
 
@@ -405,7 +405,7 @@
     (test (> ?fills 0))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu) (obligatori si) (motiu "Familia amb fills necessita escoles")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu) (obligatori no) (motiu "Familia amb fills necessita escoles")))
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ZonaVerda) (obligatori no) (motiu "Familia amb fills prefereix zones verdes")))
     (debug-print [ABSTRACCIO] (instance-name ?sol) necessita escoles perquè te fills)
 )
@@ -416,8 +416,8 @@
     ?sol <- (object (is-a PersonaGran))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiSalut)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiSalut) (obligatori si) (motiu "Persona gran necessita serveis de salut")))
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiComercial) (obligatori si) (motiu "Persona gran necessita comerços a prop")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiSalut) (obligatori no) (motiu "Persona gran necessita serveis de salut")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiComercial) (obligatori no) (motiu "Persona gran necessita comerços a prop")))
     (debug-print [ABSTRACCIO] (instance-name ?sol) necessita salut i comerç)
 )
 
@@ -427,7 +427,7 @@
     ?sol <- (object (is-a GrupEstudiants))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori si) (motiu "Estudiant necessita transport public")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori no) (motiu "Estudiant necessita transport public")))
 
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiOci) (obligatori no) (motiu "Estudiant prefereix zones oci")))
 
@@ -460,7 +460,7 @@
     ?sol <- (object (is-a Solicitant) (requereixTransportPublic si))
     (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
-    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori si) (motiu "Prefereix transport public")))
+    (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori no) (motiu "Prefereix transport public")))
     (debug-print [ABSTRACCIO] (instance-name ?sol) necessita transport public)
 )
 
@@ -1046,23 +1046,6 @@
 )
 
 ;;; --- REGLES DE PUNTS POSITIUS ---
-
-(defrule resolucio-punt-bon-preu
-    "El preu es molt bo (menys del 80% del pressupost)"
-    (fase (actual scoring))
-    ?sol <- (object (is-a Joves) (pressupostMaxim ?max))
-    ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
-    (test (< ?preu (* ?max 0.8)))
-    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
-    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri planta-alta-sense-ascensor)))
-    =>
-    (modify ?rec (puntuacio (+ ?pts 10)))
-    (debug-print [RESOLUCIO] PUNTUADA +10 A (instance-name ?of) per (instance-name ?sol) - Molt bon preu)
-    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri planta-alta-sense-ascensor)))
-
-    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Preu molt bo (>20% estalvi)")))
-)
 
 (defrule resolucio-punt-terrassa
     "Habitatge amb terrassa"
