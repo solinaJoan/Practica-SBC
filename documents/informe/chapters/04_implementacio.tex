@@ -1,53 +1,780 @@
 \section{Implementació}
-\label{sec:implementacio}
 
-El sistema s'ha implementat completament en **CLIPS 6.3**. El codi s'ha estructurat en diversos fitxers per mantenir la modularitat i facilitar el manteniment, seguint les bones pràctiques d'enginyeria del programari.
+\subsection{Representació de l'ontologia}
 
-\subsection{Estructura del Codi}
-\begin{itemize}
-    \item \textbf{ontologia.clp:} Conté la definició de classes (\texttt{defclass}) generada automàticament des de Protégé i refinada manualment. Defineix l'estructura d'objectes (COOL).
-    \item \textbf{instancies\_ciutat.clp:} Conté el conjunt de dades de prova: 6 perfils de sol·licitants variats, 10 localitzacions, 60 serveis i 24 habitatges amb les seves ofertes corresponents.
-    \item \textbf{regles.clp:} El nucli del sistema expert. Conté els \texttt{deftemplates} per a fets de control i totes les regles de negoci.
-    \item \textbf{main.clp:} Implementa la interfície d'usuari per línia de comandes, permetent crear nous perfils interactivament i mostrant els resultats finals formatats.
-\end{itemize}
+Un dels primers reptes que ens vam trobar va ser com traduir l'ontologia que havíem dissenyat en Protégé a estructures de dades utilitzables en CLIPS. CLIPS ofereix el paradigma COOL (CLIPS Object-Oriented Language) que ens permet representar jerarquies de classes i instàncies d'una manera molt natural.
 
-\subsection{Control del Flux d'Execució}
-S'ha utilitzat un mecanisme de control basat en un fet global \texttt{(fase (actual ?x))}. Les regles tenen prioritat (\textit{salience}) o condicions al LHS que comproven la fase actual. Això assegura que el sistema no comenci a puntuar abans d'haver descartat les ofertes inviables.
+\subsubsection{Traducció automàtica amb owl2clips}
 
-Les transicions de fase són:
-$$ \texttt{init} \rightarrow \texttt{abstraccio} \rightarrow \texttt{descart} \rightarrow \texttt{scoring} \rightarrow \texttt{classificacio} \rightarrow \texttt{presentacio} $$
+Protégé permet exportar ontologies en format OWL, i existeix una eina anomenada \texttt{owl2clips} que tradueix automàticament aquests fitxers a codi CLIPS. Aquesta eina ens ha estalviat molt de treball manual i ha garantit que la representació en CLIPS sigui fidel a l'ontologia original.
 
-\subsection{Detalls d'Implementació Rellevants}
+El procés que vam seguir va ser:
+\begin{enumerate}
+    \item Dissenyar i documentar l'ontologia en Protégé
+    \item Exportar-la com \texttt{ontologia.owl}
+    \item Utilitzar \texttt{owl2clips} per generar \texttt{ontologia.clp}
+    \item Revisar i ajustar el codi generat si calia
+\end{enumerate}
 
-\subsubsection{Gestió de Distàncies i Proximitat}
-Per evitar calcular distàncies $N \times M$ constantment, a la fase d'abstracció es generen fets \texttt{proximitat} una sola vegada:
-\begin{verbatim}
+\subsubsection{Estructura de les classes}
+
+La traducció genera \texttt{defclass} per a cada concepte de l'ontologia. Per exemple, la jerarquia de sol·licitants es representa així:
+
+\begin{lstlisting}[language=Lisp, caption=Jerarquia de solicitants en CLIPS]
+(defclass Solicitant
+    (is-a USER)
+    (role concrete)
+    (pattern-match reactive)
+    (slot nom (type STRING))
+    (slot edat (type INTEGER))
+    (slot numeroPersones (type INTEGER))
+    (slot numeroFills (type INTEGER))
+    (multislot edatsFills (type INTEGER))
+    (slot pressupostMaxim (type FLOAT))
+    (slot pressupostMinim (type FLOAT))
+    (slot margeEstricte (type SYMBOL))
+    (slot teMascotes (type SYMBOL))
+    (slot numeroMascotes (type INTEGER))
+    (slot tipusMascota (type STRING))
+    ; ... més atributs
+)
+
+(defclass PersonaGran
+    (is-a Solicitant)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass Joves
+    (is-a Solicitant)
+    (role concrete)
+    (pattern-match reactive)
+)
+
+(defclass GrupEstudiants
+    (is-a Joves)
+    (role concrete)
+    (pattern-match reactive)
+)
+\end{lstlisting}
+
+L'herència es defineix amb \texttt{is-a}, de manera que \texttt{GrupEstudiants} hereta tots els atributs de \texttt{Joves}, que al seu torn hereta de \texttt{Solicitant}. Això ens permet escriure regles generals per a "qualsevol Jove" que s'aplicaran tant a \texttt{GrupEstudiants} com a \texttt{ParellaJove}.
+
+\subsubsection{Representació d'habitatges i serveis}
+
+De manera similar, els habitatges i serveis es representen amb les seves respectives jerarquies:
+
+\begin{lstlisting}[language=Lisp, caption=Jerarquia d'habitatges]
+(defclass Habitatge
+    (is-a USER)
+    (role concrete)
+    (pattern-match reactive)
+    (slot superficieHabitable (type FLOAT))
+    (slot numeroDormitoris (type INTEGER))
+    (slot numeroDormitorisDobles (type INTEGER))
+    (slot numeroDormitorisSimples (type INTEGER))
+    (slot numeroBanys (type INTEGER))
+    (slot plantaPis (type INTEGER))
+    (slot moblat (type SYMBOL))
+    (slot ambElectrodomestics (type SYMBOL))
+    (slot teAscensor (type SYMBOL))
+    (slot permetMascotes (type SYMBOL))
+    (slot teTerrassaOBalco (type SYMBOL))
+    (slot superficieTerrassa (type FLOAT))
+    (slot orientacioSolar (type STRING))
+    (slot nivellSoroll (type STRING))
+    (slot teLocalitzacio (type INSTANCE))
+    ; ... més atributs
+)
+
+(defclass Pis (is-a Habitatge))
+(defclass Atic (is-a Habitatge))
+(defclass Estudi (is-a Habitatge))
+(defclass HabitatgeUnifamiliar (is-a Habitatge))
+(defclass Duplex (is-a Habitatge))
+\end{lstlisting}
+
+Per als serveis, la jerarquia és més complexa perquè tenim categories i subcategories:
+
+\begin{lstlisting}[language=Lisp, caption=Jerarquia de serveis (fragment)]
+(defclass Servei
+    (is-a USER)
+    (role concrete)
+    (slot nomServei (type STRING))
+    (slot teLocalitzacio (type INSTANCE))
+)
+
+(defclass ServeiEducatiu (is-a Servei))
+(defclass Escola (is-a ServeiEducatiu))
+(defclass Institut (is-a ServeiEducatiu))
+(defclass Universitat (is-a ServeiEducatiu))
+
+(defclass ServeiSalut (is-a Servei))
+(defclass Hospital (is-a ServeiSalut))
+(defclass CentreSalut (is-a ServeiSalut))
+(defclass Farmacia (is-a ServeiSalut))
+
+(defclass Transport (is-a Servei))
+(defclass EstacioMetro (is-a Transport))
+(defclass ParadaBus (is-a Transport))
+(defclass Autopista (is-a Transport))
+\end{lstlisting}
+
+Aquesta jerarquia ens permet fer queries com "troba'm tots els serveis educatius" sense haver d'enumerar Escola, Institut, Universitat, etc.
+
+\subsubsection{Relacions entre objectes}
+
+Les relacions entre objectes es representen mitjançant slots de tipus \texttt{INSTANCE}. Per exemple, un habitatge té una localització:
+
+\begin{lstlisting}[language=Lisp]
+(slot teLocalitzacio (type INSTANCE))
+\end{lstlisting}
+
+I una oferta té un habitatge:
+
+\begin{lstlisting}[language=Lisp]
+(defclass Oferta
+    (is-a USER)
+    (slot teHabitatge (type INSTANCE))
+    (slot preuMensual (type FLOAT))
+    (slot disponible (type SYMBOL))
+    (slot dataPublicacio (type STRING))
+)
+\end{lstlisting}
+
+Això ens permet navegar per les relacions fàcilment. Per exemple, per obtenir la superfície d'un habitatge a partir d'una oferta:
+
+\begin{lstlisting}[language=Lisp]
+?of <- (object (is-a Oferta) (teHabitatge ?hab))
+?h <- (object (is-a Habitatge) (name ?hab) 
+              (superficieHabitable ?sup))
+\end{lstlisting}
+
+\subsubsection{Templates per a fets temporals}
+
+A més de l'ontologia principal, hem definit diversos templates per representar informació temporal que es genera durant el raonament:
+
+\begin{lstlisting}[language=Lisp, caption=Templates auxiliars]
+(deftemplate proximitat
+    (slot habitatge (type INSTANCE))
+    (slot servei (type INSTANCE))
+    (slot categoria (type SYMBOL))
+    (slot distancia (type SYMBOL))  ; MoltAProp, DistanciaMitjana, Lluny
+    (slot metres (type FLOAT))
+)
+
+(deftemplate requisit-inferit
+    (slot solicitant (type INSTANCE))
+    (slot categoria-servei (type SYMBOL))
+    (slot obligatori (type SYMBOL))
+    (slot motiu (type STRING))
+)
+
+(deftemplate oferta-descartada
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot motiu (type STRING))
+)
+
+(deftemplate Recomanacio
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot puntuacio (type INTEGER) (default 0))
+    (slot grau (type SYMBOL) (default NULL))
+)
+
+(deftemplate punt-positiu
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot descripcio (type STRING))
+    (slot punts (type INTEGER) (default 10))
+)
+
+(deftemplate criteri-no-complert
+    (slot solicitant (type INSTANCE))
+    (slot oferta (type INSTANCE))
+    (slot criteri (type STRING))
+    (slot gravetat (type SYMBOL) (default Lleu))
+)
+\end{lstlisting}
+
+Aquests templates són crucials per emmagatzemar els resultats intermedis del raonament i per poder generar explicacions al final.
+
+\subsection{Modularització del sistema}
+
+Un dels punts forts de la nostra implementació és la clara separació en mòduls que corresponen als subproblemes identificats a la fase de conceptualització. Aquesta modularització no només fa el codi més mantenible, sinó que també facilita el desenvolupament incremental.
+
+\subsubsection{Control de flux amb fases}
+
+Per implementar la descomposició en fases, hem utilitzat un template senzill:
+
+\begin{lstlisting}[language=Lisp]
+(deftemplate fase
+   (slot actual (type SYMBOL))
+)
+
+(deffacts inicial 
+    (fase (actual init))
+)
+\end{lstlisting}
+
+Cada fase té regles que s'executen només quan la fase actual coincideix, i al final de cada fase una regla de baixa saliència canvia la fase:
+
+\begin{lstlisting}[language=Lisp]
+(defrule init-fi
+    "Marca el final de la fase d'inicialitzacio"
+    (declare (salience -10))
+    ?f <- (fase (actual init))
+    =>
+    (modify ?f (actual abstraccio))
+    (printout t crlf "=== FASE INICIALITZACIO COMPLETADA ===" crlf)
+)
+\end{lstlisting}
+
+Aquest mecanisme és simple però efectiu: les regles normals tenen saliència per defecte (0), mentre que les regles de transició tenen saliència negativa (-10), de manera que només s'executen quan ja no queden regles normals per disparar.
+
+\subsubsection{Fase d'inicialització}
+
+Les regles d'aquesta fase tenen la condició \texttt{(fase (actual init))} i s'encarreguen de:
+
+\textbf{Càlcul de proximitats:}
+\begin{lstlisting}[language=Lisp, caption=Càlcul de distàncies]
 (defrule abstraccio-calcular-proximitats
+    "Calcula la proximitat entre cada habitatge i cada servei"
     (fase (actual init))
     ?hab <- (object (is-a Habitatge) (teLocalitzacio ?locH))
+    ?locHab <- (object (is-a Localitzacio) (name ?locH) 
+                       (coordenadaX ?x1) (coordenadaY ?y1))
     ?serv <- (object (is-a Servei) (teLocalitzacio ?locS))
-    ...
+    ?locServ <- (object (is-a Localitzacio) (name ?locS) 
+                        (coordenadaX ?x2) (coordenadaY ?y2))
+    (not (proximitat (habitatge ?hab) (servei ?serv)))
     =>
     (bind ?metres (calcular-distancia ?x1 ?y1 ?x2 ?y2))
+    (bind ?dist (classificar-distancia ?metres))
+    (bind ?cat (class ?serv))
     (assert (proximitat (habitatge ?hab) (servei ?serv) 
-            (distancia (classificar-distancia ?metres))))
+                       (categoria ?cat) (distancia ?dist) 
+                       (metres ?metres)))
 )
-\end{verbatim}
-Aquesta tècnica millora el rendiment i simplifica les regles posteriors, que només han de fer \textit{matching} amb el símbol \texttt{MoltAProp}.
+\end{lstlisting}
 
-\subsubsection{Sistema de Puntuació Incremental}
-S'ha implementat un \texttt{deftemplate Recomanacio} que manté l'estat de l'avaluació. Les regles de \textit{scoring} modifiquen aquest fet:
-\begin{verbatim}
-(defrule resolucio-puntuar-piscina
-    (fase (actual scoring))
-    ...
-    ?rec <- (Recomanacio (puntuacio ?pts))
+Aquesta regla itera sobre totes les combinacions (habitatge, servei) i crea un fet de proximitat per a cada una. La condició \texttt{(not (proximitat ...))} assegura que no calculem la mateixa distància dues vegades.
+
+Les funcions auxiliars \texttt{calcular-distancia} i \texttt{classificar-distancia} encapsulen la lògica:
+
+\begin{lstlisting}[language=Lisp]
+(deffunction calcular-distancia (?x1 ?y1 ?x2 ?y2)
+    (sqrt (+ (** (- ?x2 ?x1) 2) (** (- ?y2 ?y1) 2)))
+)
+
+(deffunction classificar-distancia (?metres)
+    (if (< ?metres 200.0) then MoltAProp
+    else (if (< ?metres 400.0) then DistanciaMitjana
+    else Lluny))
+)
+\end{lstlisting}
+
+\textbf{Expansió de categories:}
+
+Per fer les regles posteriors més generals, també creem proximitats per a categories pare:
+
+\begin{lstlisting}[language=Lisp]
+(defrule abstraccio-expandir-categories
+    "Expandeix categories pare per evitar resultats buits"
+    (declare (salience 99))
+    (fase (actual init))
+    (proximitat (habitatge ?h) (servei ?s) 
+                (categoria ?cat) (distancia ?d) (metres ?m))
     =>
-    (modify ?rec (puntuacio (+ ?pts 5)))
-    (assert (punt-positiu ... (descripcio "Te piscina")))
+    ; Transport
+    (if (or (eq ?cat EstacioMetro) (eq ?cat ParadaBus) 
+            (eq ?cat EstacioTren)) then 
+        (assert (proximitat (habitatge ?h) (servei ?s) 
+                (categoria TransportPublic) 
+                (distancia ?d) (metres ?m))))
+    ; Educacio
+    (if (or (eq ?cat Escola) (eq ?cat Universitat)) then 
+        (assert (proximitat (habitatge ?h) (servei ?s) 
+                (categoria ServeiEducatiu) 
+                (distancia ?d) (metres ?m))))
+    ; ... més categories
 )
-\end{verbatim}
-A més, es genera un historial de \texttt{punt-positiu} i \texttt{criteri-no-complert} per poder explicar a l'usuari final per què ha rebut aquella puntuació (explicabilitat).
+\end{lstlisting}
 
-\subsection{Interfície d'Usuari}
-El fitxer \texttt{main.clp} utilitza funcions de lectura (\texttt{read}, \texttt{readline}) per capturar les necessitats de l'usuari dinàmicament. Aquestes dades es converteixen en instàncies de la classe \texttt{Solicitant} (o les seves subclasses, inferides mitjançant regles a la fase d'inicialització) perquè el motor d'inferència les processi igual que les instàncies estàtiques.
+Aquesta regla té saliència alta (99) per executar-se immediatament després de crear cada proximitat específica.
+
+\textbf{Creació de recomanacions inicials:}
+
+\begin{lstlisting}[language=Lisp]
+(defrule crear-recomanacions-inicials
+    "Crea tot el parell de recomanacions entre oferta i solicitant"
+    (fase (actual init))
+    ?sol <- (object (is-a Solicitant))
+    ?of  <- (object (is-a Oferta) (disponible si))
+    (not (Recomanacio (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (Recomanacio (solicitant ?sol) (oferta ?of)))
+)
+\end{lstlisting}
+
+\subsubsection{Fase d'abstracció}
+
+Aquesta fase té dues responsabilitats: classificar sol·licitants i inferir necessitats.
+
+\textbf{Classificació de sol·licitants:}
+
+Quan el sol·licitant s'ha creat a partir del mode interactiu, tenim un template \texttt{dades-solicitant} amb tota la informació bruta. Les regles d'abstracció transformen això en una instància de la classe adequada:
+
+\begin{lstlisting}[language=Lisp]
+(defrule crear-persona-gran
+    "Persona gran (>65)"
+    (declare (salience 90))
+    (fase (actual init))
+    ?f <- (dades-solicitant (nom ?n) (edat ?e) 
+             (numeroPersones ?np) (pressupostMaxim ?pmax) 
+             ; ... més camps
+    )
+    (test (> ?e 65))
+    =>
+    (make-instance (sym-cat sol- (gensym*)) of PersonaGran
+        (nom ?n) (edat ?e) (numeroPersones ?np)
+        (pressupostMaxim ?pmax)
+        ; ... més atributs
+    )
+    (retract ?f)
+    (debug-print [ABSTRACCIO] Solicitant PersonaGran: ?n)
+)
+\end{lstlisting}
+
+Tenim una regla similar per a cada categoria de sol·licitant, amb saliències diferents per establir prioritats. Per exemple, la regla de segona residència té saliència 100 (la més alta) perquè aquest criteri és més específic i ha de verificar-se primer.
+
+\textbf{Inferència de requisits:}
+
+Un cop tenim el sol·licitant classificat, inferim les seves necessitats:
+
+\begin{lstlisting}[language=Lisp]
+(defrule abstraccio-familia-amb-fills
+    "Les families amb fills puntuen escoles i zones verdes"
+    (fase (actual abstraccio))
+    ?sol <- (object (is-a Solicitant) (numeroFills ?fills))
+    (test (> ?fills 0))
+    (not (requisit-inferit (solicitant ?sol) 
+                          (categoria-servei ServeiEducatiu)))
+    =>
+    (assert (requisit-inferit 
+        (solicitant ?sol) 
+        (categoria-servei ServeiEducatiu) 
+        (obligatori no) 
+        (motiu "Familia amb fills necessita escoles")))
+    (assert (requisit-inferit 
+        (solicitant ?sol) 
+        (categoria-servei ZonaVerda) 
+        (obligatori no) 
+        (motiu "Familia amb fills prefereix zones verdes")))
+)
+\end{lstlisting}
+
+La condició \texttt{(test (> ?fills 0))} s'aplica a qualsevol subclasse de \texttt{Solicitant} que tingui fills, sigui \texttt{ParellaAmbFills} o \texttt{IndividuAmbFills}.
+
+\subsubsection{Fase de descart}
+
+Les regles de descart tenen totes una estructura similar:
+
+\begin{lstlisting}[language=Lisp]
+(defrule resolucio-descartar-no-mascotes
+    "Descartar si no permet mascotes i el solicitant en te"
+    (fase (actual descart))
+    ?sol <- (object (is-a Solicitant) (teMascotes si))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) 
+                   (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) 
+                  (permetMascotes no))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (assert (oferta-descartada 
+        (solicitant ?sol) 
+        (oferta ?of) 
+        (motiu "No permet mascotes")))
+)
+\end{lstlisting}
+
+La condició \texttt{(not (oferta-descartada ...))} evita que la regla es dispari múltiples vegades per la mateixa oferta. Un cop s'ha creat el fet \texttt{oferta-descartada}, totes les regles posteriors que vulguin puntuar aquesta oferta fallaran perquè tenen la condició:
+
+\begin{lstlisting}[language=Lisp]
+(not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+\end{lstlisting}
+
+\subsubsection{Fase de puntuació}
+
+Aquesta és la fase més complexa, amb desenes de regles que sumen o resten punts segons diferents criteris. Cada regla segueix aquest patró:
+
+\begin{lstlisting}[language=Lisp, caption=Patró de regla de puntuació]
+(defrule resolucio-puntuar-X
+    "Explicació del criteri"
+    (fase (actual scoring))
+    ; Condicions sobre el solicitant
+    ?sol <- (object (is-a TipusSolicitant) ...)
+    ; Condicions sobre l'oferta/habitatge
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) ...)
+    ?h <- (object (is-a Habitatge) (name ?hab) 
+                  (caracteristica valor-desitjat))
+    ; Recuperar la recomanació
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) 
+                         (puntuacio ?pts))
+    ; No està descartada
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    ; No hem aplicat ja aquest criteri
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) 
+                        (criteri nom-criteri)))
+    =>
+    ; Modificar la puntuació
+    (modify ?rec (puntuacio (+ ?pts PUNTS)))
+    ; Registrar que hem aplicat el criteri
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) 
+                           (criteri nom-criteri)))
+    ; Opcionalment, registrar el motiu
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) 
+                         (descripcio "Text explicatiu") 
+                         (punts PUNTS)))
+)
+\end{lstlisting}
+
+El template \texttt{criteriAplicat} és crucial per evitar que una mateixa regla es dispari múltiples vegades. Sense això, si un habitatge té terrassa i una regla suma 20 punts per tenir terrassa, aquesta regla es podria disparar infinitament perquè la condició es continua complint després de modificar la puntuació.
+
+Exemple concret de regla de puntuació:
+
+\begin{lstlisting}[language=Lisp]
+(defrule resolucio-puntuar-terrassa
+    "Habitatge amb terrassa"
+    (fase (actual scoring))
+    ?sol <- (object (is-a Solicitant)) 
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) 
+                   (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) 
+                  (teTerrassaOBalco si))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) 
+                         (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) 
+                        (criteri te-terrassa)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) 
+                           (criteri te-terrassa)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) 
+                         (descripcio "Te terrassa o balco")))
+)
+\end{lstlisting}
+
+\subsubsection{Fase de classificació}
+
+Una vegada tenim totes les puntuacions calculades, és molt senzill assignar el grau:
+
+\begin{lstlisting}[language=Lisp]
+(defrule classificacio-assignar-grau
+    (fase (actual classificacio))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) 
+                         (puntuacio ?pts) (grau NULL))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    =>
+    (if (>= ?pts 70) then
+        (modify ?rec (grau MoltRecomanable))
+    else (if (>= ?pts 40) then
+        (modify ?rec (grau Adequat))
+    else (if (> ?pts 0) then
+        (modify ?rec (grau Parcialment))
+    )))
+)
+\end{lstlisting}
+
+\subsubsection{Fase de presentació}
+
+La presentació és més complexa perquè requereix ordenar les recomanacions i seleccionar el Top 3. Com que CLIPS no té funcions natives d'ordenació, hem implementat un bubble sort senzill dins de la pròpia regla:
+
+\begin{lstlisting}[language=Lisp, caption=Ordenació i presentació del Top 3]
+(defrule presentacio-top3-per-solicitant
+    (declare (salience -10))
+    (fase (actual presentacio))
+    ?sol <- (object (is-a Solicitant))
+    =>
+    (bind ?nom-sol (send ?sol get-nom))
+    (printout t "SOL·LICITANT: " ?nom-sol crlf)
+    
+    ; Obtenir totes les recomanacions
+    (bind $?recomanacions (create$))
+    (do-for-all-facts ((?rec Recomanacio))
+        (and (eq ?rec:solicitant ?sol) (neq ?rec:grau NULL))
+        (bind $?recomanacions (create$ $?recomanacions ?rec))
+    )
+    
+    ; Ordenar per puntuació (bubble sort)
+    (bind ?n (length$ $?recomanacions))
+    (if (> ?n 0) then
+        (loop-for-count (?i 1 (- ?n 1))
+            (loop-for-count (?j 1 (- ?n ?i))
+                (bind ?rec1 (nth$ ?j $?recomanacions))
+                (bind ?rec2 (nth$ (+ ?j 1) $?recomanacions))
+                (if (< (fact-slot-value ?rec1 puntuacio) 
+                       (fact-slot-value ?rec2 puntuacio)) then
+                    (bind $?recomanacions 
+                          (replace$ $?recomanacions ?j ?j ?rec2))
+                    (bind $?recomanacions 
+                          (replace$ $?recomanacions (+ ?j 1) 
+                                   (+ ?j 1) ?rec1))
+                )
+            )
+        )
+        
+        ; Mostrar només els 3 primers
+        (bind ?max-mostrar (min 3 (length$ $?recomanacions)))
+        (loop-for-count (?i 1 ?max-mostrar)
+            (bind ?rec (nth$ ?i $?recomanacions))
+            ; ... formatar i mostrar la recomanació
+        )
+    )
+)
+\end{lstlisting}
+
+\subsection{Implementació de la metodologia de classificació heurística}
+
+La nostra implementació segueix fidelment la metodologia de classificació heurística, que és especialment adequada per a problemes on hem de categoritzar elements segons múltiples criteris.
+
+\subsubsection{Abstracció}
+
+El primer pas de la metodologia és obtenir una descripció abstracta del problema. En el nostre cas:
+\begin{itemize}
+    \item \textbf{Dades brutes}: Edat, nombre de persones, fills, pressupost, etc.
+    \item \textbf{Abstracció}: Classificació en perfils (PersonaGran, GrupEstudiants, ParellaAmbFills, etc.)
+    \item \textbf{Inferència}: Deducció de necessitats implícites (requisits inferits)
+\end{itemize}
+
+Aquesta fase transforma dades heterogènies en conceptes del domini que es poden utilitzar en les regles posteriors.
+
+\subsubsection{Matching heurístic}
+
+En aquesta fase, emparellam cada oferta amb cada sol·licitant i avaluam el grau de coincidència. Ho fem en dues etapes:
+
+\textbf{Descart (matching binari):} Algunes restriccions són absolutes: si no es compleixen, l'oferta es descarta directament. Això és equivalent a dir "aquestes ofertes no encaixen amb aquest sol·licitant de cap manera".
+
+\textbf{Puntuació (matching gradual):} Per les ofertes que passen el filtre, calculam un grau de coincidència numèric que reflecteix quant de bé encaixen el sol·licitant i l'oferta. Això captura la idea que algunes ofertes són millors que altres, però no hi ha un tall net entre "bo" i "dolent".
+
+\subsubsection{Refinament}
+
+El refinament consisteix a transformar la puntuació numèrica en categories qualitatives:
+\begin{itemize}
+    \item Molt Recomanable (≥70 punts)
+    \item Adequat (≥40 punts)
+    \item Parcialment Adequat (>0 punts)
+\end{itemize}
+
+Aquestes categories són més útils per a l'usuari que una puntuació numèrica crua, però la puntuació ens serveix per ordenar dins de cada categoria.
+
+\subsubsection{Justificació}
+
+Un aspecte fonamental de la classificació heurística és poder justificar les decisions. Ho hem implementat mitjançant els templates \texttt{punt-positiu} i \texttt{criteri-no-complert}, que s'omplen durant la fase de puntuació i es mostren després al generar la sortida.
+
+\subsection{Desenvolupament incremental i prototipatge}
+
+Un dels requisits de la pràctica era seguir una metodologia de desenvolupament incremental. Ho hem fet creant una sèrie de prototips de complexitat creixent.
+
+\subsubsection{Prototip 0: Estructura bàsica}
+
+El primer prototip no feia res útil, però establia l'estructura:
+\begin{itemize}
+    \item Carregar l'ontologia
+    \item Crear algunes instàncies de prova
+    \item Una regla simple que imprimia "Sistema inicialitzat"
+\end{itemize}
+
+Aquest prototip ens va servir per validar que l'ontologia es carregava correctament i que podíem accedir als atributs dels objectes.
+
+\subsubsection{Prototip 1: Càlcul de proximitats i descart bàsic}
+
+El segon prototip ja feia alguna cosa útil:
+\begin{itemize}
+    \item Calcular distàncies entre habitatges i serveis
+    \item Classificar-les en molt a prop / distància mitjana / lluny
+    \item Aplicar una sola regla de descart (pressupost estricte)
+    \item Mostrar quines ofertes quedaven després del descart
+\end{itemize}
+
+Amb aquest prototip vam validar:
+\begin{itemize}
+    \item La funció de càlcul de distàncies funcionava correctament
+    \item Les regles podien accedir a localitzacions i coordenades
+    \item El mecanisme de descart funcionava
+\end{itemize}
+
+\subsubsection{Prototip 2: Classificació de sol·licitants}
+
+El tercer prototip afegia:
+\begin{itemize}
+    \item Regles per classificar sol·licitants segons edat i situació familiar
+    \item Funció interactiva per recollir dades del sol·licitant
+    \item Creació automàtica de la instància de la classe adequada
+\end{itemize}
+
+Aquest va ser un punt d'inflexió important, perquè ara el sistema ja podia adaptar-se a diferents perfils.
+
+\subsubsection{Prototip 3: Inferència de requisits i puntuació bàsica}
+
+El quart prototip incorporava:
+\begin{itemize}
+    \item Regles per inferir necessitats segons el perfil
+    \item Un conjunt reduït de regles de puntuació (5-6 criteris)
+    \item Classificació simple en graus de recomanació
+    \item Sortida bàsica mostrant les millors ofertes
+\end{itemize}
+
+Amb aquest prototip ja teníem un sistema funcional de cap a cap, tot i que amb coneixement limitat.
+
+\subsubsection{Prototip 4: Expansió del coneixement}
+
+El cinquè prototip va ser una expansió massiva:
+\begin{itemize}
+    \item Afegir més regles de descart (mascotes, accessibilitat, superfície, etc.)
+    \item Afegir moltes més regles de puntuació (vam passar de 6 a més de 30)
+    \item Diferenciar puntuacions segons el perfil del sol·licitant
+    \item Registrar punts positius i criteris no complerts per a explicacions
+\end{itemize}
+
+Aquest va ser el prototip més laborios de desenvolupar, però el resultat va ser un sistema amb prou cobertura per a casos realistes.
+
+\subsubsection{Prototip 5: Presentació i refinament final}
+
+L'últim prototip es va centrar en la qualitat de la sortida:
+\begin{itemize}
+    \item Implementar l'ordenació de recomanacions
+    \item Seleccionar només el Top 3 per sol·licitant
+    \item Formatar la sortida de manera clara i atractiva
+    \item Mostrar explicacions detallades dels punts forts i aspectes a considerar
+    \item Afegir estadístiques i missatges de debug opcionals
+\end{itemize}
+
+\subsubsection{Beneficis del desenvolupament incremental}
+
+Aquest enfocament incremental ens ha aportat diversos avantatges:
+
+\textbf{Detecció primerenca d'errors}: Cada prototip ens permetia validar que el que havíem implementat funcionava abans d'afegir més complexitat. Per exemple, vam descobrir que la nostra fórmula inicial de distància era incorrecta (utilitzàvem distància euclidiana en lloc de Manhattan) en el Prototip 1, abans de construir tota la lògica que depenia d'ella.
+
+\textbf{Iteració sobre el disseny}: A mesura que anàvem implementant regles, ens adonàvem que alguns criteris que havíem pensat inicialment no tenien sentit o eren redundants. El prototipatge ens va permetre experimentar i ajustar sense haver de reescriure tot el sistema.
+
+\textbf{Divisió del treball}: Els diferents membres de l'equip podíem treballar en paral·lel. Mentre un implementava més regles de puntuació, un altre podia estar refinant la presentació o afegint instàncies de prova.
+
+\textbf{Motivació}: Tenir versions funcionals des del principi és molt més motivador que treballar durant setmanes en alguna cosa que no fa res fins al final. Cada prototip era un petit èxit que ens animava a continuar.
+
+\subsection{Aspectes destacables de la implementació}
+
+\subsubsection{Funcions auxiliars}
+
+Hem creat diverses funcions auxiliars que encapsulen lògica reutilitzable:
+
+\begin{lstlisting}[language=Lisp, caption=Funcions d'interacció amb l'usuari]
+(deffunction pregunta-si-no (?pregunta)
+    "Pregunta amb resposta si/no"
+    (printout t ?pregunta " (si/no): ")
+    (bind ?resp (read))
+    (while (and (neq ?resp si) (neq ?resp no))
+        (printout t "Si us plau, respon 'si' o 'no': ")
+        (bind ?resp (read))
+    )
+    ?resp
+)
+
+(deffunction pregunta-numero (?pregunta ?min ?max)
+    "Pregunta amb resposta numerica amb limits"
+    (printout t ?pregunta " [" ?min "-" ?max "]: ")
+    (bind ?resp (read))
+    (while (or (not (numberp ?resp)) 
+               (< ?resp ?min) (> ?resp ?max))
+        (printout t "Introdueix un numero entre " 
+                    ?min " i " ?max ": ")
+        (bind ?resp (read))
+    )
+    ?resp
+)
+\end{lstlisting}
+
+Aquestes funcions fan que la funció principal \texttt{crear-perfil-solicitant} sigui molt més llegible i estructurada.
+
+\subsubsection{Mode debug}
+
+Hem implementat un sistema de missatges de debug que es pot activar/desactivar:
+
+\begin{lstlisting}[language=Lisp]
+(defglobal ?*DEBUG* = TRUE)
+
+(deffunction debug-print ($?msg)
+   (if ?*DEBUG*
+      then (printout t $?msg crlf)
+   )
+)
+\end{lstlisting}
+
+Així, durant el desenvolupament podem veure tots els passos intermedis:
+\begin{verbatim}
+[ABSTRACCIO] Solicitant de la categoria ParellaAmbFills: Garcia
+[ABSTRACCIO] Garcia necessita escoles perque te fills
+[DISTANCIES] hab-1 i escola-1 categoria Escola distancia: MoltAProp
+[RESOLUCIO] DESCARTADA oferta-3 - No permet mascotes
+[RESOLUCIO] PUNTUADA +20p A oferta-1 - Te terrassa
+\end{verbatim}
+
+Però en producció podem desactivar-ho posant \texttt{?*DEBUG* = FALSE}.
+
+\subsubsection{Gestió de fases amb saliència}
+
+L'ús de saliències negatives per a les regles de transició de fase és elegant i efectiu. Garanteix que una fase no acaba fins que s'han disparat totes les regles d'aquella fase, sense necessitat de comptar explícitament quantes regles queden.
+
+\subsubsection{Evitar dispars múltiples amb criteriAplicat}
+
+El patró de crear un fet \texttt{criteriAplicat} cada vegada que una regla de puntuació es dispara és crucial per evitar cicles infinits. Sense això, modificar la puntuació no canvia les condicions de la regla (l'habitatge encara té terrassa), així que la regla es dispararia de nou infinitament.
+
+Aquest patró és una bona pràctica en CLIPS quan fas modificacions incrementals a fets.
+
+\subsection{Dificultats trobades}
+
+Durant la implementació ens hem trobat amb diversos obstacles que val la pena documentar:
+
+\subsubsection{Gestió de la memòria}
+
+Amb moltes instàncies (6 habitatges, 10 serveis, 8 ofertes, etc.) i calculant totes les proximitats, es generen molts fets. En execucions llargues, això pot fer que CLIPS vagi lent. Hem mitigat això:
+\begin{itemize}
+    \item Retracting facts que ja no necessitem (com \texttt{dades-solicitant} un cop creat el sol·licitant)
+    \item Evitant crear fets redundants amb condicions \texttt{(not (...))}
+\end{itemize}
+
+\subsubsection{Debugging de regles}
+
+Quan una regla no es dispara quan esperem, pot ser difícil saber per què. CLIPS ofereix \texttt{(matches regla-name)} per veure quines condicions fallen, però hem trobat més útil afegir \texttt{debug-print} dins de les regles per veure quan s'executen.
+
+\subsubsection{Ordenació en CLIPS}
+
+CLIPS no té funcions natives per ordenar llistes de facts, així que hem hagut d'implementar l'ordenació manualment. Hem escollit bubble sort per la seva simplicitat, tot i que no és l'algorisme més eficient. Per al nostre cas (ordenar 3-10 elements) és més que suficient.
+
+\subsubsection{Gestió de multislots}
+
+Els multislots en CLIPS són una mica peculiars. Per exemple, per afegir un element a un multislot has de fer:
+
+\begin{lstlisting}[language=Lisp]
+(bind $?llista (create$ $?llista nou-element))
+\end{lstlisting}
+
+Aquesta sintaxi no és molt intuïtiva al principi i ens va costar una estona dominar-la.
+
+\subsection{Arquitectura de fitxers}
+
+Finalment, hem organitzat el codi en diversos fitxers per facilitar el manteniment:
+
+\begin{itemize}
+    \item \texttt{ontologia.clp}: Definició de totes les classes (generat automàticament)
+    \item \texttt{instancies\_ciutat.clp}: Instàncies d'habitatges, serveis i ofertes
+    \item \texttt{instancies\_solicitants.clp}: Sol·licitants de prova predefinits
+    \item \texttt{regles.clp}: Totes les regles del sistema, organitzades per fases
+    \item \texttt{main.clp}: Funcions d'interacció i funció principal
+    \item \texttt{presentacio.clp}: Regles específiques per a la presentació del Top 3
+    \item \texttt{run.clp}: Script que carrega tot i executa el sistema
+\end{itemize}
+
+Aquest disseny modular fa que sigui fàcil localitzar i modificar parts concretes del sistema sense haver de navegar per un únic fitxer gegant.
