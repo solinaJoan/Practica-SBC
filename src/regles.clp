@@ -1047,23 +1047,6 @@
 
 ;;; --- REGLES DE PUNTS POSITIUS ---
 
-(defrule resolucio-punt-bon-preu
-    "El preu es molt bo (menys del 80% del pressupost)"
-    (fase (actual scoring))
-    ?sol <- (object (is-a Joves) (pressupostMaxim ?max))
-    ?of <- (object (is-a Oferta) (preuMensual ?preu) (disponible si))
-    (test (< ?preu (* ?max 0.8)))
-    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
-    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri planta-alta-sense-ascensor)))
-    =>
-    (modify ?rec (puntuacio (+ ?pts 10)))
-    (debug-print [RESOLUCIO] PUNTUADA +10 A (instance-name ?of) per (instance-name ?sol) - Molt bon preu)
-    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri planta-alta-sense-ascensor)))
-
-    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Preu molt bo (>20% estalvi)")))
-)
-
 (defrule resolucio-punt-terrassa
     "Habitatge amb terrassa"
     (fase (actual scoring))
