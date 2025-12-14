@@ -1,6 +1,42 @@
 (definstances solicitants
 
+    ;;; ------------------------------------------------------------
+    ;;; SOL·LICITANT 1: Família Garcia
+    ;;; ------------------------------------------------------------
+    ([sol-familia-garcia] of ParellaAmbFills
+        (nom "Familia Garcia")
+        (edat 40)
+        (pressupostMaxim 1800.0)
+        (pressupostMinim 1200.0)
+        (margeEstricte no)
+        (numeroPersones 4)
+        (numeroFills 2)
+        (edatsFills 6 10)
+        (teAvis no)
+        (numeroAvis 0)
+        (teVehicle si)
+        (treballaACiutat si)
+        (estudiaACiutat no)
+        (requereixTransportPublic no)
+        (necessitaAccessibilitat no)
+        (teMascotes si)
+        (numeroMascotes 1)
+        (tipusMascota "Gos")
+        (evitaServei
+            [servei-discoteca]
+            [servei-bar-frankfurt]
+            [servei-metro-liceu]
+        )
 
+        (requereixServei
+            [servei-escola-balmes]
+            [servei-parc-miro]
+            [servei-super-bonpreu]
+            [servei-mercat-ninot]
+            [servei-farmacia-24h]
+        )
+
+    )
 
     ;;; ------------------------------------------------------------
     ;;; SOL·LICITANT 2: Grup d'Estudiants UPC
