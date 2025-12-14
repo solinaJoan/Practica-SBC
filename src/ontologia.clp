@@ -1,8 +1,7 @@
 ;;; ---------------------------------------------------------
-;;; ontologiaSBC.clp - VERSIÓ UNIFICADA
+;;; ontologiaSBC.clp
 ;;; Translated by owl2clips
 ;;; Translated to CLIPS from ontology ontologiaSBC.owl
-;;; Compatible amb regles.clp unificat
 ;;; ---------------------------------------------------------
 
 ;;; ============================================================

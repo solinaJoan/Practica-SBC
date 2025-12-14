@@ -1,7 +1,6 @@
 ;;; ============================================================
-;;; main.clp - VERSIÓ UNIFICADA
+;;; main.clp
 ;;; Sistema Expert Interactiu de Recomanació d'Habitatges
-;;; Mostra només els TOP 3 millors resultats
 ;;; ============================================================
 
 ;;; ============================================================
@@ -72,72 +71,13 @@
     ?resposta
 )
 
-;;; ============================================================
-;;; FUNCIÓ PER DETERMINAR LA CLASSE DE SOLICITANT
-;;; ============================================================
-
-(deffunction determinar-classe-solicitant (?edat ?num-persones ?num-fills ?estudia ?te-avis ?seg-residencia)
-    "Determina automàticament la classe més específica del sol·licitant"
-    
-    ;; Segona residència
-    (if (eq ?seg-residencia no) then
-        (return CompradorSegonaResidencia)
-    )
-    
-    ;; Persona gran
-    (if (> ?edat 65) then
-        (return PersonaGran)
-    )
-    
-    ;; Estudiants
-    (if (eq ?estudia si) then
-        (return GrupEstudiants)
-    )
-    
-    ;; Joves (18-35 anys)
-    (if (<= ?edat 35) then
-        (if (> ?num-persones 1) then
-            (return ParellaJove)
-        else
-            (return Joves)
-        )
-    )
-    
-    ;; Adults amb més d'una persona
-    (if (> ?num-persones 1) then
-        ;; Parelles adultes
-        (if (> ?num-fills 0) then
-            (return ParellaAmbFills)
-        else
-            ;; Preguntar si planegen fills
-            (bind ?futurs-fills (pregunta-si-no "Planegeu tenir fills en un futur proper (1-2 anys)"))
-            (if (eq ?futurs-fills si) then
-                (return ParellaFutursFills)
-            else
-                (return ParellaSenseFills)
-            )
-        )
-    else
-        ;; Individus adults
-        (if (> ?num-fills 0) then
-            (return IndividuAmbFills)
-        else
-            (bind ?futurs-fills (pregunta-si-no "Planegeu tenir fills en un futur proper"))
-            (if (eq ?futurs-fills si) then
-                (return IndividuFutursFills)
-            else
-                (return IndividuSenseFills)
-            )
-        )
-    )
-)
 
 ;;; ============================================================
 ;;; CREACIÓ DEL PERFIL DEL SOL·LICITANT
 ;;; ============================================================
 
 (deffunction crear-perfil-solicitant ()
-    "Crea un nou perfil de solicitant mitjançant preguntes interactives"
+    "Recull dades i fa ASSERT del template dades-solicitant"
     
     (printout t crlf)
     (printout t "============================================================" crlf)
@@ -149,7 +89,7 @@
     (printout t "--- 1. DADES PERSONALS ---" crlf)
     (bind ?nom (pregunta-text "Nom o identificador del sol·licitant"))
     (bind ?edat (pregunta-numero "Edat del sol·licitant principal" 18 99))
-    (bind ?seg-residencia (pregunta-si-no "Es tracta de la compra d'una PRIMERA residència (habitatge habitual)"))
+    (bind ?seg-residencia (pregunta-si-no "Es tracta de la compra d'una SEGONA residència "))
     
     ;;; --- 2. SITUACIÓ FAMILIAR ---
     (printout t crlf "--- 2. CONVIVÈNCIA ---" crlf)
@@ -158,19 +98,29 @@
     (bind ?num-fills 0)
     (bind ?edats-fills (create$))
     (bind ?te-avis no)
+    (bind ?planeja-fills no)
     
     (if (> ?num-persones 1) then
         (bind ?té-fills (pregunta-si-no "Hi haurà fills menors (<18 anys) convivint"))
         (if (eq ?té-fills si) then
             (bind ?num-fills (pregunta-numero "Quants fills menors" 1 (- ?num-persones 1)))
-            (printout t "Ara et preguntaré les edats dels fills:" crlf)
             (loop-for-count (?i 1 ?num-fills)
                 (bind ?edat-fill (pregunta-numero (str-cat "  Edat del fill " ?i) 0 17))
                 (bind ?edats-fills (create$ ?edats-fills ?edat-fill))
             )
+        else
+            ;; Parella o grup sense fills actuals
+            (if (and (eq ?seg-residencia no) (<= ?edat 45)) then
+                (bind ?planeja-fills (pregunta-si-no "Planegeu tenir fills en un futur proper (1-2 anys)"))
+            )
         )
         (if (< (+ 1 ?num-fills) ?num-persones) then
             (bind ?te-avis (pregunta-si-no "Conviureu amb persones grans (>65 anys)"))
+        )
+    else
+        ;; Individu sol
+        (if (and (eq ?seg-residencia no) (<= ?edat 45)) then
+            (bind ?planeja-fills (pregunta-si-no "Planegeu tenir fills o formar família en un futur proper"))
         )
     )
     
@@ -186,7 +136,7 @@
     
     (bind ?estudia-ciutat no)
     (if (and (< ?edat 30) (eq ?treballa-ciutat no)) then
-        (bind ?estudia-ciutat (pregunta-si-no "Estudies a la ciutat (Universitat/FP/Màster)"))
+        (bind ?estudia-ciutat (pregunta-si-no "Estudies a la ciutat"))
     )
     
     (bind ?te-vehicle (pregunta-si-no "Disposeu de vehicle propi (cotxe/moto)"))
@@ -232,49 +182,39 @@
             Discoteca Parc Estadi Bar Mercat Autopista Aeroport)
     )
     
-    ;;; --- DETERMINACIÓ AUTOMÀTICA DE LA CLASSE ---
-    (bind ?classe (determinar-classe-solicitant ?edat ?num-persones ?num-fills ?estudia-ciutat ?te-avis ?seg-residencia))
+    ;;; --- ASSERT DEL FET (DADES RAW) ---
+    (printout t crlf ">> Dades recollides. Generant perfil..." crlf)
     
-    (printout t crlf ">> Perfil detectat automàticament: " ?classe crlf)
-    (printout t crlf)
-    
-    ;;; --- CREAR INSTÀNCIA ---
-    (bind ?nom-inst (sym-cat sol- (gensym*)))
-    
-    (make-instance ?nom-inst of ?classe
+    (assert (dades-solicitant
         (nom ?nom)
         (edat ?edat)
         (numeroPersones ?num-persones)
-        (pressupostMaxim ?pres-max)
-        (pressupostMinim ?pres-min)
-        (margeEstricte ?marge-estricte)
         (numeroFills ?num-fills)
         (edatsFills ?edats-fills)
         (teAvis ?te-avis)
+        (segonaResidencia ?seg-residencia)
+        (estudiaACiutat ?estudia-ciutat)
+        (pressupostMaxim ?pres-max)
+        (pressupostMinim ?pres-min)
+        (margeEstricte ?marge-estricte)
         (teVehicle ?te-vehicle)
         (requereixTransportPublic ?req-transport)
         (necessitaAccessibilitat ?nec-access)
         (teMascotes ?te-mascotes)
         (numeroMascotes ?num-mascotes)
         (tipusMascota ?tipus-mascota)
-        (treballaACiutat ?treballa-ciutat)
-        (estudiaACiutat ?estudia-ciutat)
+        (planejaFills ?planeja-fills)
         (evitaServei $?serveis-molestos)
         (prefereixServei $?prefereix-servei)
-        (segonaResidencia ?seg-residencia)
-    )
+    ))
     
-    (printout t "============================================================" crlf)
-    (printout t "  Perfil creat correctament: " ?nom crlf)
-    (printout t "  ID del perfil: " ?nom-inst crlf)
-    (printout t "============================================================" crlf)
-    (printout t crlf)
-    
-    ?nom-inst
+    TRUE
 )
 
+
+
 ;;; ============================================================
-;;; MODIFICACIÓ DE LES REGLES DE PRESENTACIÓ PER TOP 3
+;;; PRESENTACIÓ TOP 3
 ;;; ============================================================
 
 (defrule presentacio-top3-inici
@@ -284,7 +224,7 @@
     =>
     (printout t crlf)
     (printout t "================================================================" crlf)
-    (printout t "          TOP 3 MILLORS RECOMANACIONS PER SOL·LICITANT         " crlf)
+    (printout t "          TOP 3 MILLORS RECOMANACIONS PER SOL·LICITANT          " crlf)
     (printout t "================================================================" crlf)
     (printout t crlf)
 )
@@ -298,7 +238,7 @@
     (bind ?nom-sol (send ?sol get-nom))
     (printout t crlf)
     (printout t "┌────────────────────────────────────────────────────────────┐" crlf)
-    (printout t "│  SOL·LICITANT: " ?nom-sol crlf)
+    (printout t "│  SOL·LICITANT: " ?nom-sol crlf)                            │
     (printout t "└────────────────────────────────────────────────────────────┘" crlf)
     (printout t crlf)
     
@@ -400,15 +340,14 @@
     (printout t "╚════════════════════════════════════════════════════════════╝" crlf)
     (printout t crlf)
     
-    ;; IMPORTANT: Ontologia, Regles i Instàncies han d'estar ja carregades
     (printout t "Sistema carregat i a punt." crlf)
     (printout t crlf)
-    
+    (reset)
     ;;; Preguntar mode d'execució
     (bind ?crear-nou (pregunta-si-no "Vols crear un nou perfil de sol·licitant personalitzat"))
     
     (if (eq ?crear-nou si) then
-        ;;; Mode interactiu: Crear nou perfil
+
         (printout t crlf "Iniciant mode interactiu..." crlf)
         
         ;; Esborrar sol·licitants anteriors per evitar confusions
@@ -416,19 +355,12 @@
         
         ;; Crear el nou perfil
         (bind ?perfil (crear-perfil-solicitant))
-        
-        (printout t "Iniciant cerca d'habitatges per a " (send ?perfil get-nom) "..." crlf)
-        (printout t crlf)
-        
-        ;; Executar sistema expert
-        (reset)
+                      
         (run)
     else
-        ;;; Mode automàtic: Usar perfils predefinits
+
         (printout t crlf "Mode automàtic: Utilitzant perfils predefinits..." crlf)
         (printout t crlf)
-        
-        (reset)
         (run)
     )
     

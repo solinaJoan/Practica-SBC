@@ -1,7 +1,5 @@
 ;;; ============================================================
 ;;; regles.clp
-;;; Sistema Expert de Recomanació d'Habitatges - VERSIÓ UNIFICADA
-;;; Fases: ABSTRACCIÓ -> RESOLUCIÓ -> REFINACIÓ -> PRESENTACIÓ
 ;;; ============================================================
 
 (defglobal ?*DEBUG* = FALSE)
@@ -9,6 +7,30 @@
 ;;; ============================================================
 ;;; TEMPLATES
 ;;; ============================================================
+
+
+(deftemplate dades-solicitant
+    (slot nom)
+    (slot edat)
+    (slot numeroPersones)
+    (slot numeroFills)
+    (multislot edatsFills)
+    (slot teAvis)
+    (slot segonaResidencia)
+    (slot estudiaACiutat)
+    (slot pressupostMaxim)
+    (slot pressupostMinim)
+    (slot margeEstricte)
+    (slot teVehicle)
+    (slot requereixTransportPublic)
+    (slot necessitaAccessibilitat)
+    (slot teMascotes)
+    (slot numeroMascotes)
+    (slot tipusMascota)
+    (slot planejaFills)
+    (multislot evitaServei)
+    (multislot prefereixServei)
+)
 
 (deftemplate proximitat
     (slot habitatge (type INSTANCE))
@@ -134,6 +156,189 @@
 )
 
 ;;; ============================================================
+;;; CLASSIFICACIÓ DE SOL·LICITANTS
+;;; ============================================================
+
+(defrule crear-segona-residencia
+    (declare (salience 100))
+    (fase (actual init))
+    ?f <- (dades-solicitant (nom ?n) (segonaResidencia si) (edat ?e) (numeroPersones ?np) 
+             (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+             (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+             (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc) 
+             (prefereixServei $?ps) (evitaServei $?es))
+    =>
+    (make-instance (sym-cat sol- (gensym*)) of CompradorSegonaResidencia
+        (nom ?n) (edat ?e) (numeroPersones ?np) (segonaResidencia si)
+        (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+        (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+        (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+        (prefereixServei $?ps) (evitaServei $?es))
+    (retract ?f)
+    (debug-print "[CREACIO] Creat CompradorSegonaResidencia: " ?n)
+)
+
+(defrule crear-persona-gran
+    "Persona gran (>65)"
+    (declare (salience 90))
+    (fase (actual init))
+    ?f <- (dades-solicitant (nom ?n) (edat ?e) (teAvis ?avis) 
+             (numeroPersones ?np) (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+             (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+             (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+             (prefereixServei $?ps) (evitaServei $?es))
+    (test (> ?e 65))
+    =>
+    (make-instance (sym-cat sol- (gensym*)) of PersonaGran
+        (nom ?n) (edat ?e) (teAvis ?avis) (numeroPersones ?np)
+        (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+        (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+        (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+        (prefereixServei $?ps) (evitaServei $?es))
+    (retract ?f)
+    (debug-print "[CREACIO] Creat PersonaGran: " ?n)
+)
+
+(defrule crear-estudiants
+    "Estudiants"
+    (declare (salience 80))
+    (fase (actual init))
+    ?f <- (dades-solicitant (nom ?n) (estudiaACiutat si) (edat ?e)
+             (numeroPersones ?np) (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+             (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+             (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+             (prefereixServei $?ps) (evitaServei $?es))
+    =>
+    (make-instance (sym-cat sol- (gensym*)) of GrupEstudiants
+        (nom ?n) (edat ?e) (estudiaACiutat si) (numeroPersones ?np)
+        (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+        (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+        (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+        (prefereixServei $?ps) (evitaServei $?es))
+    (retract ?f)
+    (debug-print "[CREACIO] Creat GrupEstudiants: " ?n)
+)
+
+(defrule crear-parella-jove
+    "Parella Jove (<35)"
+    (declare (salience 70))
+    (fase (actual init))
+    ?f <- (dades-solicitant (nom ?n) (edat ?e) (numeroPersones ?np)
+             (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+             (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+             (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+             (prefereixServei $?ps) (evitaServei $?es))
+    (test (<= ?e 35))
+    (test (> ?np 1))
+    =>
+    (make-instance (sym-cat sol- (gensym*)) of ParellaJove
+        (nom ?n) (edat ?e) (numeroPersones ?np)
+        (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+        (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+        (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+        (prefereixServei $?ps) (evitaServei $?es))
+    (retract ?f)
+    (debug-print "[CREACIO] Creat ParellaJove: " ?n)
+)
+
+(defrule crear-individu-jove
+    "Individu Jove (<35)"
+    (declare (salience 70))
+    (fase (actual init))
+    ?f <- (dades-solicitant (nom ?n) (edat ?e) (numeroPersones ?np)
+             (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+             (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+             (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+             (prefereixServei $?ps) (evitaServei $?es))
+    (test (<= ?e 35))
+    (test (= ?np 1))
+    =>
+    (make-instance (sym-cat sol- (gensym*)) of Joves
+        (nom ?n) (edat ?e) (numeroPersones ?np)
+        (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+        (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+        (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+        (prefereixServei $?ps) (evitaServei $?es))
+    (retract ?f)
+    (debug-print "[CREACIO] Creat Individu Jove: " ?n)
+)
+
+(defrule crear-adult-amb-fills
+    "Adult (>35) amb fills"
+    (declare (salience 60))
+    (fase (actual init))
+    ?f <- (dades-solicitant (nom ?n) (edat ?e) (numeroPersones ?np) (numeroFills ?nf) (edatsFills $?ef)
+             (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+             (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+             (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+             (prefereixServei $?ps) (evitaServei $?es))
+    (test (> ?e 35))
+    (test (> ?nf 0))
+    =>
+    ;; Distingim entre parella o individu segons numeroPersones
+    (bind ?classe ParellaAmbFills)
+    ;; Si num persones és igual a fills + 1 (l'adult), llavors és individu monoparental
+    (if (= ?np (+ ?nf 1)) then (bind ?classe IndividuAmbFills))
+
+    (make-instance (sym-cat sol- (gensym*)) of ?classe
+        (nom ?n) (edat ?e) (numeroPersones ?np) (numeroFills ?nf) (edatsFills $?ef)
+        (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+        (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+        (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+        (prefereixServei $?ps) (evitaServei $?es))
+    (retract ?f)
+    (debug-print "[CREACIO] Creat " ?classe ": " ?n)
+)
+
+(defrule crear-adult-futurs-fills
+    "Adult (>35) sense fills però amb plans"
+    (declare (salience 60))
+    (fase (actual init))
+    ?f <- (dades-solicitant (nom ?n) (edat ?e) (numeroPersones ?np) (numeroFills 0) (planejaFills si)
+             (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+             (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+             (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+             (prefereixServei $?ps) (evitaServei $?es))
+    (test (> ?e 35))
+    =>
+    (bind ?classe ParellaFutursFills)
+    (if (= ?np 1) then (bind ?classe IndividuFutursFills))
+
+    (make-instance (sym-cat sol- (gensym*)) of ?classe
+        (nom ?n) (edat ?e) (numeroPersones ?np)
+        (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+        (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+        (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+        (prefereixServei $?ps) (evitaServei $?es))
+    (retract ?f)
+    (debug-print "[CREACIO] Creat " ?classe " (plans de fills): " ?n)
+)
+
+(defrule crear-adult-sense-fills
+    "Adult standard (>35) sense fills ni plans"
+    (declare (salience 50))
+    (fase (actual init))
+    ?f <- (dades-solicitant (nom ?n) (edat ?e) (numeroPersones ?np)
+             (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+             (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+             (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+             (prefereixServei $?ps) (evitaServei $?es))
+    (test (> ?e 35))
+    =>
+    (bind ?classe ParellaSenseFills)
+    (if (= ?np 1) then (bind ?classe IndividuSenseFills))
+
+    (make-instance (sym-cat sol- (gensym*)) of ?classe
+        (nom ?n) (edat ?e) (numeroPersones ?np)
+        (pressupostMaxim ?pmax) (pressupostMinim ?pmin) (margeEstricte ?me)
+        (teVehicle ?tv) (requereixTransportPublic ?rtp) (necessitaAccessibilitat ?na)
+        (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
+        (prefereixServei $?ps) (evitaServei $?es))
+    (retract ?f)
+    (debug-print "[CREACIO] Creat " ?classe ": " ?n)
+)
+
+;;; ============================================================
 ;;; FASE INIT: INICIALITZACIÓ
 ;;; ============================================================
 
@@ -255,6 +460,26 @@
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori si) (motiu "Prefereix transport public")))
     (debug-print "[ABSTRACCIO] " (instance-name ?sol) " necessita transport public")
+)
+
+(defrule abstraccio-necessita-autopista-feina-fora
+    "Inferència: Si té cotxe, edat laboral i no treballa/estudia a la ciutat, necessita sortir-ne"
+    (fase (actual abstraccio))
+    ?sol <- (object (is-a Solicitant) 
+                (estudiaACiutat no)
+                (treballaACiutat no) 
+                (teVehicle si) 
+                (edat ?e))
+    ;; Edat laboral (aprox 18-65)
+    (test (and (>= ?e 18) (<= ?e 65)))
+    ;; Comprovem que no tingui ja el requisit
+    (not (requisit-inferit (solicitant ?sol) (categoria-servei Autopista)))
+    =>
+    (assert (requisit-inferit (solicitant ?sol) 
+                              (categoria-servei Autopista) 
+                              (obligatori no) 
+                              (motiu "Treballa fora de la ciutat i té vehicle")))
+    (debug-print "[ABSTRACCIO] " (instance-name ?sol) " necessita Autopista (treballa fora)")
 )
 
 ;;; ============================================================
@@ -594,6 +819,34 @@
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Dormitoris individuals per tothom") (punts 20)))
 )
 
+(defrule resolucio-puntuar-habitacio-doble-families
+    "Puntua si l'habitatge té almenys una habitació doble per a parelles, famílies o avis"
+    (fase (actual scoring))
+       
+    ?sol <- (object (is-a ?tipus))
+    (test (or (eq ?tipus ParellaJove) 
+              (eq ?tipus ParellaAdulta)
+              (eq ?tipus ParellaAmbFills) 
+              (eq ?tipus ParellaFutursFills)
+              (eq ?tipus ParellaSenseFills)
+              (eq ?tipus IndividuAmbFills)    
+              (eq ?tipus IndividuFutursFills)
+              (eq ?tipus PersonaGran)))       
+              
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+
+    ?h <- (object (is-a Habitatge) (name ?hab) (numeroDormitorisDobles ?nd))
+    (test (>= ?nd 1))
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri habitacio-doble)))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 20)))
+    (debug-print "[SCORING] +20p " (instance-name ?of) " - Te habitacio doble (per parella/familia)")
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri habitacio-doble)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Disposa d'habitació doble") (punts 20)))
+)
+
 (defrule resolucio-puntuar-universitat
     (fase (actual scoring))
     ?sol <- (object (is-a Joves))
@@ -661,23 +914,26 @@
 )
 
 (defrule resolucio-puntuar-autopista
-    ;; De moment agafa tots els solicitants. Mirar si es pot afegr un requisit-inferit d'autopista
-    
+    "Puntua autopista només si s'ha inferit que la necessita (treballa fora)"
     (fase (actual scoring))
-    ?sol <- (object (is-a Solicitant))
+    
+    ;; CONDICIÓ NOVA: Ha d'existir el requisit (creat a la fase d'abstracció)
+    (requisit-inferit (solicitant ?sol) (categoria-servei Autopista))
+    
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ?h <- (object (is-a Habitatge) (name ?hab))
-    (proximitat (habitatge ?hab) (categoria ?cat) (distancia ?dist))
-    (test (eq ?cat Autopista))
+    (proximitat (habitatge ?hab) (categoria Autopista) (distancia ?dist))
+    
+    ;; Puntua tant si està Molt A Prop com Distancia Mitjana
     (test (or (eq ?dist MoltAProp) (eq ?dist DistanciaMitjana)))
+    
     ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-autopista)))
     =>
     (modify ?rec (puntuacio (+ ?pts 20)))
-    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'una Autopista)
+    (debug-print "[SCORING] +20p " (instance-name ?of) " - Autopista (Requisit inferit)")
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-autopista)))
-    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Acces facil a autopista") (punts 20)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Acces facil a autopista (Necessari per feina)") (punts 20)))
 )
 
 (defrule resolucio-puntuar-comerços
@@ -906,6 +1162,41 @@
     (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Planta alta sense ascensor") (gravetat Moderat)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri sense-ascensor)))
     (debug-print "[SCORING] -15p " (instance-name ?of) " - Sense ascensor")
+)
+
+(defrule resolucio-criteri-poc-assolellat
+    "Penalitza habitatges amb poca llum natural"
+    (fase (actual scoring))
+    ?sol <- (object (is-a Solicitant))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (orientacioSolar "Mai"))
+    
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri poc-assolellat)))
+    =>
+    (modify ?rec (puntuacio (- ?pts 10)))
+    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Poca llum natural") (gravetat Lleu)))
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri poc-assolellat)))
+    (debug-print "[SCORING] -10p " (instance-name ?of) " - Poc assolellat")
+)
+
+(defrule resolucio-criteri-baixa-eficiencia
+    "Penalitza habitatges amb mala qualificació energètica"
+    (fase (actual scoring))
+    ?sol <- (object (is-a Solicitant))
+    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
+    ?h <- (object (is-a Habitatge) (name ?hab) (consumEnergetic ?ce))
+    (test (or (eq ?ce F) (eq ?ce G)))
+    
+    ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts))
+    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
+    (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri baixa-eficiencia)))
+    =>
+    (modify ?rec (puntuacio (- ?pts 10)))
+    (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Baixa eficiència energètica (F/G)") (gravetat Lleu)))
+    (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri baixa-eficiencia)))
+    (debug-print "[SCORING] -10p " (instance-name ?of) " - Baixa eficiencia")
 )
 
 (defrule classificacio-assignar-grau
