@@ -494,6 +494,7 @@
     (modify ?rec (puntuacio (+ ?pts 20)))
     (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge a reformar)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri a-reformar)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Potencial per reformar a mida") (punts 20)))
 )
 
 (defrule resolucio-puntuar-aire-acondicionat
@@ -508,6 +509,7 @@
     (modify ?rec (puntuacio (+ ?pts 15)))
     (debug-print [RESOLUCIO] PUNTUADA +15p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb aire acondicionat)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri aire-acondicionat)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te aire acondicionat") (punts 15)))
 )
 
 (defrule resolucio-puntuar-calefaccio
@@ -523,6 +525,7 @@
     (modify ?rec (puntuacio (+ ?pts 20)))
     (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb calefaccio)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-calefaccio)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te calefaccio") (punts 20)))
 )
 
 (defrule resolucio-puntuar-electrodomestics
@@ -535,7 +538,8 @@
     (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-electrodomestics)))
     =>
     (modify ?rec (puntuacio (+ ?pts 20)))
-    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb calefaccio)
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb electrodomestics)
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te electrodomestics") (punts 20)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri te-electrodomestics)))
 )
 
@@ -569,6 +573,7 @@
     (modify ?rec (puntuacio (+ ?pts 20)))
     (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb nombre de banys minim)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri nombre-banys)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Mes d'un bany") (punts 20)))
 )
 
 (defrule resolucio-puntuar-dormitoris-individuals-estudiants
@@ -586,6 +591,7 @@
     (modify ?rec (puntuacio (+ ?pts 20)))
     (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge amb nombre de dormitoris suficicient)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri nombre-dormitoris-simples)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Dormitoris individuals per tothom") (punts 20)))
 )
 
 (defrule resolucio-puntuar-universitat
@@ -603,6 +609,7 @@
     (modify ?rec (puntuacio (+ ?pts 20)))
     (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'una Universitat)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-universitat)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "A prop d'una universitat") (punts 20)))
 )
 
 (defrule resolucio-puntuar-vistes
@@ -670,6 +677,7 @@
     (modify ?rec (puntuacio (+ ?pts 20)))
     (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'una Autopista)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-autopista)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Acces facil a autopista") (punts 20)))
 )
 
 (defrule resolucio-puntuar-comerços
@@ -687,6 +695,7 @@
     (modify ?rec (puntuacio (+ ?pts 20)))
     (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'un servei comercial)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-comerç)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Comerços a prop") (punts 20)))
 )
 
 (defrule resolucio-puntuar-oci-joves
@@ -704,6 +713,7 @@
     (modify ?rec (puntuacio (+ ?pts 10)))
     (debug-print [RESOLUCIO] PUNTUADA +10 A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'un servei de salut)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-oci-joves)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Zones d'oci per joves properes") (punts 10)))
 )
 
 (defrule resolucio-puntuar-oci-adults
@@ -721,6 +731,7 @@
     (modify ?rec (puntuacio (+ ?pts 10)))
     (debug-print [RESOLUCIO] PUNTUADA +10 A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'oci per adults)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-oci-adults)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Zones d'oci per adults properes") (punts 10)))
 )
 
 (defrule resolucio-puntuar-oci-avis
@@ -738,6 +749,7 @@
     (modify ?rec (puntuacio (+ ?pts 10)))
     (debug-print [RESOLUCIO] PUNTUADA +10 A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'oci per persones grans)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-oci-avis)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Zones d'oci per avis properes") (punts 10)))
 )
 
 (defrule resolucio-puntuar-molta-proximitat-salut
@@ -754,6 +766,7 @@
     (modify ?rec (puntuacio (+ ?pts 25)))
     (debug-print [RESOLUCIO] PUNTUADA +25 A (instance-name ?of) per (instance-name ?sol) - Habitatge a prop d'un servei de salut)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri molta-proximitat-salut)))
+    (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Serveis de salut molt propers") (punts 25)))
 )
 
 
