@@ -101,8 +101,8 @@
 )
 
 (deffunction classificar-distancia (?metres)
-    (if (< ?metres 500.0) then MoltAProp
-    else (if (< ?metres 1000.0) then DistanciaMitjana
+    (if (< ?metres 200.0) then MoltAProp
+    else (if (< ?metres 400.0) then DistanciaMitjana
     else Lluny))
 )
 
