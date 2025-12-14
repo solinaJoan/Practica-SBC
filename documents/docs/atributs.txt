@@ -30,7 +30,7 @@ Les característiques físiques de l'immoble.
 | permetMascotes             | boolean | Si accepten animals                 |
 | teCalefaccio               | boolean | Si té calefacció                    |
 | teAireCondicionat          | boolean | Si té A/C                           |
-| orientacioSolar            | string  | "Mati", "Tarda", "TotElDia", "Nord" |
+| orientacioSolar            | string  | "Mati", "Mai", "TotElDia"           |
 | teVistes                   | boolean | Si té bones vistes                  |
 | tipusVistes                | string  | "Mar", "Muntanya", "Ciutat", "Parc" |
 | tePiscinaComunitaria       | boolean | Accés a piscina                     |
