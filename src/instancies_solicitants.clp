@@ -1,130 +1,216 @@
-
 (definstances solicitants
 
-    ;;; GRUP D'ESTUDIANTS
-    ([estudiant-marc] of GrupEstudiants
-        (nom "Marc i companys")
-        (edat 22)
-        (numeroPersones 3)
-        (pressupostMaxim 900.0)
-        (pressupostMinim 300.0)
-        (margeEstricte no)
-        (numeroFills 0)
-        (teAvis no)
-        (teVehicle no)
-        (requereixTransportPublic si)
-        (necessitaAccessibilitat no)
-        (teMascotes no)
-        (treballaACiutat no)
-        (estudiaACiutat si))
-
-        ;;; FAMILIA BIPARENTAL amb fills i mascota
-    ([familia-garcia] of ParellaAmbFills
+    ;;; ------------------------------------------------------------
+    ;;; SOL·LICITANT 1: Família Garcia
+    ;;; ------------------------------------------------------------
+    ([sol-familia-garcia] of ParellaAmbFills
         (nom "Familia Garcia")
-        (edat 38)
-        (numeroPersones 4)
-        (pressupostMaxim 1500.0)
-        (pressupostMinim 600.0)
+        (edat 40)
+        (pressupostMaxim 1800.0)
+        (pressupostMinim 1200.0)
         (margeEstricte no)
+        (numeroPersones 4)
         (numeroFills 2)
         (edatsFills 6 10)
         (teAvis no)
+        (numeroAvis 0)
         (teVehicle si)
+        (treballaACiutat si)
+        (estudiaACiutat no)
         (requereixTransportPublic no)
         (necessitaAccessibilitat no)
         (teMascotes si)
         (numeroMascotes 1)
-        (tipusMascota Gos)
-        (treballaACiutat si))
+        (tipusMascota "Gos")
+        (evitaServei
+            [servei-discoteca]
+            [servei-bar-frankfurt]
+            [servei-metro-liceu]
+        )
 
-    ;;; PERSONA GRAN amb necessitat d'accessibilitat
-    ([jubilada-maria] of PersonaGran
-        (nom "Maria Lopez")
-        (edat 72)
-        (numeroPersones 1)
-        (pressupostMaxim 1000.0)
-        (pressupostMinim 400.0)
-        (margeEstricte no)
+        (requereixServei
+            [servei-escola-balmes]
+            [servei-parc-miro]
+            [servei-super-bonpreu]
+            [servei-mercat-ninot]
+            [servei-farmacia-24h]
+        )
+
+    )
+
+    ;;; ------------------------------------------------------------
+    ;;; SOL·LICITANT 2: Grup d'Estudiants UPC
+    ;;; ------------------------------------------------------------
+    ([sol-estudiants-upc] of GrupEstudiants
+        (nom "Grup UPC")
+        (edat 21)
+        (pressupostMaxim 900.0)
+        (pressupostMinim 600.0)
+        (margeEstricte si)
+        (numeroPersones 3)
         (numeroFills 0)
+        (edatsFills) ; Llista buida
         (teAvis no)
+        (numeroAvis 0)
         (teVehicle no)
+        (treballaACiutat no)
+        (estudiaACiutat si)
         (requereixTransportPublic si)
-        (necessitaAccessibilitat si)
-        (teMascotes no)
-        (treballaACiutat no))
-
-    ;;; PARELLA JOVE sense fills
-    ([parella-martinez] of ParellaSenseFills
-        (nom "Parella Martinez")
-        (edat 30)
-        (numeroPersones 2)
-        (pressupostMaxim 1400.0)
-        (pressupostMinim 500.0)
-        (margeEstricte no)
-        (numeroFills 0)
-        (teAvis no)
-        (teVehicle si)
-        (requereixTransportPublic no)
         (necessitaAccessibilitat no)
         (teMascotes no)
-        (treballaACiutat si))
+        (numeroMascotes 0)
+        (tipusMascota "Cap")
+        (evitaServei)
+        (requereixServei
+            [servei-upc]
+            [servei-metro-uni]
+            [servei-bus-33]
+            [servei-super-campus]
+            [servei-bar-frankfurt]
+        )
 
-    ;;; PARELLA que vol tenir fills aviat
-    ([parella-lopez] of ParellaFutursFills
-        (nom "Parella Lopez")
-        (edat 32)
-        (numeroPersones 2)
-        (pressupostMaxim 1600.0)
+    )
+
+    ;;; ------------------------------------------------------------
+    ;;; SOL·LICITANT 3: Maria Jubilada
+    ;;; ------------------------------------------------------------
+    ([sol-maria-jubilada] of PersonaGran
+        (nom "Maria Antonia")
+        (edat 78)
+        (pressupostMaxim 1100.0)
         (pressupostMinim 700.0)
         (margeEstricte no)
+        (numeroPersones 1)
         (numeroFills 0)
-        (teAvis no)
-        (teVehicle si)
+        (edatsFills)
+        (teAvis no) ; Ella és la persona gran, no conviu amb "avis" extra
+        (numeroAvis 0)
+        (teVehicle no)
+        (treballaACiutat no)
+        (estudiaACiutat no)
         (requereixTransportPublic no)
-        (necessitaAccessibilitat no)
+        (necessitaAccessibilitat si)
         (teMascotes si)
         (numeroMascotes 1)
-        (tipusMascota Gat)
-        (treballaACiutat si))
+        (tipusMascota "Gat")
+        (evitaServei
+            [servei-discoteca]
+            [servei-bar-frankfurt]
+            [servei-metro-liceu]
+        )
 
-    ;;; Inversor Desconfiat
-    ([inversor-robert] of IndividuAmbFills
-        (nom "Robert De Niro")
-        (edat 50)
-        (pressupostMaxim 5000.0)
-        (pressupostMinim 1000.0)
+        (requereixServei
+            [servei-cap-eixample]
+            [servei-hospital-clinic]
+            [servei-farmacia-24h]
+            [servei-mercat-ninot]
+            [servei-parc-miro]
+        )
+
+    )
+
+    ;;; ------------------------------------------------------------
+    ;;; SOL·LICITANT 4: Parella Silenciosa
+    ;;; ------------------------------------------------------------
+    ([sol-parella-silenciosa] of ParellaSenseFills
+        (nom "Parella Tranquil·la")
+        (edat 35)
+        (pressupostMaxim 1400.0)
+        (pressupostMinim 900.0)
         (margeEstricte no)
-        (numeroFills 3)
+        (numeroPersones 2)
+        (numeroFills 0)
+        (edatsFills)
         (teAvis no)
+        (numeroAvis 0)
         (teVehicle si)
+        (treballaACiutat si)
+        (estudiaACiutat no)
         (requereixTransportPublic no)
         (necessitaAccessibilitat no)
-        (teMascotes si)
-        (numeroMascotes 1)
-        (tipusMascota Gos)
-        (treballaACiutat si))
+        (teMascotes no)
+        (numeroMascotes 0)
+        (tipusMascota "Cap")
+        (evitaServei
+            [servei-discoteca]
+            [servei-bar-frankfurt]
+            [servei-teatre-principal]
+        )
 
+        (requereixServei
+            [servei-super-bonpreu]
+            [servei-parc-miro]
+            [servei-farmacia-24h]
+        )
 
-    ;;; 2. L'AVI EN FORMA
-    ([avi-joan] of PersonaGran
-        (nom "Joan Marxador")
-        (edat 68) ; > 60 anys
+    )
+
+    ;;; ------------------------------------------------------------
+    ;;; SOL·LICITANT 5: Executiu Zona Alta
+    ;;; ------------------------------------------------------------
+    ([sol-executiu-alt] of Individu
+        (nom "Sr. Roca")
+        (edat 45)
+        (pressupostMaxim 3500.0)
+        (pressupostMinim 2000.0)
+        (margeEstricte no)
+        (numeroPersones 1)
+        (numeroFills 0)
+        (edatsFills)
+        (teAvis no)
+        (numeroAvis 0)
+        (teVehicle si)
+        (treballaACiutat si)
+        (estudiaACiutat no)
+        (requereixTransportPublic no)
+        (necessitaAccessibilitat no)
+        (teMascotes no)
+        (numeroMascotes 0)
+        (tipusMascota "Cap")
+        (evitaServei
+            [servei-discoteca]
+            [servei-bar-frankfurt]
+            [servei-metro-liceu]
+        )
+
+        (requereixServei
+            [servei-autopista]
+            [servei-club-tennis]
+            [servei-parc-collserola]
+            [servei-super-sarria]
+        )
+
+    )
+
+    ;;; ------------------------------------------------------------
+    ;;; SOL·LICITANT 6: Parella Jove
+    ;;; ------------------------------------------------------------
+    ([sol-parella-jove] of ParellaJove
+        (nom "Marc i Laura")
+        (edat 28)
         (pressupostMaxim 1200.0)
-        (necessitaAccessibilitat no)
+        (pressupostMinim 800.0)
         (margeEstricte no)
-        (requereixTransportPublic si))
+        (numeroPersones 2)
+        (numeroFills 0)
+        (edatsFills)
+        (teAvis no)
+        (numeroAvis 0)
+        (teVehicle no)
+        (treballaACiutat si)
+        (estudiaACiutat no)
+        (requereixTransportPublic si)
+        (necessitaAccessibilitat no)
+        (teMascotes no)
+        (numeroMascotes 0)
+        (tipusMascota "Cap")
+        (evitaServei)
+        (requereixServei
+            [servei-metro-centre]
+            [servei-gimnas-dir]
+            [servei-super-bonpreu]
+            [servei-parc-miro]
+        )
 
-    ;;; 3. EL HATER DEL SOROLL
-    ([vei-tranquil] of Individu
-        (nom "Senyor Silenci")
-        (edat 40)
-        (pressupostMaxim 1500.0)
-        (margeEstricte no))
-
-    ;;; 3. EL HATER DEL SOROLL
-    ([especulador-fastigos] of CompradorSegonaResidencia
-        (nom "Especulador")
-        (edat 40)
-        (pressupostMaxim 6000.0)
-        (margeEstricte no))
+    )
 )

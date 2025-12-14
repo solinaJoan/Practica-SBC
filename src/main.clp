@@ -245,7 +245,6 @@
 
         (printout t crlf "Mode automàtic: Utilitzant perfils predefinits..." crlf)
         (printout t crlf)
-        (load instancies_solicitants.clp)
         (reset)
         (run)
     )
