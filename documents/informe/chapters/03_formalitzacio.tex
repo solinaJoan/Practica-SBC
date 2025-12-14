@@ -1,12 +1,12 @@
+\section{Formalització}
 
-
-\section{Introducció}
+\subsection{Introducció}
 
 Aquest document presenta la documentació detallada de l'ontologia desenvolupada per a un Sistema Basat en Coneixement (SBC) de recomanació d'habitatges. L'ontologia modela el domini immobiliari, incloent solicitants, habitatges, serveis urbans i ofertes, amb l'objectiu de facilitar la recomanació personalitzada d'habitatges segons les necessitats i preferències dels usuaris. L'ontologia s'ha implementat utilitzant Protégé i exportada a CLIPS amb la llibreria \textit{owl2clips}. 
 
-\section{Procés de Construcció de l'Ontologia}
+\subsection{Procés de Construcció de l'Ontologia}
 
-\subsection{Metodologia Aplicada}
+\subsubsection{Metodologia Aplicada}
 
 Per a la construcció d'aquesta ontologia s'ha seguit una metodologia sistemàtica basada en els següents passos:
 
@@ -22,9 +22,9 @@ Per a la construcció d'aquesta ontologia s'ha seguit una metodologia sistemàti
     \item \textbf{Definició de relacions}: Establiment de les relacions entre conceptes diferents per modelar les interconnexions del domini.
 \end{enumerate}
 
-\section{Descripció de l'Ontologia}
+\subsection{Descripció de l'Ontologia}
 
-\subsection{Visió General}
+\subsubsection{Visió General}
 
 L'ontologia està estructurada en cinc jerarquies principals que representen els conceptes fonamentals del domini:
 
@@ -40,9 +40,9 @@ L'ontologia està estructurada en cinc jerarquies principals que representen els
 
 Les relacions entre classes, les explicarem més endavant.
 
-\subsection{Jerarquia de Classes}
+\subsubsection{Jerarquia de Classes}
 
-\subsubsection{Jerarquia de Solicitants}
+\textbf{Jerarquia de Solicitants}
 
 La classe \texttt{Solicitant} representa qualsevol persona o grup que busca un habitatge. Aquesta classe es divideix en diverses subclasses segons l'edat i situació familiar:
 
@@ -81,7 +81,7 @@ Representa compradors que busquen una segona residència amb finalitats vacacion
 
 \fbox{\includegraphics[width=16cm]{solicitants.png}}
 
-\subsubsection{Jerarquia d'Habitatges}
+\textbf{Jerarquia d'Habitatges}
 
 La classe \texttt{Habitatge} representa les propietats immobiliàries disponibles:
 
@@ -95,7 +95,7 @@ La classe \texttt{Habitatge} representa les propietats immobiliàries disponible
 
 \fbox{\includegraphics[width=16cm]{habitatges.png}}
 
-\subsubsection{Jerarquia de Serveis}
+\textbf{Jerarquia de Serveis}
 
 La classe \texttt{Servei} engloba tots els serveis urbans rellevants:
 
@@ -109,7 +109,7 @@ La classe \texttt{Servei} engloba tots els serveis urbans rellevants:
     \item \textbf{Supermercat}: Establiment de compra quotidiana
 \end{itemize}
 
-\fbox{\includegraphics[width=0.9\textwidth]{informe/fotos/ServeiComercial.png}}
+\fbox{\includegraphics[width=0.9\textwidth]{ServeiComercial.png}}
 
 \item \textbf{Servei Educatiu}
 
@@ -120,7 +120,7 @@ La classe \texttt{Servei} engloba tots els serveis urbans rellevants:
     \item \textbf{Universitat}: Centre d'educació superior
 \end{itemize}
 
-\fbox{\includegraphics[width=16cm]{informe/fotos/ServeiEducatiu.png}}
+\fbox{\includegraphics[width=16cm]{ServeiEducatiu.png}}
 
 \item \textbf{ServeiOci}
 
@@ -134,7 +134,7 @@ La classe \texttt{Servei} engloba tots els serveis urbans rellevants:
     \item \textbf{Gimnas}: Centre esportiu i de fitness
 \end{itemize}
 
-\fbox{\includegraphics[width=16cm]{informe/fotos/ServeiOci.png}}
+\fbox{\includegraphics[width=16cm]{ServeiOci.png}}
 
 \item \textbf{ServeiSalut}
 
@@ -144,7 +144,7 @@ La classe \texttt{Servei} engloba tots els serveis urbans rellevants:
     \item \textbf{Hospital}: Centre hospitalari
 \end{itemize}
 
-\fbox{\includegraphics[width=16cm]{informe/fotos/Serveisalut.png}}
+\fbox{\includegraphics[width=16cm]{Serveisalut.png}}
 
 \item \textbf{Transport}
 
@@ -159,7 +159,7 @@ La classe \texttt{Servei} engloba tots els serveis urbans rellevants:
     \end{itemize}
 \end{itemize}
 
-\fbox{\includegraphics[width=16cm]{informe/fotos/ServeiTransport.png}}
+\fbox{\includegraphics[width=16cm]{ServeiTransport.png}}
 
 \item \textbf{Zona Verda}
 
@@ -169,19 +169,19 @@ La classe \texttt{Servei} engloba tots els serveis urbans rellevants:
     \item \textbf{Zona Esportiva}: Àrea esportiva a l'aire lliure
 \end{itemize}
 
-\fbox{\includegraphics[width=16cm]{informe/fotos/ZonaVerda.png}}
+\fbox{\includegraphics[width=16cm]{ZonaVerda.png}}
 
 \end{itemize}
 
-\subsubsection{Jerarquia de Localització}
+\textbf{Jerarquia de Localització}
 
 La classe \texttt{Localitzacio} modela la informació geogràfica i administrativa de les ubicacions.
 
-\subsubsection{Jerarquia d'Ofertes}
+\textbf{Jerarquia d'Ofertes}
 
 La classe \texttt{Oferta} representa les ofertes immobiliàries disponibles en el mercat.
 
-\section{Relacions entre Conceptes}
+\subsection{Relacions entre Conceptes}
 
 \begin{itemize}
     \item \texttt{prefereixServei}: És una relació entre Solicitant i Servei, i indica els serveis desitjables
@@ -192,9 +192,9 @@ La classe \texttt{Oferta} representa les ofertes immobiliàries disponibles en e
 
 Com veurem, cada relació es transformarà en un atribut a la classe corresponent, que apunta a una (o vèries) instància determinada.
 
-\section{Descripció dels atributs}
+\subsection{Descripció dels atributs}
 
-\subsection{Atributs de Solicitant}
+\subsubsection{Atributs de Solicitant}
 Els solicitants han d'emmagatzemar tota la informació d'una persona que vol comprar una casa. Necessitem identificar-lo, saber per quantes persones viuran a la casa, el pressupost que té... Els atributs que hem acabat fent servir són els següents: 
 
 \begin{tabular}{|l|l|p{8cm}|}
@@ -227,7 +227,7 @@ evitaServei & multislot instance & Serveis que vol evitar \\
 
 
 
-\subsection{Atributs d'Habitatge}
+\subsubsection{Atributs d'Habitatge}
 Per emmagatzemar totes les caracteristiques d'un Habitatge, hem fet servir els següents atributs:
 
 \begin{tabular}{|l|l|p{8cm}|}
@@ -266,7 +266,7 @@ teLocalitzacio & instance & Referència a la localització de l'habitatge \\
 \end{tabular}
 
 
-\subsection{Atributs de Servei}
+\subsubsection{Atributs de Servei}
 Un servei només requereix el nom
 
 \begin{tabular}{|l|l|p{8cm}|}
@@ -279,7 +279,7 @@ teLocalitzacio & instance & Referència a la localització del servei \\
 \end{tabular}
 
 
-\subsection{Atributs de Localització}
+\subsubsection{Atributs de Localització}
 Per la localització emmagatzem la seguent informació:
 
 \begin{tabular}{|l|l|p{8cm}|}
@@ -296,7 +296,7 @@ coordenadaY & float & Coordenada Y (latitud) \\
 \end{tabular}
 
 
-\subsection{Atributs d'Oferta}
+\subsubsection{Atributs d'Oferta}
 I finalment d'una oferta guardem el següent.
 
 \begin{tabular}{|l|l|p{8cm}|}
@@ -311,7 +311,7 @@ disponible & bool & Indica si està disponible \\
 \end{tabular}
 
 
-\section{Conclusions}
+\subsection{Conclusions}
 
 L'ontologia desenvolupada proporciona una representació completa i estructurada del domini de recomanació d'habitatges. Funciona com el vocabulari que li donem al nostre sistema per tal de que pugui gestionar el coneixement. És una forma de representar-lo que és intuitiva i en línia amb la programació orientada a objectes, per tant intuitiva. La jerarquia de classes permet modelar diferents perfils de solicitants amb les seves necessitats específiques, cosa que ens ha facilitat la programació de les regles. Podriem haver representat el coneixeixement amb etiquetes de categoria en ves de classes noves, ja que no tenen atributs propis, però com acabem de comentaar, ens hem decidit per aquesta opció per la possibilitat d'utilitzar herència a la fase de resolució.
 
