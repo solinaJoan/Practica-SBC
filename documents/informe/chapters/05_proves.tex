@@ -1,5 +1,47 @@
-% 05_proves.tex
-% Capítol 5: Jocs de Prova
-
-\section{Jocs de prova}
+\section{Jocs de prova i Resultats}
 \label{sec:proves}
+
+Per validar el sistema, s'han dissenyat jocs de prova que cobreixen els diferents perfils d'usuari identificats a la conceptualització. A continuació s'analitzen dos casos representatius que mostren com el sistema s'adapta a necessitats oposades.
+
+\subsection{Cas de Prova 1: Persona Gran (Sra. Montserrat)}
+\textbf{Perfil:} Dona de 72 anys, viu sola, necessita accessibilitat i transport públic. Pressupost 1500€. Prioritza salut i silenci.
+\textbf{Resultats Obtinguts:}
+\begin{itemize}
+    \item \textbf{Oferta Recomanada:} \textit{oferta-avis-1} (Pis a l'Eixample).
+    \item \textbf{Puntuació:} Alta (Molt Recomanable).
+    \item \textbf{Justificació del Sistema:}
+        \begin{itemize}
+            \item "Serveis de salut molt propers" (+25p).
+            \item "Transport públic molt a prop" (+25p).
+            \item "Te ascensor" (Requisit dur complert).
+        \end{itemize}
+    \item \textbf{Descarts:} El sistema ha descartat correctament l'\textit{oferta-parella-1} (Pis 4t sense ascensor a Gràcia) aplicant la regla \texttt{resolucio-descartar-no-accessible}. També ha descartat ofertes amb soroll alt a zones de festa.
+\end{itemize}
+
+\subsection{Cas de Prova 2: Grup d'Estudiants (Grup UPC)}
+\textbf{Perfil:} 4 joves, pressupost ajustat per persona, necessiten pis moblat i prop de la universitat.
+\textbf{Resultats Obtinguts:}
+\begin{itemize}
+    \item \textbf{Oferta Recomanada:} \textit{oferta-estudiants-1} (Pis Zona Universitària).
+    \item \textbf{Puntuació:} Molt Recomanable.
+    \item \textbf{Justificació del Sistema:}
+        \begin{itemize}
+            \item "A prop d'una universitat" (+20p).
+            \item "Ja moblat" (+25p).
+            \item "Dormitoris individuals per tothom" (+20p).
+        \end{itemize}
+    \item \textbf{Descarts:} El sistema ha descartat automàticament tots els pisos que apareixen com \texttt{moblat no} mitjançant la regla \texttt{resolucio-descartar-estudiant-sense-mobles}, ja que l'expert (LLM) va indicar que els estudiants rarament compren mobles.
+\end{itemize}
+
+\subsection{Cas de Prova 3: Família amb Fills}
+\textbf{Perfil:} Parella amb 2 fills (6 i 9 anys). Busquen espai i escoles.
+\textbf{Anàlisi:} El sistema valora positivament els pisos amb més de 100m² i amb 3 o més habitacions. Es dispara la inferència \texttt{abstraccio-familia-amb-fills} que afegeix la necessitat d'Escoles. El sistema puntua alt l'\textit{oferta-familia-1} (Les Corts) perquè té escoles i parcs a menys de 500m.
+
+\subsection{Cobertura de les Proves}
+Els jocs de prova han validat:
+\begin{enumerate}
+    \item \textbf{Restriccions Dures:} Pressupost estricte vs flexible, mascotes, ascensor.
+    \item \textbf{Inferència:} Detecció automàtica de necessitats (escoles, autopista per qui treballa fora).
+    \item \textbf{Càlcul Espacial:} Correcta classificació de distàncies (MoltAProp vs Lluny).
+    \item \textbf{Explicabilitat:} El sistema és capaç de llistar els motius positius i negatius.
+\end{enumerate}

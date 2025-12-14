@@ -1,5 +1,33 @@
-% 01_identificacio.tex
-% Capítol 1: Identificació del problema
-
-\section{Identificació}
+\section{Identificació del problema}
 \label{sec:identificacio}
+
+\subsection{Descripció del problema}
+El mercat immobiliari a grans ciutats com Barcelona presenta una complexitat elevada a causa de la gran disparitat entre l'oferta disponible i les necessitats específiques dels demandants. El problema que s'aborda en aquest projecte, proposat per la Regidoria d'Habitatge, consisteix a facilitar l'aparellament (\textit{matching}) entre persones que busquen habitatge de lloguer i les ofertes disponibles.
+
+No es tracta d'un simple filtre per preu o habitacions, sinó d'un sistema que ha d'incorporar \textbf{coneixement expert} per inferir necessitats no explicades directament per l'usuari. Per exemple, una família amb nens petits pot no explicitar que necessita escoles a prop, però un agent immobiliari expert ho tindria en compte. El sistema ha de ser capaç de recomanar ofertes basant-se en restriccions dures (pressupost, mascotes) i preferències suaus (proximitat a serveis, orientació solar), proporcionant un grau de recomanació (Parcialment adequat, Adequat, Molt recomanable).
+
+\subsection{Objectius del Sistema}
+L'objectiu principal és desenvolupar un Sistema Basat en el Coneixement (SBC) utilitzant el llenguatge CLIPS i la metodologia d'enginyeria del coneixement. Els objectius específics són:
+
+\begin{itemize}
+    \item \textbf{Recollida d'informació intel·ligent:} Crear perfils d'usuari rics que incloguin no només dades demogràfiques sinó també estil de vida (mascotes, feina, vehicle).
+    \item \textbf{Inferència de requisits:} Aplicar regles d'abstracció per deduir necessitats implícites (ex: persona gran $\rightarrow$ necessita ascensor i serveis de salut propers).
+    \item \textbf{Filtrat i Puntuació:} Implementar un procés en dues fases: descartar opcions inviables i puntuar les viables segons la satisfacció de preferències.
+    \item \textbf{Justificació:} El sistema ha d'explicar per què es recomana una oferta (ex: "Molt recomanable perquè té el transport públic a prop i entra en pressupost") o per què es descarta.
+\end{itemize}
+
+\subsection{Fonts de coneixement}
+Per a l'adquisició del coneixement necessari per construir el sistema, s'han utilitzat dues fonts principals:
+\begin{enumerate}
+    \item \textbf{Anàlisi de portals immobiliaris:} S'ha observat l'estructura de dades de portals reals (Idealista, Fotocasa) per determinar els atributs rellevants dels habitatges (superfície, certificació energètica, orientació, etc.).
+    \item \textbf{Elicitació amb Models de Llenguatge (LLM):} Tal com suggereix l'enunciat, s'ha utilitzat un model de llenguatge (Gemini/ChatGPT) simulant el rol d'un agent immobiliari expert. Aquest procés ha permès identificar regles heurístiques de "sentit comú", com ara que els estudiants prioritzen la proximitat a la universitat i l'oci nocturn per sobre de l'estat de conservació de l'immoble.
+\end{enumerate}
+
+\subsection{Anàlisi de viabilitat}
+La construcció d'un SBC és adequada per a aquest problema perquè:
+\begin{itemize}
+    \item El domini està ben acotat (lloguer a una ciutat).
+    \item Els experts (agents immobiliaris) utilitzen regles heurístiques que es poden formalitzar (Si X és jove $\rightarrow$ Valora Oci).
+    \item Les dades són estructurades però requereixen raonament simbòlic, no només càlcul numèric.
+    \item La solució no és única, sinó que requereix un rànquing de millors alternatives.
+\end{itemize}

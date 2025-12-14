@@ -1,5 +1,27 @@
-% 06_conclusions.tex
-% Capítol 6: Conclusions
-
 \section{Conclusions}
 \label{sec:conclusions}
+
+\subsection{Assoliment d'Objectius}
+En aquesta pràctica s'ha dissenyat i implementat amb èxit un Sistema Basat en el Coneixement per a la recomanació d'habitatges. S'han complert els objectius inicials:
+\begin{itemize}
+    \item S'ha formalitzat el coneixement expert en una ontologia complexa amb classes, subclasses i relacions.
+    \item S'ha utilitzat CLIPS per implementar un motor de regles modular (fases).
+    \item El sistema és capaç de raonar sobre dades implícites (inferència de necessitats) i no només fer filtrat SQL.
+    \item La integració del coneixement extret via LLM ha permès enriquir les regles amb criteris realistes (ex: importància del mobiliari per a estudiants).
+\end{itemize}
+
+\subsection{Punts Forts del Sistema}
+\begin{enumerate}
+    \item \textbf{Modularitat:} La separació en fitxers d'instàncies, ontologia i regles, i l'ús de fases d'execució, fa que el sistema sigui fàcilment ampliable.
+    \item \textbf{Sensibilitat al Context:} El sistema tracta diferent la mateixa distància segons l'usuari. Una discoteca a prop és positiva per a un estudiant però negativa per a una família (regla d'evitació de serveis).
+    \item \textbf{Explicabilitat:} A diferència d'una caixa negra (com una xarxa neuronal), aquest sistema expert pot justificar exactament per què una oferta és bona, llistant els criteris aplicats.
+\end{enumerate}
+
+\subsection{Limitacions i Millores Futures}
+\begin{itemize}
+    \item \textbf{Càlcul de distàncies:} Actualment s'usa la distància euclidiana directa. Una millora seria integrar una API de mapes per calcular distàncies reals caminant o en transport públic.
+    \item \textbf{Lògica Difusa (Fuzzy Logic):} Els límits de distància (500m) o preu són rígids. Implementar lògica difusa permetria una transició més suau (ex: "bastant a prop").
+    \item \textbf{Dinamisme:} Les ofertes són estàtiques. En un entorn real, caldria connectar el sistema a una base de dades en temps real.
+\end{itemize}
+
+En conclusió, la pràctica ha permès aprofundir en el cicle de vida de l'enginyeria del coneixement, des de la conceptualització abstracta fins a la implementació concreta de regles de producció, demostrant la utilitat dels SBC en problemes de presa de decisions complexes.

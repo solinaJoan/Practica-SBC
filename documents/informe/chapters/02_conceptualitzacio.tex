@@ -1,5 +1,55 @@
-% 02_conceptualitzacio.tex
-% Capítol 2: Conceptualització
-
 \section{Conceptualització}
 \label{sec:conceptualitzacio}
+
+\subsection{Adquisició de Coneixement (Rol de l'Expert)}
+Seguint les indicacions de la pràctica, s'ha realitzat una fase d'elicitació de coneixement utilitzant un LLM amb el següent \textit{prompt} de context:
+
+\begin{quote}
+\textit{"You are a real estate agent with wide experience... The knowledge engineer is going to ask about the characteristics, criteria, and knowledge that you use for making the decisions."}
+\end{quote}
+
+A partir de les respostes de l'expert sintètic, s'han identificat els següents patrons de raonament que s'han incorporat al sistema:
+\begin{itemize}
+    \item \textbf{Persones Grans:} Necessitat crítica d'accessibilitat (ascensor, plantes baixes), silenci i proximitat a farmàcies/CAPs.
+    \item \textbf{Famílies:} Prioritat per l'espai (mínim 10m² per persona), zones verdes i escoles. Eviten zones d'oci nocturn sorollós.
+    \item \textbf{Estudiants:} Pressupost ajustat, necessitat d'habitatge moblat i bones comunicacions amb transport públic.
+    \item \textbf{Segona Residència:} Cerca de luxe, vistes, terrasses i no importa tant la proximitat a serveis bàsics com escoles.
+\end{itemize}
+
+\subsection{Identificació de Conceptes (Ontologia Preliminar)}
+S'han identificat les quatre grans classes que conformen el domini:
+
+\begin{enumerate}
+    \item \textbf{Sol·licitant:} L'entitat que demana el lloguer. Es classifica en sub-rols per facilitar l'aplicació de regles específiques:
+    \begin{itemize}
+        \item \textit{Joves} (Grup d'estudiants, Parella jove, Individu jove).
+        \item \textit{Adults} (Família amb fills, Parella sense fills, etc.).
+        \item \textit{Persona Gran}.
+        \item \textit{Comprador Segona Residència}.
+    \end{itemize}
+    
+    \item \textbf{Habitatge:} L'objecte físic. Atributs clau: superfície, preu, habitacions (dobles/simples), ascensor, orientació solar, estat de conservació, etc. Subtipus: \textit{Pis, Dúplex, Àtic, Unifamiliar, Estudi}.
+    
+    \item \textbf{Servei:} Punts d'interès a la ciutat que aporten valor o resten segons el perfil.
+    \begin{itemize}
+        \item \textit{Salut:} Hospital, CAP, Farmàcia.
+        \item \textit{Educació:} Escola, Universitat.
+        \item \textit{Oci:} Bar, Discoteca, Gimnàs, Parc.
+        \item \textit{Transport:} Metro, Bus, Autopista.
+    \end{itemize}
+    
+    \item \textbf{Oferta:} L'entitat que vincula un Habitatge amb un preu i una disponibilitat. És l'objecte que el sistema ha de recomanar.
+    
+    \item \textbf{Localització:} Coordenades (X, Y), barri i districte, compartida tant per Habitatges com per Serveis per calcular distàncies.
+\end{enumerate}
+
+\subsection{Descomposició del Problema}
+El procés de resolució s'ha dividit en tasques seqüencials seguint una metodologia de **Classificació Heurística**:
+
+\begin{enumerate}
+    \item \textbf{Abstracció de Dades:} Convertir dades brutes (ex: edat=72, coordenades X/Y) en trets abstractes (ex: és \textit{PersonaGran}, el servei està \textit{MoltAProp}).
+    \item \textbf{Inferència de Requisits:} Determinar necessitats no dites. Si és \textit{PersonaGran} $\rightarrow$ REQUEREIX \textit{Ascensor}.
+    \item \textbf{Filtrat (Descart):} Eliminar ofertes que incompleixen restriccions dures (preu màxim estricte, falta d'ascensor necessari, prohibició de mascotes).
+    \item \textbf{Puntuació (Scoring):} Assignar punts positius per característiques desitjables (terrassa, piscina, serveis preferits a prop) i punts negatius per defectes menors (preu lleugerament superior, soroll).
+    \item \textbf{Classificació:} Etiquetar l'oferta segons la puntuació final (Molt Recomanable, Adequat, Parcialment Adequat).
+\end{enumerate}

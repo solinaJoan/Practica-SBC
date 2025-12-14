@@ -9,13 +9,18 @@
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage{amsmath}
-
-
 \usepackage{float}        
 \usepackage{caption}       
 \usepackage{subcaption}    
-\usepackage{xcolor}        
+\usepackage{tikz}
+\usepackage{forest}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{booktabs}
 
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+
+\tikzstyle{arrow} = [thick,->,>=stealth]
 
 % Configuració de capçaleres i peus
 \pagestyle{fancy}
@@ -45,7 +50,7 @@
     captionpos=b,
     breaklines=true,
     breakatwhitespace=false,
-    escapeinside={\%*}{*},
+    escapeinside={\%*}{*)},
     xleftmargin=2em,
     xrightmargin=2em
 }
@@ -63,7 +68,6 @@
 \textsc{Grau IA -- Q1 Curs 2025-2026}\\[2mm] 
 \normalsize Departament de Ciències de la Computació \\
 \normalsize Universitat Politècnica de Catalunya \\[1cm]
-%
 \begin{tabular}{cc}
 {\textsc{Anel Ademovic}} & {\textsc{Aleix Pitarch}} \\
 \normalsize \texttt{anel.suljic@estudiantat.upc.edu} & \normalsize \texttt{aleix.pitarch@estudiantat.upc.edu} \\[4mm]
@@ -76,13 +80,13 @@
 
 \pagestyle{plain}
 \setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
 
 \begin{document}
 \sloppy
 \maketitle
 \newpage
 \tableofcontents
-
 
 \newpage
 \input{chapters/01_identificacio}
