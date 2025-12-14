@@ -38,7 +38,7 @@ SOL·LICITANT
     │           ├── Parella Sense Fills
     │           └── Parella Futurs Fills
     ├── Persona Gran
-    └── Segona Residència
+    └── Comprador Segona Residència
 
 
 SERVEI
