@@ -717,7 +717,7 @@
         (modify ?rec (grau Parcialment))
     )))
     (bind ?nouGrau (fact-slot-value ?rec grau))
-    (debug-print "[CLASSIFICACIO] " (instance-name ?of) " -> " ?nouGrau " (" ?pts "p) per " (instance-name ?sol))
+    (debug-print [CLASSIFICACIO] (instance-name ?of) : ?nouGrau [ ?pts p] per (instance-name ?sol))
 )
 
 ;;; ============================================================
