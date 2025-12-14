@@ -32,6 +32,8 @@ Un dels conceptes centrals del nostre sistema és el \textbf{Sol·licitant}, que
 
 El concepte d'\textbf{Habitatge} agrupa totes les propietats físiques i característiques d'un immoble. Hem identificat diversos tipus segons la seva estructura:
 
+\vspace{0.5cm}
+
 \textbf{Tipus d'habitatge}:
 \begin{itemize}
     \item \textit{Pis}: El tipus més comú, en edifici plurifamiliar.
@@ -73,6 +75,8 @@ El concepte d'\textbf{Habitatge} agrupa totes les propietats físiques i caracte
 \subsubsection{Serveis urbans}
 
 Els \textbf{Serveis} representen tots els equipaments i zones d'interès que hi ha a la ciutat i que poden influir en l'adequació d'un habitatge segons la seva proximitat. Hem creat una taxonomia força completa:
+
+\vspace{0.5cm}
 
 \textbf{Serveis Educatius}:
 \begin{itemize}
@@ -146,6 +150,8 @@ Una \textbf{Oferta} representa un habitatge disponible per llogar en un moment d
 
 A més dels conceptes principals, hem definit conceptes auxiliars que s'utilitzen durant el procés de raonament:
 
+\vspace{0.5cm}
+
 \textbf{Proximitat}: Relació entre un habitatge i un servei que indica:
 \begin{itemize}
     \item La distància en metres
@@ -176,12 +182,16 @@ El problema global de recomanar habitatges és massa complex per resoldre'l d'un
 
 \textbf{Objectiu}: Preparar totes les dades base necessàries per al raonament posterior.
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 1.1: Càrrega de dades}
 \begin{itemize}
     \item Carregar la ontologia amb totes les classes i relacions
     \item Instanciar tots els habitatges, serveis i ofertes disponibles
     \item Crear o capturar el perfil del sol·licitant
 \end{itemize}
+
+\vspace{0.5cm}
 
 \textbf{Subproblema 1.2: Càlcul de proximitats}
 
@@ -200,17 +210,24 @@ Aquest és un subproblema crucial que prepara informació espacial que s'utilitz
 
 Per què calculem això per endavant? Perquè quasi totes les regles posteriors necessitaran saber si un habitatge està a prop d'un cert tipus de servei, i és molt més eficient calcular-ho una vegada que repetir el càlcul cada vegada.
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 1.3: Expansió de categories}
 
 Un detall important: també creem relacions de proximitat per a categories generals. Per exemple, si detectem que un habitatge està a prop d'una "Escola", també afirmem que està a prop d'un "Servei Educatiu". Això ens permet escriure regles més generals sense haver de contemplar tots els subtipus específics.
+
+\vspace{0.5cm}
 
 \textbf{Subproblema 1.4: Crear recomanacions inicials}
 
 Per a cada parella (sol·licitant, oferta disponible), creem una recomanació buida amb puntuació 0 i sense grau assignat. Aquestes recomanacions s'aniran omplint en les fases següents.
 
+
 \subsubsection{Fase 2: Abstracció}
 
 \textbf{Objectiu}: Transformar les dades brutes del sol·licitant en un perfil significatiu i inferir necessitats implícites.
+
+\vspace{0.5cm}
 
 \textbf{Subproblema 2.1: Classificació del sol·licitant}
 
@@ -231,6 +248,8 @@ A partir de les característiques demogràfiques (edat, nombre de persones, fill
 \end{enumerate}
 
 Aquesta classificació és determinista però té en compte múltiples factors i segueix un ordre de prioritat basat en el nostre coneixement del domini.
+
+\vspace{0.5cm}
 
 \textbf{Subproblema 2.2: Inferència de requisits}
 
@@ -278,6 +297,8 @@ Aquests requisits s'emmagatzemen com a fets, indicant si són obligatoris (han d
 
 Aquest subproblema implementa restriccions dures que no admeten excepcions. Si una oferta viola alguna d'aquestes restriccions, es descarta directament i ja no es considera més:
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 3.1: Restriccions econòmiques}
 \begin{itemize}
     \item Si el preu supera el pressupost màxim i el sol·licitant té marge estricte → DESCARTAR
@@ -286,20 +307,28 @@ Aquest subproblema implementa restriccions dures que no admeten excepcions. Si u
 
 El pressupost mínim pot semblar estrany, però alguns sol·licitants el defineixen perquè consideren que ofertes massa barates poden amagar problemes o ser estafes.
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 3.2: Restriccions sobre mascotes}
 \begin{itemize}
     \item Si el sol·licitant té mascotes i l'habitatge no les permet → DESCARTAR
 \end{itemize}
+
+\vspace{0.5cm}
 
 \textbf{Subproblema 3.3: Restriccions d'accessibilitat}
 \begin{itemize}
     \item Si el sol·licitant necessita accessibilitat i l'habitatge està en planta alta sense ascensor → DESCARTAR
 \end{itemize}
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 3.4: Serveis a evitar}
 \begin{itemize}
     \item Si el sol·licitant vol evitar un cert tipus de servei (ex: discoteques) i n'hi ha un molt a prop → DESCARTAR
 \end{itemize}
+
+\vspace{0.5cm}
 
 \textbf{Subproblema 3.5: Requisits inferits obligatoris}
 \begin{itemize}
@@ -308,12 +337,16 @@ El pressupost mínim pot semblar estrany, però alguns sol·licitants el definei
 
 De moment aquesta darrera regla no s'activa gaire perquè hem marcat la majoria de requisits com a preferibles, però és important tenir-la per a casos més extrems.
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 3.6: Superfície mínima}
 \begin{itemize}
     \item Si la superfície és inferior a 10m² per persona → DESCARTAR
 \end{itemize}
 
 Aquest és un criteri de sentit comú: 3 persones no poden viure dignament en 25m².
+
+\vspace{0.5cm}
 
 \textbf{Subproblema 3.7: Restriccions específiques de perfil}
 
@@ -331,6 +364,8 @@ Alguns perfils tenen restriccions addicionals:
 
 Aquest és el subproblema més complex perquè és on rau la major part del coneixement expert. Hem dissenyat un sistema de puntuació additiu on cada característica positiva suma punts i cada deficiència en resta. L'estratègia és:
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 4.1: Puntuació per adequació de pressupost}
 
 El preu és fonamental, però no és només "dins pressupost" o "fora pressupost":
@@ -341,6 +376,8 @@ El preu és fonamental, però no és només "dins pressupost" o "fora pressupost
     \item Preu adequat (marge flexible, fins 15\% sobre màxim): +20 punts
     \item Preu lleugerament alt (dins marge flexible): -10 punts
 \end{itemize}
+
+\vspace{0.5cm}
 
 \textbf{Subproblema 4.2: Puntuació per característiques de l'habitatge}
 
@@ -401,6 +438,8 @@ Diferents perfils valoren diferents coses:
     \item Suficients habitacions individuals: +20 punts
 \end{itemize}
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 4.3: Puntuació per serveis propers}
 
 Aquí és on s'apliquen els requisits inferits i les preferències:
@@ -447,6 +486,8 @@ Aquí és on s'apliquen els requisits inferits i les preferències:
     \item Si un requisit inferit (escola per fills, zona verda, etc.) està molt a prop: +20 punts
 \end{itemize}
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 4.4: Penalitzacions}
 
 També restem punts per deficiències:
@@ -456,6 +497,8 @@ També restem punts per deficiències:
     \item Poca llum natural (orientació "Mai"): -10 punts
     \item Baixa eficiència energètica (F o G): -10 punts
 \end{itemize}
+
+\vspace{0.5cm}
 
 \textbf{Subproblema 4.5: Registre de punts positius i criteris no complerts}
 
@@ -486,13 +529,19 @@ Aquests llindars s'han escollit experimentalment per assegurar que les categorie
 
 \textbf{Objectiu}: Generar la sortida en un format útil per a l'usuari.
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 6.1: Ordenació}
 
 Per a cada sol·licitant, ordenem les seves recomanacions per puntuació descendent.
 
+\vspace{0.5cm}
+
 \textbf{Subproblema 6.2: Selecció del Top 3}
 
 Prenem només les 3 millors ofertes per sol·licitant per no saturar l'usuari amb massa informació.
+
+\vspace{0.5cm}
 
 \textbf{Subproblema 6.3: Formatació i explicació}
 
