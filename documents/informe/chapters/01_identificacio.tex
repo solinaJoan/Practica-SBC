@@ -2,16 +2,15 @@
 
 \subsection{Descripció del problema}
 
-El mercat immobiliari de lloguer a Barcelona presenta una complexitat creixent que dificulta la cerca d'habitatge adequat per part dels ciutadans. La regidoria d'habitatge de l'ajuntament de Barcelona disposa d'un gran nombre d'ofertes de lloguer, però connectar aquestes ofertes amb les persones que busquen habitatge de manera eficient requereix un coneixement expert que tingui en compte múltiples factors simultàniament.
+El mercat immobiliari de lloguer a Barcelona presenta una complexitat creixent que dificulta la cerca d'habitatge adequat. La regidoria d'habitatge disposa de nombroses ofertes, però connectar-les eficientment amb els ciutadans requereix un sistema intel·ligent que vagi més enllà de filtres simples.
 
-El problema que ens proposem resoldre va més enllà d'una simple cerca parametritzada. No es tracta només de filtrar ofertes per preu o nombre d'habitacions, sinó d'entendre les necessitats reals de cada tipus de sol·licitant i fer recomanacions intel·ligents que considerin el context complet de la seva situació vital. Per exemple, una família amb fills petits no només necessita un pis amb suficients habitacions, sinó que valora especialment la proximitat a escoles, zones verdes i serveis pediàtrics, mentre que evita zones amb soroll excessiu. Una persona gran, per contra, prioritza l'accessibilitat, la proximitat a centres de salut i comerços de proximitat. Aquestes preferències no sempre són explícites en la cerca inicial del sol·licitant, però un expert immobiliari les tindria en compte.
+El repte consisteix a entendre les necessitats reals de cada tipus de sol·licitant considerant el seu context vital complet. Una família amb fills petits necessita proximitat a escoles i zones verdes, mentre que una persona gran prioritza accessibilitat i serveis sanitaris propers. Aquestes preferències, sovint implícites, han de ser inferides pel sistema.
 
-A més, el sistema ha d'anar més enllà de les característiques intrínseques de l'habitatge (superfície, nombre d'habitacions, preu) i considerar el seu entorn urbà. La localització de l'habitatge en relació amb serveis com transport públic, comerços, centres educatius, sanitaris i zones d'oci és crucial per determinar la seva adequació. Aquest coneixement territorial no és trivial: cal saber què significa estar "a prop" d'un servei segons el context (una persona gran considera prop el que està a 200m, mentre que un jove pot considerar acceptable 500m), i entendre quins serveis són molestos per a qui (una discoteca propera pot ser desitjable per a estudiants però inacceptable per a famílies amb nens petits).
+A més de les característiques intrínseques de l'habitatge (superfície, habitacions, preu), cal considerar l'entorn urbà: transport públic, comerços, centres educatius i sanitaris. Aquest coneixement territorial és complex: la distància acceptable varia segons el perfil (500m per a una persona gran, 1000m per a un jove), i certs serveis poden ser desitjables o inacceptables segons qui busca (una discoteca propera pot ser atractiva per a estudiants però inadequada per a famílies).
 
-El repte també inclou gestionar restriccions de diferent naturalesa. Algunes són absolutes (permetre mascotes quan el sol·licitant en té, accessibilitat per a persones amb mobilitat reduïda), altres són preferències fortes (pressupost màxim), i d'altres són desitjables però no imprescindibles (orientació solar, vistes). El sistema ha de ser capaç de distingir entre aquests nivells i generar recomanacions que s'adaptin al grau de flexibilitat de cada sol·licitant.
+El sistema ha de gestionar restriccions de diferent naturalesa: absolutes (permetre mascotes, accessibilitat), preferències fortes (pressupost màxim) i desitjables (orientació, vistes). Cal distingir entre aquests nivells per generar recomanacions adaptades.
 
-Finalment, el sistema no només ha de trobar habitatges que compleixin uns criteris mínims, sinó que ha de classificar-los en diferents graus de recomanació: des d'ofertes parcialment adequades (que compleixen la majoria de requisits però fallen en algun aspecte menor) fins a ofertes molt recomanables (que no només compleixen tots els requisits sinó que ofereixen avantatges addicionals). Aquesta classificació ha de venir acompanyada d'explicacions clares que permetin al sol·licitant entendre per què una oferta està recomanada i què la fa destacar o quins aspectes caldria considerar abans de prendre una decisió.
-
+Finalment, les ofertes s'han de classificar en diferents graus de recomanació (des de parcialment adequades fins a molt recomanables) amb explicacions clares que permetin al sol·licitant entendre els avantatges i aspectes a considerar de cada opció.
 \subsection{Anàlisi de viabilitat}
 
 Per determinar si aquest problema és adequat per ser resolt mitjançant un sistema basat en el coneixement, hem analitzat diverses dimensions de viabilitat.
@@ -20,7 +19,7 @@ Per determinar si aquest problema és adequat per ser resolt mitjançant un sist
 
 El problema reuneix les característiques fonamentals que fan viable la construcció d'un SBC:
 
-\textbf{Existència de coneixement expert.} Existeix un coneixement expert clar en el domini immobiliari. Els agents immobiliaris experimentats desenvolupen una comprensió profunda de com emparedar perfils de clients amb habitatges adequats, considerant factors que van més enllà de les especificacions tècniques. Aquest coneixement inclou heurístiques del tipus "les famílies amb fills petits valoren especialment la proximitat a escoles i parcs" o "les persones grans necessiten accessibilitat i serveis de salut propers", que es poden formalitzar en regles.
+\textbf{Existència de coneixement expert.} Existeix un coneixement expert clar en el domini immobiliari. Els agents immobiliaris experimentats desenvolupen una comprensió profunda de com emparedar perfils de clients amb habitatges adequats, considerant factors que van més enllà de les especificacions tècniques. Aquest coneixement inclou heurístiques del tipus ``les famílies amb fills petits valoren especialment la proximitat a escoles i parcs'' o ``les persones grans necessiten accessibilitat i serveis de salut propers'', que es poden formalitzar en regles.
 
 \textbf{Domini delimitat.} Hem acotat el problema a la ciutat de Barcelona, amb tipus d'habitatge i serveis ben definits. Aquesta delimitació fa el problema tractable sense perdre la seva essència. No intentem resoldre el problema general de recomanació d'habitatges a nivell mundial, sinó que ens centrem en un context urbà específic amb característiques ben conegudes.
 
@@ -48,23 +47,19 @@ Tot i la viabilitat general, hem identificat algunes limitacions que cal tenir p
 
 \textbf{Absència de retroalimentació.} El sistema actual no aprèn de les decisions dels usuaris. No sabem si les recomanacions que fem són realment útils o si els usuaris acaben escollint opcions diferents de les que el sistema proposa com a millors. Un sistema real hauria d'incorporar mecanismes de feedback per ajustar els pesos i les regles.
 
-\textbf{Factors subjectius.} Alguns factors que influeixen en la decisió d'escollir un habitatge són altament subjectius i difícils de codificar en regles (l'estètica del barri, la "sensació" que transmet un habitatge, factors culturals o personals molt específics). El nostre sistema se centra en factors objectius o preferències generals, però no pot capturar aquestes nuances individuals.
-
 \subsection{Fonts de coneixement}
 
 Per construir el sistema hem identificat i utilitzat diverses fonts de coneixement:
 
 \subsubsection{Fonts primàries}
 
-\textbf{Coneixement de sentit comú.} La base principal del nostre sistema prové del sentit comú sobre necessitats habitacionals segons perfils demogràfics. Aquest coneixement inclou afirmacions com "les persones grans necessiten accessibilitat" o "els estudiants valoren la proximitat al transport públic", que són àmpliament acceptades i no requereixen expertesa específica.
-
-\textbf{Normativa d'accessibilitat.} Hem consultat els requisits bàsics d'accessibilitat (presència d'ascensor en plantes altes, accés sense barreres) que són estàndards regulats i objectius.
+\textbf{Coneixement de sentit comú.} La base principal del nostre sistema prové del sentit comú sobre necessitats habitacionals segons perfils demogràfics. Aquest coneixement inclou afirmacions com ``les persones grans necessiten accessibilitat'' o ``els estudiants valoren la proximitat al transport públic'', que són àmpliament acceptades i no requereixen expertesa específica.
 
 \textbf{Webs d'anuncis immobiliaris.} Plataformes com Idealista ens han servit per identificar les característiques rellevants que es descriuen en les ofertes reals (superfície, nombre d'habitacions, si permet mascotes, si té terrassa, consum energètic, etc.). També ens han permès veure quines són les categories de serveis que es mencionen habitualment com a punts forts de les ubicacions.
 
 \subsubsection{Fonts secundàries}
 
-\textbf{Models de llenguatge (opcional).} Tal com s'indica a l'enunciat, podríem haver utilitzat models de llenguatge com a "experts" per fer elicitació de coneixement sobre criteris de decisió en la recomanació d'habitatges. Tot i que no ho hem documentat extensament en aquest apartat, seria una via legítima per obtenir coneixement estructurat sobre el domini.
+\textbf{Models de llenguatge.} Tal com s'indica a l'enunciat, podíem utilitzar models de llenguatge com a ``experts'' per fer elicitació de coneixement sobre criteris de decisió en la recomanació d'habitatges. Tot i que no ho hem documentat extensament en aquest apartat, és una via legítima per obtenir coneixement estructurat sobre el domini.
 
 \textbf{Experiència personal.} Els membres de l'equip hem aplicat la nostra pròpia experiència en la cerca d'habitatge i coneixement de la ciutat de Barcelona per definir proximitats raonables, serveis rellevants i preferències típiques.
 
@@ -111,7 +106,7 @@ El sistema proporciona com a sortida una llista de recomanacions personalitzades
 \begin{itemize}
     \item \textbf{Top 3 d'ofertes recomanades}: El sistema presenta les tres millors ofertes ordenades per puntuació, facilitant la presa de decisió sense saturar l'usuari amb massa opcions.
     
-    \item \textbf{Grau de recomanació}: Per a cada oferta, s'indica si és "Parcialment adequada", "Adequada" o "Molt recomanable".
+    \item \textbf{Grau de recomanació}: Per a cada oferta, s'indica si és ``Parcialment adequada'', ``Adequada'' o ``Molt recomanable''.
     
     \item \textbf{Puntuació numèrica}: Tot i que l'usuari final veu principalment la classificació qualitativa, el sistema genera internament una puntuació numèrica que permet ordenar les ofertes amb precisió.
 \end{itemize}
@@ -121,9 +116,9 @@ El sistema proporciona com a sortida una llista de recomanacions personalitzades
 \begin{itemize}
     \item \textbf{Característiques bàsiques}: Tipus d'habitatge, superfície, nombre de dormitoris i banys, preu mensual, adreça i districte.
     
-    \item \textbf{Punts forts}: Llista de característiques positives que fan l'oferta especialment adequada per al sol·licitant concret. Per exemple: "Té terrassa o balcó (+10p)", "Molt assolellat (+20p)", "Proximitat a escoles (inferida) (+20p)".
+    \item \textbf{Punts forts}: Llista de característiques positives que fan l'oferta especialment adequada per al sol·licitant concret. Per exemple: ``Té terrassa o balcó (+10p)'', ``Molt assolellat (+20p)'', ``Proximitat a escoles (inferida) (+20p)''.
     
-    \item \textbf{Aspectes a considerar}: Per a ofertes parcialment adequades o adequades, s'indiquen els criteris que no es compleixen completament. Per exemple: "Preu lleugerament superior al pressupost màxim (Moderat)", "Planta alta sense ascensor (Lleu)".
+    \item \textbf{Aspectes a considerar}: Per a ofertes parcialment adequades o adequades, s'indiquen els criteris que no es compleixen completament. Per exemple: ``Preu lleugerament superior al pressupost màxim (Moderat)'', ``Planta alta sense ascensor (Lleu)''.
 \end{itemize}
 
 \subsubsection{Informació complementària}
