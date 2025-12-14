@@ -1,0 +1,53 @@
+\section{Implementació}
+\label{sec:implementacio}
+
+El sistema s'ha implementat completament en **CLIPS 6.3**. El codi s'ha estructurat en diversos fitxers per mantenir la modularitat i facilitar el manteniment, seguint les bones pràctiques d'enginyeria del programari.
+
+\subsection{Estructura del Codi}
+\begin{itemize}
+    \item \textbf{ontologia.clp:} Conté la definició de classes (\texttt{defclass}) generada automàticament des de Protégé i refinada manualment. Defineix l'estructura d'objectes (COOL).
+    \item \textbf{instancies\_ciutat.clp:} Conté el conjunt de dades de prova: 6 perfils de sol·licitants variats, 10 localitzacions, 60 serveis i 24 habitatges amb les seves ofertes corresponents.
+    \item \textbf{regles.clp:} El nucli del sistema expert. Conté els \texttt{deftemplates} per a fets de control i totes les regles de negoci.
+    \item \textbf{main.clp:} Implementa la interfície d'usuari per línia de comandes, permetent crear nous perfils interactivament i mostrant els resultats finals formatats.
+\end{itemize}
+
+\subsection{Control del Flux d'Execució}
+S'ha utilitzat un mecanisme de control basat en un fet global \texttt{(fase (actual ?x))}. Les regles tenen prioritat (\textit{salience}) o condicions al LHS que comproven la fase actual. Això assegura que el sistema no comenci a puntuar abans d'haver descartat les ofertes inviables.
+
+Les transicions de fase són:
+$$ \texttt{init} \rightarrow \texttt{abstraccio} \rightarrow \texttt{descart} \rightarrow \texttt{scoring} \rightarrow \texttt{classificacio} \rightarrow \texttt{presentacio} $$
+
+\subsection{Detalls d'Implementació Rellevants}
+
+\subsubsection{Gestió de Distàncies i Proximitat}
+Per evitar calcular distàncies $N \times M$ constantment, a la fase d'abstracció es generen fets \texttt{proximitat} una sola vegada:
+\begin{verbatim}
+(defrule abstraccio-calcular-proximitats
+    (fase (actual init))
+    ?hab <- (object (is-a Habitatge) (teLocalitzacio ?locH))
+    ?serv <- (object (is-a Servei) (teLocalitzacio ?locS))
+    ...
+    =>
+    (bind ?metres (calcular-distancia ?x1 ?y1 ?x2 ?y2))
+    (assert (proximitat (habitatge ?hab) (servei ?serv) 
+            (distancia (classificar-distancia ?metres))))
+)
+\end{verbatim}
+Aquesta tècnica millora el rendiment i simplifica les regles posteriors, que només han de fer \textit{matching} amb el símbol \texttt{MoltAProp}.
+
+\subsubsection{Sistema de Puntuació Incremental}
+S'ha implementat un \texttt{deftemplate Recomanacio} que manté l'estat de l'avaluació. Les regles de \textit{scoring} modifiquen aquest fet:
+\begin{verbatim}
+(defrule resolucio-puntuar-piscina
+    (fase (actual scoring))
+    ...
+    ?rec <- (Recomanacio (puntuacio ?pts))
+    =>
+    (modify ?rec (puntuacio (+ ?pts 5)))
+    (assert (punt-positiu ... (descripcio "Te piscina")))
+)
+\end{verbatim}
+A més, es genera un historial de \texttt{punt-positiu} i \texttt{criteri-no-complert} per poder explicar a l'usuari final per què ha rebut aquella puntuació (explicabilitat).
+
+\subsection{Interfície d'Usuari}
+El fitxer \texttt{main.clp} utilitza funcions de lectura (\texttt{read}, \texttt{readline}) per capturar les necessitats de l'usuari dinàmicament. Aquestes dades es converteixen en instàncies de la classe \texttt{Solicitant} (o les seves subclasses, inferides mitjançant regles a la fase d'inicialització) perquè el motor d'inferència les processi igual que les instàncies estàtiques.

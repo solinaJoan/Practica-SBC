@@ -1,0 +1,83 @@
+\section{Formalització}
+\label{sec:formalitzacio}
+
+\subsection{Disseny de l'Ontologia}
+L'ontologia s'ha implementat utilitzant Protégé i exportada a CLIPS. A continuació es detalla l'estructura formal de classes i propietats.
+
+\subsubsection{Jerarquia de Classes}
+L'arbre de classes principal és el següent:
+\begin{verbatim}
+USER
++-- Solicitant
+|   +-- Joves (GrupEstudiants, ParellaJove)
+|   +-- Adults (ParellaAmbFills, Individu, etc.)
+|   +-- PersonaGran
+|   +-- CompradorSegonaResidencia
++-- Habitatge
+|   +-- Pis
+|   +-- Atic
+|   +-- Duplex
+|   +-- HabitatgeUnifamiliar
++-- Servei
+|   +-- ServeiSalut (Hospital, CAP...)
+|   +-- ServeiOci (Bar, Cinema...)
+|   +-- Transport (Metro, Bus...)
++-- Oferta
++-- Localitzacio
+\end{verbatim}
+
+\subsubsection{Atributs i Relacions (Slots)}
+Els atributs s'han definit amb tipus estrictes per facilitar el raonament a les regles:
+\begin{itemize}
+    \item \textbf{Relacions d'Objectes:} 
+    \begin{itemize}
+        \item \texttt{teLocalitzacio}: Vincula Habitatge/Servei amb Localitzacio.
+        \item \texttt{teHabitatge}: Vincula Oferta amb Habitatge.
+        \item \texttt{prefereixServei} / \texttt{evitaServei}: Multislots a Solicitant que contenen instàncies de serveis específics.
+    \end{itemize}
+    \item \textbf{Atributs de Dades:}
+    \begin{itemize}
+        \item \texttt{preuMensual} (FLOAT): Per comparacions numèriques.
+        \item \texttt{disponible} (SYMBOL: si/no).
+        \item \texttt{orientacioSolar} (STRING: "TotElDia", "Mati", etc.).
+    \end{itemize}
+\end{itemize}
+
+\subsection{Model de Raonament i Regles}
+El sistema utilitza un motor d'inferència basat en regles de producció (forward chaining) organitzat en mòduls o fases temporals.
+
+\subsubsection{Fase 1: Abstracció i Càlcul Espacial}
+Es defineix una funció de distància euclidiana:
+$$ d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2} $$
+Les regles categoritzen aquesta distància en conceptes qualitatius:
+\begin{itemize}
+    \item $d < 500m \rightarrow$ \texttt{MoltAProp}
+    \item $500m \le d < 1000m \rightarrow$ \texttt{DistanciaMitjana}
+    \item $d \ge 1000m \rightarrow$ \texttt{Lluny}
+\end{itemize}
+Això permet escriure regles com: "Si hi ha una escola \texttt{MoltAProp}, suma punts".
+
+\subsubsection{Fase 2: Inferència de Requisits}
+En aquesta fase es generen fets intermedis \texttt{requisit-inferit}.
+\begin{itemize}
+    \item \textit{Regla:} Si \texttt{numeroFills > 0} $\rightarrow$ Assert \texttt{requisit-inferit(Educacio, Obligatori: no, Motiu: "Família")}.
+    \item \textit{Regla:} Si \texttt{classe és PersonaGran} $\rightarrow$ Assert \texttt{requisit-inferit(Salut, Obligatori: si)}.
+\end{itemize}
+
+\subsubsection{Fase 3: Descart (Hard Constraints)}
+S'eliminen les ofertes que violen restriccions crítiques. Es genera un fet \texttt{oferta-descartada} i es documenta el motiu.
+Exemples de regles de descart:
+\begin{itemize}
+    \item Preu > Pressupost Màxim (si el marge és estricte).
+    \item Habitatge sense ascensor AND Pis > 0 AND Sol·licitant requereix accessibilitat.
+    \item Habitatge sense mobles AND Sol·licitant és GrupEstudiants.
+\end{itemize}
+
+\subsubsection{Fase 4: Scoring (Soft Constraints)}
+Les ofertes supervivents reben punts. Es parteix d'una puntuació base (0) i es modifica mitjançant \texttt{modify ?rec}.
+\begin{itemize}
+    \item +20 punts si té habitació doble (per parelles).
+    \item +25 punts si el transport públic és \texttt{MoltAProp}.
+    \item -10 punts si el preu supera el pressupost però està dins del marge flexible (15\%).
+    \item +50 punts si és una "ganga" (preu < 70\% del pressupost).
+\end{itemize}

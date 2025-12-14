@@ -61,25 +61,26 @@ On està ubicat l'habitatge o servei.
 
 SOL·LICITANT
 Qui busca habitatge i les seves necessitats.
-
-|           Atribut         | Tipus   |                  Significat                         |
-|---------------------------|---------|-----------------------------------------------------|
-| pressupostMaxim           | float   | Màxim que pot pagar                                 |
-| pressupostMinim           | float   | Mínim acceptable (desconfiança si és massa barat)   |
-| margeEstricte             | boolean | Si el màxim és negociable o no                      |
-| edatSolicitant            | int     | Edat                                                |
-| numeroPersones            | int     | Quantes persones viuran                             |
-| numeroFills               | int     | Nombre de fills                                     |
-| edatsFills                | int     | 3,7,12   (multislot)                                |
-| teAvis                    | boolean | Si viuen amb avis                                   |
-| numeroAvis                | int     | Quants avis                                         |
-| teVehicle                 | boolean | Si té cotxe                                         |
-| treballaACiutat           | boolean | Si treballa a la ciutat                             |
-| estudiaACiutat            | boolean | Si estudia a la ciutat                              |
-| prefereixTransportPublic  | boolean | Si usa transport públic                             |
-| necessitaAccessibilitat   | boolean | Si necessita ascensor/planta baixa                  |
-| teMascotes                | boolean | Si té animals                                       |
-| numeroMascotes            | int     | Quantes mascotes                                    |
-| tipusMascota              | string  | "Gos", "Gat", "Altre"                               |
-
+| Atribut                  | Tipus             | Significat                                          |
+| ------------------------ | ----------------- | --------------------------------------------------- |
+| nom                      | string            | Nom del sol·licitant                                |
+| edat                     | int               | Edat del sol·licitant                               |
+| pressupostMaxim          | float             | Màxim que pot pagar                                 |
+| pressupostMinim          | float             | Mínim acceptable (desconfiança si és massa barat)   |
+| margeEstricte            | boolean           | Si el pressupost màxim és negociable o no           |
+| numeroPersones           | int               | Quantes persones viuran a l’habitatge               |
+| numeroFills              | int               | Nombre de fills                                     |
+| edatsFills               | int (multi)       | Edats dels fills (ex: `3 7 12`)                     |
+| teAvis                   | boolean           | Si conviu amb avis                                  |
+| numeroAvis               | int               | Nombre d’avis                                       |
+| teVehicle                | boolean           | Si disposa de vehicle propi                         |
+| treballaACiutat          | boolean           | Si treballa a la ciutat                             |
+| estudiaACiutat           | boolean           | Si estudia a la ciutat                              |
+| requereixTransportPublic | boolean           | Si prefereix utilitzar el transport públic          |
+| necessitaAccessibilitat  | boolean           | Si necessita accessibilitat                         |
+| teMascotes               | boolean           | Si té animals de companyia                          |
+| numeroMascotes           | int               | Nombre de mascotes                                  |
+| tipusMascota             | string            | Tipus de mascota                                    |
+| evitaServei              | instance (multi)  | Serveis que vol evitar                              |
+| requereixServei          | instance (multi)  | Serveis que necessita                               |
 
