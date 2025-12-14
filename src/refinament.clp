@@ -49,7 +49,7 @@
         )
         
         ;; Mostrar només els 3 primers
-        (bind ?max-mostrar (min 1 (length$ $?recomanacions)))
+        (bind ?max-mostrar (min 3 (length$ $?recomanacions)))
         (loop-for-count (?i 1 ?max-mostrar)
             (bind ?rec (nth$ ?i $?recomanacions))
             (bind ?of (fact-slot-value ?rec oferta))
@@ -67,7 +67,7 @@
             (bind ?districte (send ?localitzacio get-districte))
             
             (printout t "  ╔════════════════════════════════════════════════════════╗" crlf)
-            (printout t "  ║  #" ?i " - " (instance-name ?of) " - *** " ?grau " ***  (" ?punt " punts)" crlf)
+            (printout t "  ║  #" ?i " - " (instance-name ?of) " - " ?grau " (" ?punt " punts)" crlf) ║
             (printout t "  ╚════════════════════════════════════════════════════════╝" crlf)
             (printout t "    Tipus:       " ?tipus crlf)
             (printout t "    Superficie:  " ?sup " m²" crlf)
