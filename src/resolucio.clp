@@ -66,6 +66,7 @@
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
     ;; Comprovem que NO existeixi cap proximitat d'aquesta categoria (ni a prop ni mitjana)
     (not (proximitat (habitatge ?hab) (categoria ?cat) (distancia MoltAProp|DistanciaMitjana)))
+    
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu (str-cat "Falta servei obligatori (" ?cat "): " ?motiuTxt))))
@@ -854,5 +855,4 @@
     (fase (actual presentacio))
     =>
     (printout t crlf "[SISTEMA] Fase de resolució completada" crlf)
-    (load presentacio.clp)
 )
