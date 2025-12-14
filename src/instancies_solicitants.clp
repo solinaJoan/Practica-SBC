@@ -28,14 +28,13 @@
             [servei-metro-liceu]
         )
 
-        (requereixServei
+        (prefereixServei
             [servei-escola-balmes]
             [servei-parc-miro]
             [servei-super-bonpreu]
             [servei-mercat-ninot]
             [servei-farmacia-24h]
         )
-
     )
 
     ;;; ------------------------------------------------------------
@@ -61,7 +60,7 @@
         (numeroMascotes 0)
         (tipusMascota "Cap")
         (evitaServei)
-        (requereixServei
+        (prefereixServei
             [servei-upc]
             [servei-metro-uni]
             [servei-bus-33]
@@ -99,7 +98,7 @@
             [servei-metro-liceu]
         )
 
-        (requereixServei
+        (prefereixServei
             [servei-cap-eixample]
             [servei-hospital-clinic]
             [servei-farmacia-24h]
@@ -137,7 +136,7 @@
             [servei-teatre-principal]
         )
 
-        (requereixServei
+        (prefereixServei
             [servei-super-bonpreu]
             [servei-parc-miro]
             [servei-farmacia-24h]
@@ -173,7 +172,7 @@
             [servei-metro-liceu]
         )
 
-        (requereixServei
+        (prefereixServei
             [servei-autopista]
             [servei-club-tennis]
             [servei-parc-collserola]
@@ -205,7 +204,7 @@
         (numeroMascotes 0)
         (tipusMascota "Cap")
         (evitaServei)
-        (requereixServei
+        (prefereixServei
             [servei-metro-centre]
             [servei-gimnas-dir]
             [servei-super-bonpreu]

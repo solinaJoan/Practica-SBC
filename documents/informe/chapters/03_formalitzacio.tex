@@ -1,83 +1,321 @@
-\section{Formalització}
-\label{sec:formalitzacio}
 
-\subsection{Disseny de l'Ontologia}
-L'ontologia s'ha implementat utilitzant Protégé i exportada a CLIPS. A continuació es detalla l'estructura formal de classes i propietats.
 
-\subsubsection{Jerarquia de Classes}
-L'arbre de classes principal és el següent:
-\begin{verbatim}
-USER
-+-- Solicitant
-|   +-- Joves (GrupEstudiants, ParellaJove)
-|   +-- Adults (ParellaAmbFills, Individu, etc.)
-|   +-- PersonaGran
-|   +-- CompradorSegonaResidencia
-+-- Habitatge
-|   +-- Pis
-|   +-- Atic
-|   +-- Duplex
-|   +-- HabitatgeUnifamiliar
-+-- Servei
-|   +-- ServeiSalut (Hospital, CAP...)
-|   +-- ServeiOci (Bar, Cinema...)
-|   +-- Transport (Metro, Bus...)
-+-- Oferta
-+-- Localitzacio
-\end{verbatim}
+\section{Introducció}
 
-\subsubsection{Atributs i Relacions (Slots)}
-Els atributs s'han definit amb tipus estrictes per facilitar el raonament a les regles:
+Aquest document presenta la documentació detallada de l'ontologia desenvolupada per a un Sistema Basat en Coneixement (SBC) de recomanació d'habitatges. L'ontologia modela el domini immobiliari, incloent solicitants, habitatges, serveis urbans i ofertes, amb l'objectiu de facilitar la recomanació personalitzada d'habitatges segons les necessitats i preferències dels usuaris. L'ontologia s'ha implementat utilitzant Protégé i exportada a CLIPS amb la llibreria \textit{owl2clips}. 
+
+\section{Procés de Construcció de l'Ontologia}
+
+\subsection{Metodologia Aplicada}
+
+Per a la construcció d'aquesta ontologia s'ha seguit una metodologia sistemàtica basada en els següents passos:
+
+\begin{enumerate}
+    \item \textbf{Anàlisi del domini}: Estudi detallat dels noms i verbs més importants de l'enunciat, identificació dels conceptes clau relacionats amb la recomanació d'habitatges.
+    
+    \item \textbf{Identificació de conceptes}: Determinació de les entitats principals del domini (solicitants, habitatges, serveis, localitzacions i ofertes).
+    
+    \item \textbf{Establiment de la jerarquia}: Organització dels conceptes en una estructura jeràrquica que reflecteix les relacions d'especialització entre ells.
+    
+    \item \textbf{Definició d'atributs}: Especificació de les propietats que caracteritzen cada concepte, incloent tipus de dades i restriccions.
+    
+    \item \textbf{Definició de relacions}: Establiment de les relacions entre conceptes diferents per modelar les interconnexions del domini.
+\end{enumerate}
+
+\section{Descripció de l'Ontologia}
+
+\subsection{Visió General}
+
+L'ontologia està estructurada en cinc jerarquies principals que representen els conceptes fonamentals del domini:
+
+\begin{enumerate}
+    \item \textbf{Solicitant}: Representa els diferents perfils d'usuaris que busquen habitatge
+    \item \textbf{Habitatge}: Modela els diferents tipus d'habitatges disponibles
+    \item \textbf{Servei}: Engloba els serveis urbans rellevants per a la selecció d'habitatge
+    \item \textbf{Localització}: Representa la ubicació geogràfica dels habitatges i serveis
+    \item \textbf{Oferta}: Modela les ofertes immobiliàries disponibles
+\end{enumerate}
+
+\fbox{\includegraphics[width=16cm]{things.png}}
+
+Les relacions entre classes, les explicarem més endavant.
+
+\subsection{Jerarquia de Classes}
+
+\subsubsection{Jerarquia de Solicitants}
+
+La classe \texttt{Solicitant} representa qualsevol persona o grup que busca un habitatge. Aquesta classe es divideix en diverses subclasses segons l'edat i situació familiar:
+
+\paragraph{Persona Gran}
+Representa persones de tercera edat amb necessitats específiques com accessibilitat i proximitat a serveis de salut.
+
+\paragraph{Joves}
+
+Inclou persones joves, amb dues especialitzacions:
+
 \begin{itemize}
-    \item \textbf{Relacions d'Objectes:} 
+    \item \textbf{ParellaJove}: Parelles joves sense fills
+    \item \textbf{GrupEstudiants}: Grups d'estudiants que comparteixen habitatge
+\end{itemize}
+
+\paragraph{Adults}
+Representa persones adultes, dividida en:
+
+\begin{itemize}
+    \item \textbf{Parella Adulta}: Parelles adultes, que es subdivideix en:
     \begin{itemize}
-        \item \texttt{teLocalitzacio}: Vincula Habitatge/Servei amb Localitzacio.
-        \item \texttt{teHabitatge}: Vincula Oferta amb Habitatge.
-        \item \texttt{prefereixServei} / \texttt{evitaServei}: Multislots a Solicitant que contenen instàncies de serveis específics.
+        \item \textit{Parella Amb Fills}: Parelles amb fills
+        \item \textit{Parella Sense Fills}: Parelles sense fills
+        \item \textit{Parella Futurs Fills}: Parelles que planegen tenir fills
     \end{itemize}
-    \item \textbf{Atributs de Dades:}
+    \item \textbf{Individu}: Persones adultes soles, subdividida en:
     \begin{itemize}
-        \item \texttt{preuMensual} (FLOAT): Per comparacions numèriques.
-        \item \texttt{disponible} (SYMBOL: si/no).
-        \item \texttt{orientacioSolar} (STRING: "TotElDia", "Mati", etc.).
+        \item \textit{Individu Amb Fills}: Persones soles amb fills (famílies monoparentals)
+        \item \textit{Individu Sense Fills}: Persones soles sense fills
+        \item \textit{Individu Futurs Fills}: Persones soles que planegen tenir fills
     \end{itemize}
 \end{itemize}
 
-\subsection{Model de Raonament i Regles}
-El sistema utilitza un motor d'inferència basat en regles de producció (forward chaining) organitzat en mòduls o fases temporals.
+\paragraph{Comprador Segona Residencia}
+Representa compradors que busquen una segona residència amb finalitats vacacionals o d'inversió. Qualsevol tipus de persona de les mencionades anteriorment podria ser-ho, però hem vist precís modelar aquesta categoria perquè un comprador d'una segona residència té necessitats, objectius i preferències molt diferents a la resta
 
-\subsubsection{Fase 1: Abstracció i Càlcul Espacial}
-Es defineix una funció de distància euclidiana:
-$$ d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2} $$
-Les regles categoritzen aquesta distància en conceptes qualitatius:
-\begin{itemize}
-    \item $d < 500m \rightarrow$ \texttt{MoltAProp}
-    \item $500m \le d < 1000m \rightarrow$ \texttt{DistanciaMitjana}
-    \item $d \ge 1000m \rightarrow$ \texttt{Lluny}
-\end{itemize}
-Això permet escriure regles com: "Si hi ha una escola \texttt{MoltAProp}, suma punts".
+\fbox{\includegraphics[width=16cm]{solicitants.png}}
 
-\subsubsection{Fase 2: Inferència de Requisits}
-En aquesta fase es generen fets intermedis \texttt{requisit-inferit}.
+\subsubsection{Jerarquia d'Habitatges}
+
+La classe \texttt{Habitatge} representa les propietats immobiliàries disponibles:
+
 \begin{itemize}
-    \item \textit{Regla:} Si \texttt{numeroFills > 0} $\rightarrow$ Assert \texttt{requisit-inferit(Educacio, Obligatori: no, Motiu: "Família")}.
-    \item \textit{Regla:} Si \texttt{classe és PersonaGran} $\rightarrow$ Assert \texttt{requisit-inferit(Salut, Obligatori: si)}.
+    \item \textbf{Atic}: Habitatge situat a la planta superior amb terrassa
+    \item \textbf{Duplex}: Habitatge distribuït en dues plantes
+    \item \textbf{Estudi}: Habitatge d'una sola habitació amb espai multifuncional
+    \item \textbf{HabitatgeUnifamiliar}: Casa individual o adossada
+    \item \textbf{Pis}: Habitatge en edifici plurifamiliar
 \end{itemize}
 
-\subsubsection{Fase 3: Descart (Hard Constraints)}
-S'eliminen les ofertes que violen restriccions crítiques. Es genera un fet \texttt{oferta-descartada} i es documenta el motiu.
-Exemples de regles de descart:
+\fbox{\includegraphics[width=16cm]{habitatges.png}}
+
+\subsubsection{Jerarquia de Serveis}
+
+La classe \texttt{Servei} engloba tots els serveis urbans rellevants:
+
 \begin{itemize}
-    \item Preu > Pressupost Màxim (si el marge és estricte).
-    \item Habitatge sense ascensor AND Pis > 0 AND Sol·licitant requereix accessibilitat.
-    \item Habitatge sense mobles AND Sol·licitant és GrupEstudiants.
+\item \textbf{Servei Comercial}:
+
+\begin{itemize}
+    \item \textbf{Centre Comercial}: Gran superfície amb múltiples botigues
+    \item \textbf{Hipermercat}: Establiment comercial de gran superfície
+    \item \textbf{Mercat}: Mercat tradicional de productes frescos
+    \item \textbf{Supermercat}: Establiment de compra quotidiana
 \end{itemize}
 
-\subsubsection{Fase 4: Scoring (Soft Constraints)}
-Les ofertes supervivents reben punts. Es parteix d'una puntuació base (0) i es modifica mitjançant \texttt{modify ?rec}.
+\fbox{\includegraphics[width=0.9\textwidth]{informe/fotos/ServeiComercial.png}}
+
+\item \textbf{Servei Educatiu}
+
 \begin{itemize}
-    \item +20 punts si té habitació doble (per parelles).
-    \item +25 punts si el transport públic és \texttt{MoltAProp}.
-    \item -10 punts si el preu supera el pressupost però està dins del marge flexible (15\%).
-    \item +50 punts si és una "ganga" (preu < 70\% del pressupost).
+    \item \textbf{Llar Infants}: Centre educatiu per a nens de 0-3 anys
+    \item \textbf{Escola}: Centre d'educació primària
+    \item \textbf{Institut}: Centre d'educació secundària
+    \item \textbf{Universitat}: Centre d'educació superior
 \end{itemize}
+
+\fbox{\includegraphics[width=16cm]{informe/fotos/ServeiEducatiu.png}}
+
+\item \textbf{ServeiOci}
+
+\begin{itemize}
+    \item \textbf{Bar}: Establiment de restauració informal
+    \item \textbf{Restaurant}: Establiment de restauració formal
+    \item \textbf{Cinema}: Sala de projecció cinematogràfica
+    \item \textbf{Teatre}: Sala d'arts escèniques
+    \item \textbf{Discoteca}: Local d'oci nocturn
+    \item \textbf{Estadi}: Instal·lació esportiva de gran capacitat
+    \item \textbf{Gimnas}: Centre esportiu i de fitness
+\end{itemize}
+
+\fbox{\includegraphics[width=16cm]{informe/fotos/ServeiOci.png}}
+
+\item \textbf{ServeiSalut}
+
+\begin{itemize}
+    \item \textbf{Centre Salut}: Centre d'atenció primària
+    \item \textbf{Farmacia}: Establiment farmacèutic
+    \item \textbf{Hospital}: Centre hospitalari
+\end{itemize}
+
+\fbox{\includegraphics[width=16cm]{informe/fotos/Serveisalut.png}}
+
+\item \textbf{Transport}
+
+\begin{itemize}
+    \item \textbf{Aeroport}: Terminal aèria
+    \item \textbf{Autopista}: Via ràpida de transport
+    \item \textbf{Transport Public}: Mitjans de transport col·lectiu
+    \begin{itemize}
+        \item \textit{Estacio Metro}: Parada de metro
+        \item \textit{Estacio Tren}: Estació de tren
+        \item \textit{Parada Bus}: Parada d'autobús
+    \end{itemize}
+\end{itemize}
+
+\fbox{\includegraphics[width=16cm]{informe/fotos/ServeiTransport.png}}
+
+\item \textbf{Zona Verda}
+
+\begin{itemize}
+    \item \textbf{Jardi}: Jardí públic petit
+    \item \textbf{Parc}: Parc urbà de grans dimensions
+    \item \textbf{Zona Esportiva}: Àrea esportiva a l'aire lliure
+\end{itemize}
+
+\fbox{\includegraphics[width=16cm]{informe/fotos/ZonaVerda.png}}
+
+\end{itemize}
+
+\subsubsection{Jerarquia de Localització}
+
+La classe \texttt{Localitzacio} modela la informació geogràfica i administrativa de les ubicacions.
+
+\subsubsection{Jerarquia d'Ofertes}
+
+La classe \texttt{Oferta} representa les ofertes immobiliàries disponibles en el mercat.
+
+\section{Relacions entre Conceptes}
+
+\begin{itemize}
+    \item \texttt{prefereixServei}: És una relació entre Solicitant i Servei, i indica els serveis desitjables
+    \item \texttt{evitaServei}: És una relació entre Solicitant i Servei, Serveis que el solicitant vol evitar en la proximitat
+    \item \texttt{teLocalitzacio}: Relaciona cada Habitatge amb la seva ubicació geogràfica específica, una Localització. Fem servir la mateixa relació entre cada Servei i la respectiva Localització
+    \item \texttt{teHabitatge}: Relaciona cada Oferta amb l'Habitatge que ofereix
+\end{itemize}
+
+Com veurem, cada relació es transformarà en un atribut a la classe corresponent, que apunta a una (o vèries) instància determinada.
+
+\section{Descripció dels atributs}
+
+\subsection{Atributs de Solicitant}
+Els solicitants han d'emmagatzemar tota la informació d'una persona que vol comprar una casa. Necessitem identificar-lo, saber per quantes persones viuran a la casa, el pressupost que té... Els atributs que hem acabat fent servir són els següents: 
+
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Atribut} & \textbf{Tipus} & \textbf{Informació} \\
+\hline
+nom & string & Nom del solicitant \\
+edat & integer & Edat del solicitant en anys \\
+numeroPersones & integer & Nombre total de persones que viuran a l'habitatge \\
+numeroFills & integer & Nombre de fills \\
+edatsFills & multislot integer & Edats dels fills \\
+teAvis & bool & Indica si conviuran amb avis \\
+teMascotes & bool & Indica si té mascotes \\
+numeroMascotes & integer & Nombre de mascotes \\
+tipusMascota & string & Tipus de mascota (gos, gat, etc.) \\
+teVehicle & bool & Indica si té vehicle propi \\
+pressupostMinim & float & Pressupost mínim en euros \\
+pressupostMaxim & float & Pressupost màxim en euros \\
+margeEstricte & bool & Indica si el pressupost és estricte \\
+treballaACiutat & bool & Indica si treballa a la ciutat \\
+estudiaACiutat & bool & Indica si estudia a la ciutat \\
+requereixTransportPublic & bool & Necessita accés a transport públic \\
+necessitaAccessibilitat & bool & Necessita accessibilitat per a mobilitat reduïda \\
+segonaResidencia & bool & Busca segona residència \\
+requereixServei & multislot instance & Serveis que són imprescindibles \\
+prefereixServei & multislot instance & Serveis que són desitjables \\
+evitaServei & multislot instance & Serveis que vol evitar \\
+\hline
+\end{tabular}
+
+
+
+\subsection{Atributs d'Habitatge}
+Per emmagatzemar totes les caracteristiques d'un Habitatge, hem fet servir els següents atributs:
+
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Atribut} & \textbf{Tipus} & \textbf{Informació} \\
+\hline
+numeroDormitoris & integer & Nombre total d'habitacions \\
+numeroDormitorisDobles & integer & Nombre d'habitacions dobles \\
+numeroDormitorisSimples & integer & Nombre d'habitacions individuals \\
+numeroBanys & integer & Nombre de banys \\
+superficieHabitable & float & Superfície habitable en metres quadrats \\
+superficieTerrassa & float & Superfície de terrassa/balcó en metres quadrats \\
+plantaPis & integer & Planta on es troba l'habitatge \\
+anyConstruccio & integer & Any de construcció de l'edifici \\
+estatConservacio & string & Estat (nou, bon estat, necessita reforma, etc.) \\
+orientacioSolar & string & Orientació (nord, sud, est, oest) \\
+consumEnergetic & string & Certificat energètic (A, B, C, D, E, F, G) \\
+nivellSoroll & string & Nivell de soroll (baix, mitjà, alt) \\
+esExterior & bool & Indica si és exterior \\
+moblat & bool & Indica si està moblat \\
+ambElectrodomestics & bool & Inclou electrodomèstics \\
+teAscensor & bool & Disposa d'ascensor \\
+teCalefaccio & bool & Té calefacció \\
+teAireCondicionat & bool & Té aire condicionat \\
+teArmariEncastat & bool & Té armaris encastats \\
+teTerrassaOBalco & bool & Té terrassa o balcó \\
+teTraster & bool & Disposa de traster \\
+tePlacaAparcament & bool & Té plaça d'aparcament \\
+numeroPlacesAparcament & integer & Nombre de places d'aparcament \\
+tePiscinaComunitaria & bool & Té piscina comunitària \\
+permetMascotes & bool & Permet mascotes \\
+teVistes & bool & Té vistes \\
+tipusVistes & string & Tipus de vistes (mar, muntanya, ciutat, parc, etc.) \\
+teLocalitzacio & instance & Referència a la localització de l'habitatge \\
+\hline
+\end{tabular}
+
+
+\subsection{Atributs de Servei}
+Un servei només requereix el nom
+
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Atribut} & \textbf{tipus} & \textbf{Informació} \\
+\hline
+nomServei & string & Nom del servei \\
+teLocalitzacio & instance & Referència a la localització del servei \\
+\hline
+\end{tabular}
+
+
+\subsection{Atributs de Localització}
+Per la localització emmagatzem la seguent informació:
+
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Atribut} & \textbf{tipus} & \textbf{Informació} \\
+\hline
+adreca & string & Adreça completa \\
+codiPostal & string & Codi postal \\
+barri & string & Nom del barri \\
+districte & string & Nom del districte \\
+coordenadaX & float & Coordenada X (longitud) \\
+coordenadaY & float & Coordenada Y (latitud) \\
+\hline
+\end{tabular}
+
+
+\subsection{Atributs d'Oferta}
+I finalment d'una oferta guardem el següent.
+
+\begin{tabular}{|l|l|p{8cm}|}
+\hline
+\textbf{Atribut} & \textbf{tipus} & \textbf{Informació} \\
+\hline
+teHabitatge & instance & Referència a l'habitatge ofertat \\
+preuMensual & float & Preu mensual en euros \\
+dataPublicacio & string & Data de publicació de l'oferta \\
+disponible & bool & Indica si està disponible \\
+\hline
+\end{tabular}
+
+
+\section{Conclusions}
+
+L'ontologia desenvolupada proporciona una representació completa i estructurada del domini de recomanació d'habitatges. Funciona com el vocabulari que li donem al nostre sistema per tal de que pugui gestionar el coneixement. És una forma de representar-lo que és intuitiva i en línia amb la programació orientada a objectes, per tant intuitiva. La jerarquia de classes permet modelar diferents perfils de solicitants amb les seves necessitats específiques, cosa que ens ha facilitat la programació de les regles. Podriem haver representat el coneixeixement amb etiquetes de categoria en ves de classes noves, ja que no tenen atributs propis, però com acabem de comentaar, ens hem decidit per aquesta opció per la possibilitat d'utilitzar herència a la fase de resolució.
+
+Els atributs definits cobreixen tant aspectes objectius (superfície, nombre d'habitacions, ubicació) com subjectius (preferències, necessitats especials), permetent així realitzar recomanacions personalitzades i justificades. No ens ha calgut utilitzar classes per fer abstracció i categoritzar alguns paràmetres (per exemple de proximitat), ja que ho hem fet amb estructures i no classes.
+
+Les relacions establertes entre les classes permeten expressar les dependències i connexions entre els diferents elements del domini, facilitant el raonament sobre la idoneïtat d'un habitatge per a un solicitant concret en funció de múltiples criteris,i constitueix una base sòlida per al desenvolupament d'un sistema basat en coneixement capaç de realitzar recomanacions 'intel·ligents' d'habitatges, tenint en compte tant les característiques intrínseques dels habitatges com els serveis i infraestructura
+

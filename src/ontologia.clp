@@ -539,9 +539,6 @@
     (is-a USER)
     (role concrete)
     (pattern-match reactive)
-    (slot aPropDe
-        (type INSTANCE)
-        (create-accessor read-write))
     (slot adreca
         (type STRING)
         (create-accessor read-write))
@@ -578,9 +575,6 @@
         (create-accessor read-write))
     (slot disponible
         (type SYMBOL)
-        (create-accessor read-write))
-    (multislot motiusRecomanacio
-        (type STRING)
         (create-accessor read-write))
     (slot preuMensual
         (type FLOAT)

@@ -14,7 +14,7 @@
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Preu supera pressupost maxim (estricte)")))
             
-    (debug-print t "[RESOLUCIO] DESCARTADA " (instance-name ?of) " per " (instance-name ?sol) " - Preu " ?preu " > " ?max " EUR" crlf)
+    (debug-print [RESOLUCIO] DESCARTADA (instance-name ?of) per (instance-name ?sol) - Preu massa alt)
 )
 
 (defrule resolucio-descartar-preu-marge-flexible
@@ -25,7 +25,7 @@
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Preu supera pressupost maxim mes del 15%")))
-    (debug-print "[DESCART] " (instance-name ?of) " per " (instance-name ?sol) " - Preu massa alt")
+    (debug-print [RESOLUCIO] DESCARTADA (instance-name ?of) per (instance-name ?sol) - Preu massa alt)
 )
 
 (defrule resolucio-descartar-no-mascotes
@@ -37,7 +37,7 @@
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "No permet mascotes")))
-    (debug-print "[DESCART] " (instance-name ?of) " per " (instance-name ?sol) " - No mascotes")
+    (debug-print [RESOLUCIO] DESCARTADA (instance-name ?of) per (instance-name ?sol) - No mascotes)
 )
 
 (defrule resolucio-descartar-no-accessible
@@ -50,7 +50,7 @@
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "No accessible: sense ascensor i planta alta")))
-    (debug-print "[DESCART] " (instance-name ?of) " per " (instance-name ?sol) " - No accessible")
+    (debug-print [RESOLUCIO] DESCARTADA (instance-name ?of) per (instance-name ?sol) - No accessible)
 )
 
 (defrule resolucio-descartar-servei-evitat
@@ -62,7 +62,7 @@
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu (str-cat "Està massa a prop d'un servei evitat: " (instance-name ?serveiEvitat)))))
-    (debug-print "[DESCART] " (instance-name ?of) " per " (instance-name ?sol) " - Servei evitat a prop")
+    (debug-print [RESOLUCIO] DESCARTADA (instance-name ?of) per (instance-name ?sol) - Servei evitat a prop)
 )
 
 (defrule resolucio-descartar-falta-requisit-inferit
@@ -75,7 +75,7 @@
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu (str-cat "Falta servei obligatori (" ?cat "): " ?motiuTxt))))
-    (debug-print "[DESCART] " (instance-name ?of) " per " (instance-name ?sol) " - Falta " ?cat)
+    (debug-print [RESOLUCIO] DESCARTADA (instance-name ?of) per (instance-name ?sol) - Falta ?cat)
 )
 
 (defrule resolucio-descartar-superficie-insuficient
@@ -88,23 +88,11 @@
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Superficie insuficient per al nombre de persones")))
-    (debug-print "[DESCART] " (instance-name ?of) " - Massa petita")
-)
-
-(defrule resolucio-descartar-estudiant-sense-mobles
-    "Els estudiants necessiten habitatges moblats"
-    (fase (actual descart))
-    ?sol <- (object (is-a GrupEstudiants))
-    ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
-    ?h <- (object (is-a Habitatge) (name ?hab) (moblat no))
-    (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
-    =>
-    (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Estudiants necessiten habitatge moblat")))
-    (debug-print "[DESCART] " (instance-name ?of) " - No moblat (estudiant)")
+    (debug-print [RESOLUCIO] DESCARTADA (instance-name ?of) - Massa petita)
 )
 
 (defrule resolucio-descartar-estudiant-a-reformar
-    "Els estudiants necessiten habitatges llestos"
+    "Els estudiants necessiten habitatge llestos"
     (fase (actual descart))
     ?sol <- (object (is-a GrupEstudiants))
     ?of <- (object (is-a Oferta) (teHabitatge ?hab) (disponible si))
@@ -114,7 +102,7 @@
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Estudiants necessiten habitatge moblat")))
 
-    (debug-print"[DESCART] " (instance-name ?of) " - Pis a reformar" crlf)
+    (printout t [RESOLUCIO] DESCARTADA (instance-name ?of) - Pis a reformar)
 )
 
 (defrule resolucio-descartar-avis-lluny-salut
@@ -126,7 +114,7 @@
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Salut molt lluny de persones grans")))
-    (debug-print "[DESCART] " (instance-name ?of) " - Salut massa lluny")
+    (printout t [RESOLUCIO] DESCARTADA (instance-name ?of) - Salut massa lluny)
 )
 
 (defrule resolucio-descartar-estudi-segona-residencia
@@ -137,7 +125,7 @@
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Estudi no adequat per segona residencia")))
-    (debug-print "[DESCART] " (instance-name ?of) " - Estudi per segona residència")
+    (printout t [RESOLUCIO] DESCARTADA (instance-name ?of) - Estudi per segona residència)
 )
 
 (defrule resolucio-descartar-no-garatge
@@ -149,7 +137,7 @@
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
     (assert (oferta-descartada (solicitant ?sol) (oferta ?of) (motiu "Persones amb vehicle necessiten aparcament")))
-    (debug-print "[DESCART] " (instance-name ?of) " - Necessita aparcament")
+    (printout t [RESOLUCIO] DESCARTADA (instance-name ?of) - Necessita aparcament)
 )
 
 
@@ -169,7 +157,7 @@
     (modify ?rec (puntuacio (+ ?pts 5)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te piscina comunitaria") (punts 5)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri piscina)))
-    (debug-print "[SCORING] +5p " (instance-name ?of) " - Piscina")
+    (debug-print [RESOLUCIO] PUNTUADA +5p A (instance-name ?of) - Piscina)
 )
 
 (defrule resolucio-puntuar-eficiencia-energetica
@@ -186,7 +174,7 @@
     (modify ?rec (puntuacio (+ ?pts 10)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Alta eficiencia energetica") (punts 10)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri eficiencia)))
-    (debug-print "[SCORING] +10p " (instance-name ?of) " - Eficiencia energetica")
+    (debug-print [RESOLUCIO] PUNTUADA +10p A  (instance-name ?of) - Eficiencia energetica)
 )
 
 (defrule resolucio-puntuar-traster
@@ -203,7 +191,7 @@
     (modify ?rec (puntuacio (+ ?pts 15)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te traster") (punts 15)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri traster)))
-    (debug-print "[SCORING] +15p " (instance-name ?of) " - Traster")
+    (debug-print [RESOLUCIO] PUNTUADA +15p A (instance-name ?of) - Traster)
 )
 
 (defrule resolucio-puntuar-moblat-estudiants
@@ -219,7 +207,7 @@
     (modify ?rec (puntuacio (+ ?pts 25)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Ja moblat") (punts 25)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri moblat)))
-    (debug-print "[SCORING] +25p " (instance-name ?of) " - Moblat")
+    (debug-print [RESOLUCIO] PUNTUADA +25p A (instance-name ?of) - Moblat)
 )
 
 (defrule resolucio-puntuar-areformar-segones-residencies
@@ -298,7 +286,7 @@
     (modify ?rec (puntuacio (+ ?pts 5)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Molt assolellat") (punts 5)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri assolellat)))
-    (debug-print "[SCORING] +5p " (instance-name ?of) " - Assolellat")
+    (debug-print [RESOLUCIO] PUNTUADA +5p A (instance-name ?of) - Assolellat)
 )
 
 (defrule resolucio-puntuar-nombre-banys
@@ -359,7 +347,7 @@
     (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri habitacio-doble)))
     =>
     (modify ?rec (puntuacio (+ ?pts 20)))
-    (debug-print "[SCORING] +20p " (instance-name ?of) " - Te habitacio doble (per parella/familia)")
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) - Te habitacio doble)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri habitacio-doble)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Disposa d'habitació doble") (punts 20)))
 )
@@ -395,7 +383,7 @@
     (modify ?rec (puntuacio (+ ?pts 10)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te bones vistes") (punts 10)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri vistes)))
-    (debug-print "[SCORING] +10p " (instance-name ?of) " - Vistes")
+    (debug-print [RESOLUCIO] PUNTUADA +10p A (instance-name ?of) - Vistes)
 )
 
 
@@ -412,7 +400,7 @@
     (modify ?rec (puntuacio (+ ?pts 30)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio (str-cat "Cobreix necessitat: " ?cat)) (punts 30)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri requisit-inferit)))
-    (debug-print "[SCORING] +30p " (instance-name ?of) " - Necessitat " ?cat)
+    (debug-print [RESOLUCIO] PUNTUADA +30p A  (instance-name ?of) - Necessitat ?cat)
 )
 
 (defrule resolucio-puntuar-transport-molt-a-prop
@@ -427,7 +415,7 @@
     (modify ?rec (puntuacio (+ ?pts 25)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Transport public molt a prop") (punts 25)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri transport-aprop)))
-    (debug-print "[SCORING] +25p " (instance-name ?of) " - Transport aprop")
+    (debug-print [RESOLUCIO] PUNTUADA +25p A (instance-name ?of) - Transport aprop)
 )
 
 (defrule resolucio-puntuar-autopista
@@ -448,7 +436,7 @@
     (not (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-autopista)))
     =>
     (modify ?rec (puntuacio (+ ?pts 20)))
-    (debug-print "[SCORING] +20p " (instance-name ?of) " - Autopista (Requisit inferit)")
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) - Autopista a prop)
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri proximitat-autopista)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Acces facil a autopista (Necessari per feina)") (punts 20)))
 )
@@ -555,7 +543,7 @@
     (modify ?rec (puntuacio (+ ?pts 20)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "A prop de servei preferit") (punts 20)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri servei-preferit)))
-    (debug-print "[SCORING] +20p " (instance-name ?of) " - Servei preferit")
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) - Servei preferit)
 )
 
 (defrule resolucio-puntuar-pressupost
@@ -592,7 +580,7 @@
     (modify ?rec (puntuacio (+ ?pts ?punts)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio ?missatge) (punts ?punts)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri pressupost)))
-    (debug-print "[SCORING] +" ?punts "p " (instance-name ?of) " - " ?missatge)
+    (debug-print [RESOLUCIO] PUNTUADA + ?punts p A (instance-name ?of) - ?missatge)
 )
 
 (defrule resolucio-puntuar-silencios
@@ -609,7 +597,7 @@
     (modify ?rec (puntuacio (+ ?pts 15)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Habitatge silencios") (punts 15)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri silencios)))
-    (debug-print "[SCORING] +15p " (instance-name ?of) " - Silencios")
+    (debug-print [RESOLUCIO] PUNTUADA +15p A (instance-name ?of) - Silencios)
 )
 
 
@@ -626,7 +614,7 @@
     (modify ?rec (puntuacio (+ ?pts 20)))
     (assert (punt-positiu (solicitant ?sol) (oferta ?of) (descripcio "Te terrassa o balco") (punts 20)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri terrassa-general)))
-    (debug-print "[SCORING] +20p " (instance-name ?of) " - Terrassa")
+    (debug-print [RESOLUCIO] PUNTUADA +20p A (instance-name ?of) - Terrassa)
 )
 
 ;;; --- CRITERIS NO COMPLERTS ---
@@ -644,7 +632,7 @@
     (modify ?rec (puntuacio (- ?pts 10)))
     (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Preu lleugerament superior") (gravetat Lleu)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri preu-superior)))
-    (debug-print "[SCORING] -10p " (instance-name ?of) " - Preu superior")
+    (debug-print [RESOLUCIO] PUNTUADA -20p A (instance-name ?of) " - Preu superior")
 )
 
 (defrule resolucio-criteri-soroll-alt
@@ -660,7 +648,7 @@
     (modify ?rec (puntuacio (- ?pts 10)))
     (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Nivell de soroll alt") (gravetat Lleu)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri soroll)))
-    (debug-print "[SCORING] -10p " (instance-name ?of) " - Soroll alt")
+    (debug-print [RESOLUCIO] PUNTUADA -10p A (instance-name ?of) - Soroll alt)
 )
 
 (defrule resolucio-criteri-sense-ascensor
@@ -678,7 +666,7 @@
     (modify ?rec (puntuacio (- ?pts 15)))
     (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Planta alta sense ascensor") (gravetat Moderat)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri sense-ascensor)))
-    (debug-print "[SCORING] -15p " (instance-name ?of) " - Sense ascensor")
+    (debug-print [RESOLUCIO] PUNTUADA -15p A  (instance-name ?of) - Sense ascensor)
 )
 
 (defrule resolucio-criteri-poc-assolellat
@@ -695,7 +683,7 @@
     (modify ?rec (puntuacio (- ?pts 10)))
     (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Poca llum natural") (gravetat Lleu)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri poc-assolellat)))
-    (debug-print "[SCORING] -10p " (instance-name ?of) " - Poc assolellat")
+    (debug-print [RESOLUCIO] PUNTUADA -10p A (instance-name ?of) - Poc assolellat)
 )
 
 (defrule resolucio-criteri-baixa-eficiencia
@@ -713,7 +701,7 @@
     (modify ?rec (puntuacio (- ?pts 10)))
     (assert (criteri-no-complert (solicitant ?sol) (oferta ?of) (criteri "Baixa eficiència energètica (F/G)") (gravetat Lleu)))
     (assert (criteriAplicat (solicitant ?sol) (oferta ?of) (criteri baixa-eficiencia)))
-    (debug-print "[SCORING] -10p " (instance-name ?of) " - Baixa eficiencia")
+    (debug-print [RESOLUCIO] PUNTUADA -10p A  (instance-name ?of) - Baixa eficiencia)
 )
 
 (defrule classificacio-assignar-grau
