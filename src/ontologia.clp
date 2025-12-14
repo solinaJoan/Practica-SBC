@@ -42,9 +42,6 @@
     (slot necessitaAccessibilitat
         (type SYMBOL)
         (create-accessor read-write))
-    (slot numeroAvis
-        (type INTEGER)
-        (create-accessor read-write))
     (slot numeroFills
         (type INTEGER)
         (create-accessor read-write))
