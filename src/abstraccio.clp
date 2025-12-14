@@ -2,7 +2,7 @@
 ;;; regles.clp
 ;;; ============================================================
 
-(defglobal ?*DEBUG* = FALSE)
+(defglobal ?*DEBUG* = TRUE)
 
 ;;; ============================================================
 ;;; TEMPLATES
@@ -116,7 +116,7 @@
     ?f <- (fase (actual init))
     =>
     (modify ?f (actual abstraccio))
-    (debug-print   "=== FASE INICIALITZACIÓ COMPLETADA ===" crlf crlf)
+    (printout t crlf "=== FASE INICIALITZACIÓ COMPLETADA ===" crlf crlf)
 )
 
 (defrule abstraccio-fi
@@ -125,7 +125,7 @@
     ?f <- (fase (actual abstraccio))
     =>
     (modify ?f (actual descart))
-    (debug-print   "=== FASE ABSTRACCIÓ COMPLETADA ===" crlf crlf)
+    (printout t crlf "=== FASE ABSTRACCIÓ COMPLETADA ===" crlf crlf)
 )
 
 (defrule descart-fi
@@ -134,7 +134,7 @@
     ?f <- (fase (actual descart))
     =>
     (modify ?f (actual scoring))
-    (debug-print  "=== FASE DESCART COMPLETADA ===" crlf crlf)
+    (printout t crlf "=== FASE DESCART COMPLETADA ===" crlf crlf)
 )
 
 (defrule scoring-fi
@@ -143,7 +143,7 @@
     ?f <- (fase (actual scoring))
     =>
     (modify ?f (actual classificacio))
-    (debug-print  "=== FASE DE SCORING COMPLETADA ===" crlf crlf)
+    (printout t crlf "=== FASE DE SCORING COMPLETADA ===" crlf crlf)
 )
 
 (defrule classificacio-fi
@@ -152,7 +152,7 @@
     ?f <- (fase (actual classificacio))
     =>
     (modify ?f (actual presentacio))
-    (debug-print  "=== FASE DE CLASSIFICACIO COMPLETADA ===" crlf crlf)
+    (printout t crlf "=== FASE DE CLASSIFICACIO COMPLETADA ===" crlf crlf)
 )
 
 ;;; ============================================================
@@ -175,7 +175,7 @@
         (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
         (prefereixServei $?ps) (evitaServei $?es))
     (retract ?f)
-    (debug-print "[CREACIO] Creat CompradorSegonaResidencia: " ?n)
+    (debug-print [ABSTRACCIO] Solicitant categoritzat com CompradorSegonaResidencia: ?n)
 )
 
 (defrule crear-persona-gran
@@ -196,7 +196,7 @@
         (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
         (prefereixServei $?ps) (evitaServei $?es))
     (retract ?f)
-    (debug-print "[CREACIO] Creat PersonaGran: " ?n)
+    (debug-print [ABSTRACCIO] Solicitant categoritzat com PersonaGran: ?n)
 )
 
 (defrule crear-estudiants
@@ -216,7 +216,7 @@
         (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
         (prefereixServei $?ps) (evitaServei $?es))
     (retract ?f)
-    (debug-print "[CREACIO] Creat GrupEstudiants: " ?n)
+    (debug-print [ABSTRACCIO] Solicitant categoritzat com GrupEstudiants: ?n)
 )
 
 (defrule crear-parella-jove
@@ -238,7 +238,7 @@
         (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
         (prefereixServei $?ps) (evitaServei $?es))
     (retract ?f)
-    (debug-print "[CREACIO] Creat ParellaJove: " ?n)
+    (debug-print [ABSTRACCIO] Solicitant categoritzat com  ParellaJove: ?n)
 )
 
 (defrule crear-individu-jove
@@ -260,7 +260,7 @@
         (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
         (prefereixServei $?ps) (evitaServei $?es))
     (retract ?f)
-    (debug-print "[CREACIO] Creat Individu Jove: " ?n)
+    (debug-print [ABSTRACCIO] Solicitant categoritzat com Jove: ?n)
 )
 
 (defrule crear-adult-amb-fills
@@ -287,7 +287,7 @@
         (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
         (prefereixServei $?ps) (evitaServei $?es))
     (retract ?f)
-    (debug-print "[CREACIO] Creat " ?classe ": " ?n)
+    (debug-print [ABSTRACCIO] Solicitant categoritzat com ?classe ?n)
 )
 
 (defrule crear-adult-futurs-fills
@@ -311,7 +311,7 @@
         (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
         (prefereixServei $?ps) (evitaServei $?es))
     (retract ?f)
-    (debug-print "[CREACIO] Creat " ?classe " (plans de fills): " ?n)
+    (debug-print [ABSTRACCIO] Solicitant categoritzat com ?classe ?n)
 )
 
 (defrule crear-adult-sense-fills
@@ -335,7 +335,7 @@
         (teMascotes ?tm) (numeroMascotes ?nm) (tipusMascota ?tmasc)
         (prefereixServei $?ps) (evitaServei $?es))
     (retract ?f)
-    (debug-print "[CREACIO] Creat " ?classe ": " ?n)
+    (debug-print [ABSTRACCIO] Solicitant categoritzat com ?classe ?n)
 )
 
 ;;; ============================================================
@@ -355,7 +355,7 @@
     (bind ?dist (classificar-distancia ?metres))
     (bind ?cat (class ?serv))
     (assert (proximitat (habitatge ?hab) (servei ?serv) (categoria ?cat) (distancia ?dist) (metres ?metres)))
-    (debug-print "[DISTANCIES] " (instance-name ?hab) " i " (instance-name ?serv) " categoria " ?cat " distancia: " ?dist)
+    (debug-print [DISTANCIES] (instance-name ?hab) i (instance-name ?serv) categoria ?cat distancia: ?dist)
 )
 
 (defrule abstraccio-expandir-categories
@@ -406,7 +406,7 @@
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu) (obligatori si) (motiu "Familia amb fills necessita escoles")))
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ZonaVerda) (obligatori no) (motiu "Familia amb fills prefereix zones verdes")))
-    (debug-print "[ABSTRACCIO] " (instance-name ?sol) " necessita escoles (te fills)")
+    (debug-print [ABSTRACCIO] (instance-name ?sol) necessita escoles perquè te fills)
 )
 
 (defrule abstraccio-persona-gran
@@ -417,7 +417,7 @@
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiSalut) (obligatori si) (motiu "Persona gran necessita serveis de salut")))
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiComercial) (obligatori si) (motiu "Persona gran necessita comerços a prop")))
-    (debug-print "[ABSTRACCIO] " (instance-name ?sol) " necessita salut i comerç")
+    (debug-print [ABSTRACCIO] (instance-name ?sol) necessita salut i comerç)
 )
 
 (defrule abstraccio-estudiants
@@ -428,7 +428,7 @@
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori si) (motiu "Estudiant necessita transport public")))
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiOci) (obligatori no) (motiu "Estudiant prefereix zones oci")))
-    (debug-print "[ABSTRACCIO] " (instance-name ?sol) " necessita transport")
+    (debug-print [ABSTRACCIO] (instance-name ?sol) necessita transport)
 )
 
 (defrule abstraccio-parella-futurs-fills
@@ -439,7 +439,7 @@
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiEducatiu) (obligatori no) (motiu "Parella amb plans de fills prefereix escoles")))
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ZonaVerda) (obligatori no) (motiu "Parella amb plans de fills prefereix parcs")))
-    (debug-print "[ABSTRACCIO] " (instance-name ?sol) " prefereix zones per futurs fills")
+    (debug-print [ABSTRACCIO] (instance-name ?sol) prefereix zones per futurs fills)
 )
 
 (defrule abstraccio-individu-jove
@@ -449,7 +449,7 @@
     (not (requisit-inferit (solicitant ?sol) (categoria-servei ServeiOci)))
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei ServeiOci) (obligatori no) (motiu "Individu jove prefereix zones oci")))
-    (debug-print "[ABSTRACCIO] " (instance-name ?sol) " prefereix oci (jove)")
+    (debug-print [ABSTRACCIO] (instance-name ?sol) prefereix oci perquè és jove)
 )
 
 (defrule abstraccio-requereix-transport
@@ -458,7 +458,7 @@
     (not (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic)))
     =>
     (assert (requisit-inferit (solicitant ?sol) (categoria-servei TransportPublic) (obligatori si) (motiu "Prefereix transport public")))
-    (debug-print "[ABSTRACCIO] " (instance-name ?sol) " necessita transport public")
+    (debug-print [ABSTRACCIO] (instance-name ?sol) necessita transport public)
 )
 
 (defrule abstraccio-necessita-autopista-feina-fora
@@ -478,6 +478,6 @@
                               (categoria-servei Autopista) 
                               (obligatori no) 
                               (motiu "Treballa fora de la ciutat i té vehicle")))
-    (debug-print "[ABSTRACCIO] " (instance-name ?sol) " necessita Autopista (treballa fora)")
+    (debug-print [ABSTRACCIO] (instance-name ?sol) necessita Autopista perquè treballa fora)
 )
 
