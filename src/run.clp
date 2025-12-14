@@ -1,6 +1,7 @@
 (clear)
 (load "ontologia.clp")
 (load "instancies_ciutat.clp")
+(load instancies_solicitants.clp)
 (load "regles.clp")
 (load "main.clp")
 (reset)
