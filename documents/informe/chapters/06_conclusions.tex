@@ -1,27 +1,186 @@
 \section{Conclusions}
-\label{sec:conclusions}
 
-\subsection{Assoliment d'Objectius}
-En aquesta pràctica s'ha dissenyat i implementat amb èxit un Sistema Basat en el Coneixement per a la recomanació d'habitatges. S'han complert els objectius inicials:
+\subsection{Assoliment d'objectius}
+
+Aquesta pràctica ens ha permès enfrontar-nos a un problema real de recomanació d'habitatges utilitzant tècniques de sistemes basats en coneixement. Tots els objectius plantejats inicialment han estat assolits amb èxit:
+
+\textbf{Modelatge del domini}: Hem construït una ontologia completa que captura els conceptes essencials del món immobiliari: sol·licitants amb perfils diversos, habitatges amb característiques variades, serveis urbans i les seves interrelacions. L'ús de Protégé per dissenyar l'ontologia i owl2clips per exportar-la a CLIPS ha resultat ser una combinació molt efectiva.
+
+\textbf{Representació del coneixement}: La jerarquia de classes implementada en CLIPS mitjançant COOL ha permès representar el coneixement de manera natural i reutilitzable. L'ús d'herència ens ha facilitat escriure regles generals que s'apliquen a múltiples subclasses, evitant repetició de codi i facilitant el manteniment.
+
+\textbf{Sistema de raonament}: Hem implementat amb èxit la metodologia de classificació heurística, descomposant el problema complex en fases seqüencials (inicialització, abstracció, descart, puntuació, classificació i presentació). Aquesta descomposició ha resultat clau per gestionar la complexitat del problema.
+
+\textbf{Validació funcional}: Els jocs de prova han demostrat que el sistema és capaç de gestionar perfils molt diversos (des d'estudiants amb pressupost ajustat fins a compradors de luxe) i generar recomanacions sensates i ben justificades per a cadascun.
+
+\subsection{Reflexió sobre el procés de desenvolupament}
+
+El desenvolupament incremental mitjançant prototips ha estat fonamental per a l'èxit del projecte. No haguéssim pogut construir tot el sistema d'un cop; la complexitat hauria estat aclaparadora. En canvi, anar construint prototips cada vegada més sofisticats ens ha permès:
+
+\textbf{Detectar errors aviat}: Per exemple, vam descobrir que la nostra primera implementació del càlcul de distàncies usava la fórmula euclidiana en lloc de la distància de Manhattan que es demanava. Si haguéssim implementat totes les regles de puntuació abans de detectar-ho, hauríem hagut de revisar-ho tot.
+
+\textbf{Iterar sobre el disseny}: Inicialment havíem pensat fer molts requisits inferits com a obligatoris, però en els primers prototips vam veure que això descartava massa ofertes i deixava alguns sol·licitants sense cap recomanació. Vam decidir fer-los preferibles i sumar punts en lloc de descartar, cosa que va millorar molt els resultats.
+
+\textbf{Comprendre millor el domini}: A mesura que implementàvem regles, ens adonàvem de casos que no havíem considerat inicialment. Per exemple, les famílies amb avis necessiten accessibilitat igual que les persones grans soles. O que els compradors de segona residència valoren l'eficiència energètica més que la majoria perquè la casa estarà buida molt temps.
+
+\textbf{Mantenir la motivació}: Tenir versions funcionals des del principi és molt més motivador que treballar setmanes en quelcom que no fa res fins al final. Cada prototip era un petit èxit que ens donava empenta per continuar.
+
+\subsection{Dificultats trobades i solucions aplicades}
+
+Durant el desenvolupament ens hem trobat amb diversos obstacles que han requerit creativitat per superar-los:
+
+\subsubsection{Gestió de l'explosió combinatòria}
+
+El primer repte important va ser quan vam començar a calcular proximitats. Amb 8 habitatges i 15 serveis, això genera 120 fets de proximitat. I després, amb cada combinació (sol·licitant, oferta), generem recomanacions, punts positius, criteris no complerts... Els fets es multiplicaven ràpidament.
+
+\textbf{Solució aplicada}: Vam implementar diverses estratègies per controlar això:
 \begin{itemize}
-    \item S'ha formalitzat el coneixement expert en una ontologia complexa amb classes, subclasses i relacions.
-    \item S'ha utilitzat CLIPS per implementar un motor de regles modular (fases).
-    \item El sistema és capaç de raonar sobre dades implícites (inferència de necessitats) i no només fer filtrat SQL.
-    \item La integració del coneixement extret via LLM ha permès enriquir les regles amb criteris realistes (ex: importància del mobiliari per a estudiants).
+    \item Utilitzar \texttt{(not (proximitat ...))} per evitar calcular la mateixa distància dues vegades
+    \item Retracting de fets temporals que ja no necessitàvem (com \texttt{dades-solicitant} un cop creat el sol·licitant)
+    \item Usar el template \texttt{criteriAplicat} per assegurar que cada regla de puntuació es dispara només una vegada per parella (sol·licitant, oferta)
 \end{itemize}
 
-\subsection{Punts Forts del Sistema}
+\subsubsection{Debugging de regles}
+
+Un dels moments més frustrants va ser quan una regla que sabíem que s'havia de disparar simplement no ho feia. CLIPS ofereix \texttt{(matches nom-regla)} per veure quines condicions fallen, però sovint els missatges eren críptics o no ens ajudaven gaire.
+
+\textbf{Solució aplicada}: Vam implementar un sistema de debug amb la variable global \texttt{?*DEBUG*} i la funció \texttt{debug-print}. Això ens permetia activar missatges detallats durant el desenvolupament per veure exactament quines regles es disparaven i quan, i després desactivar-los en producció per tenir una sortida neta.
+
+Un truc que vam descobrir: posar \texttt{debug-print} a l'inici del \texttt{=>} de cada regla ens permetia veure quines regles s'executaven realment, fins i tot si després fallaven. Això era molt més útil que \texttt{(matches)}.
+
+\subsubsection{Inconsistències en la puntuació}
+
+Quan vam començar a afegir moltes regles de puntuació, vam notar que alguns habitatges clarament inadequats rebien puntuacions massa altes perquè sumaven molts petits bonificacions. Per exemple, un estudi de 30m² per a una família de 5 persones podia tenir 50 punts només per tenir terrassa, vistes i estar ben ubicat.
+
+\textbf{Solució aplicada}: Vam introduir regles de descart més estrictes en la fase inicial (superfície mínima per persona, restriccions específiques per perfil) i vam ajustar els pesos de les puntuacions. Els criteris essencials (com pressupost o complir un requisit inferit) sumen 20-30 punts, mentre que els criteris de qualitat general només sumen 10-15 punts. Això garanteix que un habitatge no pot ser "Molt Recomanable" només per tenir moltes característiques secundàries si no compleix bé els criteris principals.
+
+\subsubsection{Ordenació en CLIPS}
+
+CLIPS no té funcions natives per ordenar llistes, i necessitàvem ordenar les recomanacions per puntuació per presentar el Top 3. Vam considerar diverses opcions:
+
 \begin{enumerate}
-    \item \textbf{Modularitat:} La separació en fitxers d'instàncies, ontologia i regles, i l'ús de fases d'execució, fa que el sistema sigui fàcilment ampliable.
-    \item \textbf{Sensibilitat al Context:} El sistema tracta diferent la mateixa distància segons l'usuari. Una discoteca a prop és positiva per a un estudiant però negativa per a una família (regla d'evitació de serveis).
-    \item \textbf{Explicabilitat:} A diferència d'una caixa negra (com una xarxa neuronal), aquest sistema expert pot justificar exactament per què una oferta és bona, llistant els criteris aplicats.
+    \item Implementar un algoritme d'ordenació (bubble sort, quicksort...)
+    \item Usar asserts/retracts per mantenir una llista ordenada incrementalment
+    \item Buscar la millor recomanació 3 vegades i marcar-les com a processades
 \end{enumerate}
 
-\subsection{Limitacions i Millores Futures}
+\textbf{Solució aplicada}: Vam implementar un bubble sort senzill directament dins de la regla de presentació. No és l'algoritme més eficient, però per ordenar 3-10 elements és més que suficient i mantenir el codi tot en un lloc el fa més fàcil d'entendre i mantenir.
+
+\subsubsection{Gestió de categories de serveis}
+
+Inicialment havíem escrit regles molt específiques: "si hi ha una Escola a prop, suma 20 punts". Però això significava escriure regles separades per Escola, Institut, Llar d'Infants... I si després volíem canviar els punts, havíem de modificar múltiples regles.
+
+\textbf{Solució aplicada}: Vam crear una regla d'expansió de categories que, a partir d'un servei específic (Escola), crea fets addicionals per a categories més generals (ServeiEducatiu). Això ens permet escriure regles generals com "si hi ha un ServeiEducatiu a prop i s'ha inferit aquesta necessitat, suma 20 punts", i s'aplicarà tant a Escoles com a Universitats.
+
+\subsection{Valoració personal del treball}
+
+\subsubsection{Aspectes més enriquidors}
+
+\textbf{Comprendre la potència de la representació declarativa}: Una de les coses que més ens ha sorprès és com un conjunt de regles aparentment simples pot generar comportaments complexos i intel·ligents. No hem programat explícitament "com" trobar el millor habitatge per a cada sol·licitant; simplement hem declarat el coneixement sobre què fa un habitatge adequat, i el motor d'inferència s'encarrega de la resta. Això és radicalment diferent de la programació imperativa que estem acostumats a fer.
+
+\textbf{Importància de la modelització del domini}: Hem après que dedicar temps a pensar en l'ontologia al principi estalvia molt temps després. Els dies que vam passar discutint si un "Comprador de Segona Residència" havia de ser una classe separada o només un atribut booleà ens van semblar una pèrdua de temps en aquell moment, però després va resultar que tenir-lo com a classe separada ens va permetre escriure regles molt més clares i específiques.
+
+\textbf{Valor de les explicacions}: Implementar el sistema de justificacions (punts positius i criteris no complerts) ha fet el sistema infinitament més útil. No n'hi ha prou amb dir "aquesta és la millor oferta"; l'usuari necessita entendre *per què* és la millor, quins són els seus punts forts i què hauria de considerar. Això fa que el sistema sigui transparent i genera confiança.
+
+\subsubsection{Limitacions reconegudes}
+
+Som conscients que el nostre sistema té limitacions importants:
+
+\textbf{Coneixement incomplet}: No som experts immobiliaris reals. Les regles que hem implementat es basen principalment en sentit comú i en patrons generals que hem pogut inferir. Un sistema de producció real necessitaria la participació activa d'agents immobiliaris experimentats per afinar les regles, els pesos de puntuació i identificar criteris que nosaltres no hem considerat.
+
+\textbf{Dades sintètiques}: Treballem amb instàncies que hem creat manualment. Un sistema real hauria d'integrar-se amb bases de dades reals d'ofertes, informació actualitzada sobre serveis urbans (potser extreta d'APIs de Google Maps o similar), i gestionar la dinàmica temporal (ofertes que deixen d'estar disponibles, preus que canvien).
+
+\textbf{Absència d'aprenentatge}: El nostre sistema no aprèn de les decisions dels usuaris. No sabem si les recomanacions que fem són realment útils o si els usuaris acaben escollint opcions diferents. Un sistema real hauria d'incorporar mecanismes de feedback (per exemple, registrar quines ofertes visita l'usuari, quina acaba escollint) i ajustar els pesos de les regles en conseqüència. Això podria fer-se amb tècniques de machine learning o simplement amb estadístiques d'ús.
+
+\textbf{Tractament simplificat de preferències}: Hem implementat només dos nivells de preferències (obligatori vs preferible), però en realitat les preferències humanes són més matisades. Algú pot dir "prefereixo orientació sud" però valorar-ho molt més que "prefereixo que hi hagi un cinema a prop". No hem implementat ponderacions configurables per usuari.
+
+\subsubsection{Treball en equip}
+
+La col·laboració entre els membres de l'equip ha estat fonamental. Hem dividit el treball de manera que cadascú pogués aportar segons les seves fortaleses:
+
 \begin{itemize}
-    \item \textbf{Càlcul de distàncies:} Actualment s'usa la distància euclidiana directa. Una millora seria integrar una API de mapes per calcular distàncies reals caminant o en transport públic.
-    \item \textbf{Lògica Difusa (Fuzzy Logic):} Els límits de distància (500m) o preu són rígids. Implementar lògica difusa permetria una transició més suau (ex: "bastant a prop").
-    \item \textbf{Dinamisme:} Les ofertes són estàtiques. En un entorn real, caldria connectar el sistema a una base de dades en temps real.
+    \item La conceptualització i disseny de l'ontologia la vam fer conjuntament en sessions de brainstorming
+    \item La implementació de regles la vam dividir per fases: un membre es va centrar en abstracció i inferència, un altre en descart i puntuació, i el tercer en classificació i presentació
+    \item Els jocs de prova i la documentació els vam repartir per perfils de sol·licitant
+    \item La revisió final del codi i la detecció de bugs la vam fer per parelles, amb una persona executant el sistema i l'altra revisant el codi
 \end{itemize}
 
-En conclusió, la pràctica ha permès aprofundir en el cicle de vida de l'enginyeria del coneixement, des de la conceptualització abstracta fins a la implementació concreta de regles de producció, demostrant la utilitat dels SBC en problemes de presa de decisions complexes.
+Les eines de control de versions (Git) han estat essencials per coordinar el treball sense trepitjar-nos mútuament. Tot i així, vam tenir algun conflicte de merge quan dos persones modificaven el mateix fitxer de regles simultàniament, però els vam resoldre parlant i acordant qui incorporava quins canvis.
+
+\subsection{Millores futures}
+
+Si haguéssim de continuar desenvolupant aquest sistema, hi ha diversos aspectes que milloraríem:
+
+\subsubsection{Preferències configurables per usuari}
+
+Implementar un sistema de pesos personalitzables on cada sol·licitant pogués indicar la importància relativa de diferents criteris. Per exemple:
+\begin{itemize}
+    \item "Per a mi, l'orientació solar és imprescindible (pes 3x)"
+    \item "No em molesta gaire el soroll (pes 0.5x)"
+    \item "Valoro molt tenir terrassa (pes 2x)"
+\end{itemize}
+
+Això es podria implementar afegint slots a la classe Solicitant amb pesos per a diferents categories, i modificant les regles de puntuació per multiplicar els punts base pel pes corresponent.
+
+\subsubsection{Raonament amb incertesa}
+
+Algunes de les nostres inferències són probabilístiques més que deterministes. Per exemple, "les parelles joves probablement volen tenir fills aviat" és veritat per a algunes parelles joves però no per a totes. Podríem incorporar factors de certesa a les regles i propagar aquesta incertesa a través del raonament, utilitzant per exemple la metodologia de factors de certesa que hem estudiat a classe.
+
+\subsubsection{Explicacions més riques}
+
+Les explicacions actuals són bastant bàsiques: llistes de punts forts i criteris no complerts. Podríem generar explicacions més narratives i contextualitzades:
+\begin{itemize}
+    \item "Aquest habitatge és ideal per a vosaltres perquè té 3 dormitoris (perfecte per als vostres 2 fills), està a 5 minuts a peu de l'escola Balmes, i té una terrassa on els nens podran jugar."
+    \item "Tot i que supera lleugerament el vostre pressupost, les estalviareu en transport perquè està a 2 minuts del metro."
+\end{itemize}
+
+Això requereix templates de text més sofisticats i capacitat de generar llenguatge natural, però faria el sistema molt més amigable.
+
+\subsubsection{Interfície web}
+
+El sistema actual funciona per línia de comandes, cosa que és adequada per a desenvolupament i prova però no per a usuaris finals. Una millora òbvia seria construir una interfície web on l'usuari pogués:
+\begin{itemize}
+    \item Emplenar un formulari amb les seves dades i preferències
+    \item Veure les recomanacions amb fotos dels habitatges
+    \item Filtrar i reordenar resultats
+    \item Marcar ofertes com a favorites
+    \item Demanar més explicacions sobre per què una oferta està recomanada
+\end{itemize}
+
+Això requereix integrar CLIPS amb un backend web (potser en Python amb pyclips) i construir un frontend modern.
+
+\subsubsection{Integració amb dades reals}
+
+Connectar el sistema amb fonts de dades reals seria el següent pas lògic:
+\begin{itemize}
+    \item API d'Idealista o similar per obtenir ofertes actualitzades
+    \item Google Maps API per calcular distàncies reals (temps de desplaçament, no només distància)
+    \item Dades obertes de l'Ajuntament de Barcelona sobre equipaments
+    \item Valoracions i opinions d'usuaris anteriors
+\end{itemize}
+
+\subsubsection{Aprenentatge automàtic}
+
+Tot i que el nostre sistema és purament simbòlic, podria beneficiar-se d'incorporar components d'aprenentatge automàtic:
+\begin{itemize}
+    \item Aprendre els pesos de puntuació a partir de dades històriques de decisions d'usuaris
+    \item Descobrir patrons nous que no hem codificat explícitament (per exemple, "els sol·licitants amb fills petits valoren més els habitatges amb pati comunitari del que pensàvem")
+    \item Detectar anomalies o ofertes sospitoses (preus massa baixos que poden ser estafes)
+\end{itemize}
+
+Aquest seria un sistema híbrid que combinaria el millor dels dos mons: la transparència i explicabilitat dels sistemes simbòlics amb la capacitat d'aprenentatge dels sistemes connexionistes.
+
+\subsection{Aprenentatges clau}
+
+Aquesta pràctica ens ha deixat diversos aprenentatges valuosos que van més enllà dels aspectes tècnics:
+
+\textbf{La importància del coneixement expert}: Un sistema basat en coneixement és tan bo com el coneixement que conté. No n'hi ha prou amb saber programar en CLIPS; cal entendre profundament el domini del problema. Hem après a fer elicitació de coneixement, encara que sigui informalment (consultant webs, parlant amb persones que han buscat pis, usant el sentit comú).
+
+\textbf{Descomposició de problemes complexos}: El problema de recomanar habitatges és complex perquè involucra molts factors interrelacionats. La clau ha estat descompondre-lo en subproblemes més simples que es resolen seqüencialment. Aquesta habilitat és transferible a molts altres problemes d'IA i d'enginyeria en general.
+
+\textbf{Valor de la transparència}: En aplicacions que afecten decisions importants de les persones (on viuran, quant pagaran), la transparència no és negociable. El sistema ha de poder explicar les seves decisions. Això contrasta amb molts sistemes de machine learning actuals que són "caixes negres".
+
+\textbf{Prototipatge com a metodologia}: Construir versions funcionals des del principi, encara que siguin incompletes, és molt més efectiu que intentar dissenyar-ho tot perfectament abans de començar a implementar. El feedback que obtens executant el sistema t'ajuda a refinar el disseny de maneres que no hauries anticipat.
+
+\textbf{Limitacions dels sistemes simbòlics}: Tot i la potència dels sistemes basats en regles, també hem vist les seves limitacions: són rígids, requereixen que tot el coneixement s'expliciti manualment, no aprenen automàticament. Això ens fa valorar més els enfocaments híbrids que combinen IA simbòlica i connexionista.
+
+En definitiva, aquesta pràctica ha estat una experiència molt enriquidora que ens ha permès aplicar conceptes teòrics a un problema real, enfrontar-nos a decisions de disseny no trivials, i desenvolupar un sistema que, amb totes les seves limitacions, realment funciona i genera recomanacions sensates. Hem après tant dels èxits com dels errors, i això és precisament el que fa que una pràctica sigui valuosa des del punt de vista formatiu.
