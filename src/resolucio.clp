@@ -709,9 +709,9 @@
     ?rec <- (Recomanacio (solicitant ?sol) (oferta ?of) (puntuacio ?pts) (grau NULL))
     (not (oferta-descartada (solicitant ?sol) (oferta ?of)))
     =>
-    (if (>= ?pts 70) then
+    (if (>= ?pts 80) then
         (modify ?rec (grau MoltRecomanable))
-    else (if (>= ?pts 40) then
+    else (if (>= ?pts 65) then
         (modify ?rec (grau Adequat))
     else (if (> ?pts 0) then
         (modify ?rec (grau Parcialment))
