@@ -1,3 +1,53 @@
+\documentclass[12pt]{article} 
+\usepackage[a4paper, left = 1in, right = 1in, top = 1in, bottom = 1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[catalan]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{amsmath}
+\usepackage{float}        
+\usepackage{caption}       
+\usepackage{subcaption}    
+\usepackage{tikz}
+\usepackage{forest}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{booktabs}
+\setlength{\parskip}{1.5cm}
+\usepackage{amssymb}
+
+
+\title{
+    \includegraphics[width=0.3\textwidth]{fotos/upc-logo.png}\\[1cm]
+    {\LARGE Pràctica de Sistemes Basats en el Coneixement}\\[0.5cm]
+    {\large Sistema Expert de Recomanació d'Habitatges de Lloguer}\\[2cm]
+}
+
+\author{
+\large
+\textsc{Grau IA -- Q1 Curs 2025-2026}\\[2mm] 
+\normalsize Departament de Ciències de la Computació \\
+\normalsize Universitat Politècnica de Catalunya \\[1cm]
+\begin{tabular}{cc}
+{\textsc{Anel Ademovic}} & {\textsc{Aleix Pitarch}} \\
+\normalsize \texttt{anel.suljic@estudiantat.upc.edu} & \normalsize \texttt{aleix.pitarch@estudiantat.upc.edu} \\[4mm]
+\multicolumn{2}{c}{\textsc{Joan Solina}} \\
+\multicolumn{2}{c}{\normalsize \texttt{joan.solina@estudiantat.upc.edu}}\\
+\end{tabular}
+}
+
+\date{14 de desembre de 2025}
+
+\pagestyle{plain}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+\begin{document}
 \section{Identificació del problema}
 
 \subsection{Descripció del problema}
@@ -53,17 +103,94 @@ Per construir el sistema hem identificat i utilitzat diverses fonts de coneixeme
 
 \subsubsection{Fonts primàries}
 
-\textbf{Coneixement de sentit comú.} La base principal del nostre sistema prové del sentit comú sobre necessitats habitacionals segons perfils demogràfics. Aquest coneixement inclou afirmacions com ``les persones grans necessiten accessibilitat'' o ``els estudiants valoren la proximitat al transport públic'', que són àmpliament acceptades i no requereixen expertesa específica.
+\textbf{Coneixement de sentit comú.} La base principal del nostre sistema prové del sentit comú sobre necessitats habitacionals segons perfils demogràfics. És coneixement bàsic com per exemple que les persones grans necessiten accessibilitat o que les famílies amb fills petits valoren la proximitat a escoles i zones verdes. Són àmpliament acceptades i no requereixen expertesa específica.
 
 \textbf{Webs d'anuncis immobiliaris.} Plataformes com Idealista ens han servit per identificar les característiques rellevants que es descriuen en les ofertes reals (superfície, nombre d'habitacions, si permet mascotes, si té terrassa, consum energètic, etc.). També ens han permès veure quines són les categories de serveis que es mencionen habitualment com a punts forts de les ubicacions.
 
+\textbf{Preguntes a l'usuari} Les preguntes a l'usuari també formen part del coneixement del sistema. Tot seguit les expliquarem amb extensió.
+
 \subsubsection{Fonts secundàries}
 
-\textbf{Models de llenguatge.} Tal com s'indica a l'enunciat, podíem utilitzar models de llenguatge com a ``experts'' per fer elicitació de coneixement sobre criteris de decisió en la recomanació d'habitatges. Tot i que no ho hem documentat extensament en aquest apartat, és una via legítima per obtenir coneixement estructurat sobre el domini.
+\textbf{Models de llenguatge.} Hem fet servir LLM's com a experts per demanar-los informació, perquè ens ajudi a pensar com un expert immobiliari i puguem fer una inferència més precisa.
 
 \textbf{Experiència personal.} Els membres de l'equip hem aplicat la nostra pròpia experiència en la cerca d'habitatge i coneixement de la ciutat de Barcelona per definir proximitats raonables, serveis rellevants i preferències típiques.
 
-\textbf{Ontologies existents.} Hem consultat exemples d'ontologies del domini immobiliari i de recomanació de serveis per estructurar adequadament els conceptes i relacions del nostre sistema.
+\subsection{Obtenció de la informació de l'usuari}
+
+Finalment, el sistema basat en coneixement obté la informació necessària mitjançant un procés interactiu de preguntes a l'usuari. Aquest procés permet construir un perfil complet del sol·licitant que posteriorment serà utilitzat pel motor d'inferència per generar recomanacions adequades.
+
+La recollida de dades es duu a terme mitjançant la funció \texttt{crear-perfil-solicitant}, la qual guia l'usuari a través d'una sèrie de preguntes estructurades en diferents blocs temàtics. Cada bloc respon a un conjunt de variables rellevants per a la presa de decisions del sistema.
+
+\subsubsection{Dades personals}
+En primer lloc, el sistema demana informació bàsica del sol·licitant, com ara:
+\begin{itemize}
+    \item Nom o identificador
+    \item Edat
+    \item Si es vol comprar un habitatge com a segona residència
+\end{itemize}
+
+Aquestes dades permeten contextualitzar el perfil i activar determinades preguntes condicionals en fases posteriors.
+
+\subsubsection{Situació familiar i convivència}
+A continuació, es recull informació sobre la composició de la llar:
+\begin{itemize}
+    \item Nombre total de persones que conviuran a l'habitatge
+    \item Existència de fills menors i les seves edats
+    \item Presència de persones grans
+    \item Intenció de tenir fills en un futur proper
+\end{itemize}
+
+Aquest bloc permet detectar necessitats futures i requisits especials d'espai o accessibilitat.
+
+\subsubsection{Pressupost}
+El sistema sol·licita informació econòmica clau:
+\begin{itemize}
+    \item Pressupost màxim mensual
+    \item Pressupost mínim desitjat
+    \item Si hi ha flexibilitat de pressupost
+\end{itemize}
+
+Aquestes dades s'utilitzen per filtrar les opcions d'habitatge compatibles amb la capacitat econòmica del sol·licitant.
+
+\subsubsection{Ubicació i mobilitat}
+Per adaptar les recomanacions a la mobilitat de l'usuari, el sistema pregunta:
+\begin{itemize}
+    \item Si el lloc de treball o estudi es troba a la ciutat
+    \item Disponibilitat de vehicle propi
+    \item Necessitat de transport públic proper
+\end{itemize}
+
+Aquestes respostes influeixen directament en la selecció de zones i accessibilitat.
+
+\subsubsection{Accessibilitat}
+En funció de l'edat del sol·licitant o la presència de persones grans, el sistema determina:
+\begin{itemize}
+    \item Necessitat d'ascensor
+    \item Requisits d'accessibilitat per a mobilitat reduïda
+\end{itemize}
+
+\subsubsection{Mascotes}
+El sistema també considera la convivència amb animals:
+\begin{itemize}
+    \item Existència de mascotes
+    \item Tipus de mascota
+    \item Nombre total
+\end{itemize}
+
+\subsubsection{Preferències i exclusions}
+Finalment, es recullen preferències respecte a serveis i entorns:
+\begin{itemize}
+    \item Serveis propers que es consideren desitjables
+    \item Serveis o instal·lacions que es volen evitar
+\end{itemize}
+
+Aquestes últimes respostes són clau al nostre sistema. Dos usuaris que siguin categoritzats amb la mateixa categoria, tindràn ofertes diferents en gran part per el gran esforç del sistema per complir aquests dos condicionants
+
+\subsubsection{Generació del perfil}
+Un cop recollides totes les respostes, el sistema les guarda com a part del domini del problema. Constitueix la base de coneixement inicial sobre la qual treballarà el sistema d'inferència.
+
+
+
 
 \subsection{Objectius del sistema}
 
@@ -134,3 +261,4 @@ El sistema també genera informació interna útil per a depuració i anàlisi:
 \end{itemize}
 
 Aquest disseny de sortida equilibra la utilitat per a l'usuari final (informació clara i accionable) amb la necessitat de transparència i explicabilitat que són fonamentals en un sistema basat en coneixement.
+\end{document}
