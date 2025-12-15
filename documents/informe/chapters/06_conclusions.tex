@@ -103,17 +103,3 @@ La col·laboració entre els membres de l'equip ha estat fonamental. Hem dividit
 \end{itemize}
 
 Les eines de control de versions (Git) han estat essencials per coordinar el treball sense trepitjar-nos mútuament. Tot i així, vam tenir algun conflicte de merge quan dos persones modificaven el mateix fitxer de regles simultàniament, però els vam resoldre parlant i acordant qui incorporava quins canvis.
-
-\subsection{Millores futures}
-
-Si haguéssim de continuar desenvolupant aquest sistema, hi ha diversos aspectes que milloraríem:
-
-\subsubsection{Preferències configurables per usuari}
-
-Implementar un sistema de pesos personalitzables on cada sol·licitant pogués indicar la importància relativa de diferents criteris, En ves de tenir nomésformació booleana sobre l'usuari, tenir una mica de marge perquè sigui el mateix ususari el que ponderi algunes decisions. Ho podriem fer demanant un enter de l'1 al 10 amb alguna pregunta de valoració.
-
-Això es podria implementar afegint slots a la classe Solicitant amb pesos per a diferents categories, i modificant les regles de puntuació per multiplicar els punts base pel pes corresponent.
-
-\subsubsection{Raonament amb incertesa}
-
-Algunes de les nostres inferències són probabilístiques més que deterministes. Per exemple, "les parelles joves probablement volen tenir fills aviat" és veritat per a algunes parelles joves però no per a totes. Podríem incorporar factors de certesa a les regles i propagar aquesta incertesa a través del raonament, utilitzant per exemple la metodologia de factors de certesa que hem estudiat a classe.
