@@ -5,7 +5,14 @@
 \usepackage{fontspec}
 \usepackage[catalan]{babel}
 \usepackage{graphicx}
-\usepackage{hyperref}
+\usepackage[
+    colorlinks=true, % <-- Aquesta opció fa que els enllaços tinguin color...
+    linkcolor=black, % <-- ...i aquests tres defineixen quin color (negre)
+    filecolor=black,
+    urlcolor=black,
+    citecolor=black,
+    linkbordercolor={0 0 0}, % <-- Aquesta opció elimina la caixa vermella
+]{hyperref}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{fancyhdr}
