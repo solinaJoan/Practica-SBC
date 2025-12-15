@@ -765,16 +765,17 @@ Aquesta sintaxi no és molt intuïtiva al principi i ens va costar una estona do
 
 \subsection{Arquitectura de fitxers}
 
-Finalment, hem organitzat el codi en diversos fitxers per facilitar el manteniment:
+Finalment, hem organitzat el codi en diversos mòduls:
 
 \begin{itemize}
     \item \texttt{ontologia.clp}: Definició de totes les classes (generat automàticament)
     \item \texttt{instancies\_ciutat.clp}: Instàncies d'habitatges, serveis i ofertes
     \item \texttt{instancies\_solicitants.clp}: Sol·licitants de prova predefinits
-    \item \texttt{regles.clp}: Totes les regles del sistema, organitzades per fases
-    \item \texttt{main.clp}: Funcions d'interacció i funció principal
-    \item \texttt{presentacio.clp}: Regles específiques per a la presentació del Top 3
-    \item \texttt{run.clp}: Script que carrega tot i executa el sistema
+    \item \texttt{main.clp}: Funcions d'interacció i funció principal. És el fitxer d'entrada que demana a l'usuari si vol crear un nou solicitant o fer servir els solicitants de prova.
+    \item \texttt{abstraccio.clp}: Fitxer que declara estructures, inicialitza distàncies i recomanacions, i conté totes les regles d'abstracció, tant inferir necessitats com calcular la categoria del Solicitant,  s'ha creat manualment.
+    \item \texttt{resolucio.clp}: Fitxer que conté totes les regles i procediments per resoldre un problema abstracte. Primer descarta ofertes que no agradarien als solicitants, per tenir menys possibilitats i guanyar eficiència. Després, manté un sistema de puntuacions (tant negatives com positives) de les ofertes per cada solicitant. Al final, fa una classificació de l'oferta segons la puntuació.
+    \item \texttt{refinament.clp}: Només té una regla que s'encarrega d'ensenyar a l'usuari els resultats de la resolució. Fa una ordencaió i ensenya el top3 recomanacions per cada usuari.
+    \item \texttt{run.clp}: Script que carrega tots els mòduls i executa el main
 \end{itemize}
 
 Aquest disseny modular fa que sigui fàcil localitzar i modificar parts concretes del sistema sense haver de navegar per un únic fitxer gegant.
