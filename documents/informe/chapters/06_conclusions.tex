@@ -1,4 +1,3 @@
-
 \section{Conclusions}
 
 \subsection{Assoliment d'objectius}
@@ -15,15 +14,13 @@ Aquesta pràctica ens ha permès enfrontar-nos a un problema real de recomanaci�
 
 \subsection{Reflexió sobre el procés de desenvolupament}
 
-El desenvolupament incremental mitjançant prototips ha estat fonamental per a l'èxit del projecte. No haguéssim pogut construir tot el sistema d'un cop; la complexitat hauria estat aclaparadora. En canvi, anar construint prototips cada vegada més sofisticats ens ha permès:
+El desenvolupament incremental mitjançant prototips ha estat fonamental per a l'èxit del projecte. No haguéssim pogut construir tot el sistema d'un cop. En canvi, anar construint prototips cada vegada més sofisticats ens ha permès:
 
 \textbf{Detectar errors aviat}: Per exemple, vam descobrir que la nostra primera implementació del càlcul de distàncies usava la fórmula euclidiana en lloc de la distància de Manhattan que es demanava. Si haguéssim implementat totes les regles de puntuació abans de detectar-ho, hauríem hagut de revisar-ho tot.
 
 \textbf{Iterar sobre el disseny}: Inicialment havíem pensat fer molts requisits inferits com a obligatoris, però en els primers prototips vam veure que això descartava massa ofertes i deixava alguns sol·licitants sense cap recomanació. Vam decidir fer-los preferibles i sumar punts en lloc de descartar, cosa que va millorar molt els resultats.
 
 \textbf{Comprendre millor el domini}: A mesura que implementàvem regles, ens adonàvem de casos que no havíem considerat inicialment. Per exemple, les famílies amb avis necessiten accessibilitat igual que les persones grans soles. O que els compradors de segona residència valoren l'eficiència energètica més que la majoria perquè la casa estarà buida molt temps.
-
-\textbf{Mantenir la motivació}: Tenir versions funcionals des del principi és molt més motivador que treballar setmanes en quelcom que no fa res fins al final. Cada prototip era un petit èxit que ens donava empenta per continuar.
 
 \subsection{Dificultats trobades i solucions aplicades}
 
@@ -113,75 +110,10 @@ Si haguéssim de continuar desenvolupant aquest sistema, hi ha diversos aspectes
 
 \subsubsection{Preferències configurables per usuari}
 
-Implementar un sistema de pesos personalitzables on cada sol·licitant pogués indicar la importància relativa de diferents criteris. Per exemple:
-\begin{itemize}
-    \item "Per a mi, l'orientació solar és imprescindible (pes 3x)"
-    \item "No em molesta gaire el soroll (pes 0.5x)"
-    \item "Valoro molt tenir terrassa (pes 2x)"
-\end{itemize}
+Implementar un sistema de pesos personalitzables on cada sol·licitant pogués indicar la importància relativa de diferents criteris, En ves de tenir nomésformació booleana sobre l'usuari, tenir una mica de marge perquè sigui el mateix ususari el que ponderi algunes decisions. Ho podriem fer demanant un enter de l'1 al 10 amb alguna pregunta de valoració.
 
 Això es podria implementar afegint slots a la classe Solicitant amb pesos per a diferents categories, i modificant les regles de puntuació per multiplicar els punts base pel pes corresponent.
 
 \subsubsection{Raonament amb incertesa}
 
 Algunes de les nostres inferències són probabilístiques més que deterministes. Per exemple, "les parelles joves probablement volen tenir fills aviat" és veritat per a algunes parelles joves però no per a totes. Podríem incorporar factors de certesa a les regles i propagar aquesta incertesa a través del raonament, utilitzant per exemple la metodologia de factors de certesa que hem estudiat a classe.
-
-\subsubsection{Explicacions més riques}
-
-Les explicacions actuals són bastant bàsiques: llistes de punts forts i criteris no complerts. Podríem generar explicacions més narratives i contextualitzades:
-\begin{itemize}
-    \item "Aquest habitatge és ideal per a vosaltres perquè té 3 dormitoris (perfecte per als vostres 2 fills), està a 5 minuts a peu de l'escola Balmes, i té una terrassa on els nens podran jugar."
-    \item "Tot i que supera lleugerament el vostre pressupost, les estalviareu en transport perquè està a 2 minuts del metro."
-\end{itemize}
-
-Això requereix templates de text més sofisticats i capacitat de generar llenguatge natural, però faria el sistema molt més amigable.
-
-\subsubsection{Interfície web}
-
-El sistema actual funciona per línia de comandes, cosa que és adequada per a desenvolupament i prova però no per a usuaris finals. Una millora òbvia seria construir una interfície web on l'usuari pogués:
-\begin{itemize}
-    \item Emplenar un formulari amb les seves dades i preferències
-    \item Veure les recomanacions amb fotos dels habitatges
-    \item Filtrar i reordenar resultats
-    \item Marcar ofertes com a favorites
-    \item Demanar més explicacions sobre per què una oferta està recomanada
-\end{itemize}
-
-Això requereix integrar CLIPS amb un backend web (potser en Python amb pyclips) i construir un frontend modern.
-
-\subsubsection{Integració amb dades reals}
-
-Connectar el sistema amb fonts de dades reals seria el següent pas lògic:
-\begin{itemize}
-    \item API d'Idealista o similar per obtenir ofertes actualitzades
-    \item Google Maps API per calcular distàncies reals (temps de desplaçament, no només distància)
-    \item Dades obertes de l'Ajuntament de Barcelona sobre equipaments
-    \item Valoracions i opinions d'usuaris anteriors
-\end{itemize}
-
-\subsubsection{Aprenentatge automàtic}
-
-Tot i que el nostre sistema és purament simbòlic, podria beneficiar-se d'incorporar components d'aprenentatge automàtic:
-\begin{itemize}
-    \item Aprendre els pesos de puntuació a partir de dades històriques de decisions d'usuaris
-    \item Descobrir patrons nous que no hem codificat explícitament (per exemple, "els sol·licitants amb fills petits valoren més els habitatges amb pati comunitari del que pensàvem")
-    \item Detectar anomalies o ofertes sospitoses (preus massa baixos que poden ser estafes)
-\end{itemize}
-
-Aquest seria un sistema híbrid que combinaria el millor dels dos mons: la transparència i explicabilitat dels sistemes simbòlics amb la capacitat d'aprenentatge dels sistemes connexionistes.
-
-\subsection{Aprenentatges clau}
-
-Aquesta pràctica ens ha deixat diversos aprenentatges valuosos que van més enllà dels aspectes tècnics:
-
-\textbf{La importància del coneixement expert}: Un sistema basat en coneixement és tan bo com el coneixement que conté. No n'hi ha prou amb saber programar en CLIPS; cal entendre profundament el domini del problema. Hem après a fer elicitació de coneixement, encara que sigui informalment (consultant webs, parlant amb persones que han buscat pis, usant el sentit comú).
-
-\textbf{Descomposició de problemes complexos}: El problema de recomanar habitatges és complex perquè involucra molts factors interrelacionats. La clau ha estat descompondre-lo en subproblemes més simples que es resolen seqüencialment. Aquesta habilitat és transferible a molts altres problemes d'IA i d'enginyeria en general.
-
-\textbf{Valor de la transparència}: En aplicacions que afecten decisions importants de les persones (on viuran, quant pagaran), la transparència no és negociable. El sistema ha de poder explicar les seves decisions. Això contrasta amb molts sistemes de machine learning actuals que són "caixes negres".
-
-\textbf{Prototipatge com a metodologia}: Construir versions funcionals des del principi, encara que siguin incompletes, és molt més efectiu que intentar dissenyar-ho tot perfectament abans de començar a implementar. El feedback que obtens executant el sistema t'ajuda a refinar el disseny de maneres que no hauries anticipat.
-
-\textbf{Limitacions dels sistemes simbòlics}: Tot i la potència dels sistemes basats en regles, també hem vist les seves limitacions: són rígids, requereixen que tot el coneixement s'expliciti manualment, no aprenen automàticament. Això ens fa valorar més els enfocaments híbrids que combinen IA simbòlica i connexionista.
-
-En definitiva, aquesta pràctica ha estat una experiència molt enriquidora que ens ha permès aplicar conceptes teòrics a un problema real, enfrontar-nos a decisions de disseny no trivials, i desenvolupar un sistema que, amb totes les seves limitacions, realment funciona i genera recomanacions sensates. Hem après tant dels èxits com dels errors, i això és precisament el que fa que una pràctica sigui valuosa des del punt de vista formatiu.
