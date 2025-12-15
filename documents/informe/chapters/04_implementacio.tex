@@ -269,8 +269,8 @@ Les funcions auxiliars \texttt{calcular-distancia} i \texttt{classificar-distanc
 )
 
 (deffunction classificar-distancia (?metres)
-    (if (< ?metres 200.0) then MoltAProp
-    else (if (< ?metres 400.0) then DistanciaMitjana
+    (if (< ?metres 500.0) then MoltAProp
+    else (if (< ?metres 1000.0) then DistanciaMitjana
     else Lluny))
 )
 \end{lstlisting}
@@ -563,8 +563,8 @@ En aquesta fase, emparellam cada oferta amb cada sol·licitant i avaluam el grau
 
 El refinament consisteix a transformar la puntuació numèrica en categories qualitatives:
 \begin{itemize}
-    \item Molt Recomanable (≥70 punts)
-    \item Adequat (≥40 punts)
+    \item Molt Recomanable (≥80 punts)
+    \item Adequat (≥65 punts)
     \item Parcialment Adequat (>0 punts)
 \end{itemize}
 
@@ -662,8 +662,6 @@ Aquest enfocament incremental ens ha aportat diversos avantatges:
 
 \textbf{Divisió del treball}: Els diferents membres de l'equip podíem treballar en paral·lel. Mentre un implementava més regles de puntuació, un altre podia estar refinant la presentació o afegint instàncies de prova.
 
-\textbf{Motivació}: Tenir versions funcionals des del principi és molt més motivador que treballar durant setmanes en alguna cosa que no fa res fins al final. Cada prototip era un petit èxit que ens animava a continuar.
-
 \subsection{Aspectes destacables de la implementació}
 
 \subsubsection{Funcions auxiliars}
@@ -732,36 +730,6 @@ L'ús de saliències negatives per a les regles de transició de fase és elegan
 El patró de crear un fet \texttt{criteriAplicat} cada vegada que una regla de puntuació es dispara és crucial per evitar cicles infinits. Sense això, modificar la puntuació no canvia les condicions de la regla (l'habitatge encara té terrassa), així que la regla es dispararia de nou infinitament.
 
 Aquest patró és una bona pràctica en CLIPS quan fas modificacions incrementals a fets.
-
-\subsection{Dificultats trobades}
-
-Durant la implementació ens hem trobat amb diversos obstacles que val la pena documentar:
-
-\subsubsection{Gestió de la memòria}
-
-Amb moltes instàncies (6 habitatges, 10 serveis, 8 ofertes, etc.) i calculant totes les proximitats, es generen molts fets. En execucions llargues, això pot fer que CLIPS vagi lent. Hem mitigat això:
-\begin{itemize}
-    \item Retracting facts que ja no necessitem (com \texttt{dades-solicitant} un cop creat el sol·licitant)
-    \item Evitant crear fets redundants amb condicions \texttt{(not (...))}
-\end{itemize}
-
-\subsubsection{Debugging de regles}
-
-Quan una regla no es dispara quan esperem, pot ser difícil saber per què. CLIPS ofereix \texttt{(matches regla-name)} per veure quines condicions fallen, però hem trobat més útil afegir \texttt{debug-print} dins de les regles per veure quan s'executen.
-
-\subsubsection{Ordenació en CLIPS}
-
-CLIPS no té funcions natives per ordenar llistes de facts, així que hem hagut d'implementar l'ordenació manualment. Hem escollit bubble sort per la seva simplicitat, tot i que no és l'algorisme més eficient. Per al nostre cas (ordenar 3-10 elements) és més que suficient.
-
-\subsubsection{Gestió de multislots}
-
-Els multislots en CLIPS són una mica peculiars. Per exemple, per afegir un element a un multislot has de fer:
-
-\begin{lstlisting}[language=Lisp]
-(bind $?llista (create$ $?llista nou-element))
-\end{lstlisting}
-
-Aquesta sintaxi no és molt intuïtiva al principi i ens va costar una estona dominar-la.
 
 \subsection{Arquitectura de fitxers}
 
