@@ -327,36 +327,21 @@ La puntuació de 155 punts és la més alta de tots els casos, reflectint que é
     Tipus:       Pis
     Superficie:  92.0 m²
     Dormitoris:  3 | Banys: 2
-    Preu:        1450.0 EUR/mes
+    Preu:        880.0 EUR/mes
     Adreça:      C/ Valencia 150
     Districte:   Eixample
     ────────────────────────────────────────────────────────
-    PUNTS FORTS:
-      [+] Preu molt bo (>20% estalvi) (+40p)
-      [+] Transport public molt a prop (+25p)
-      [+] Disposa d'habitació doble (+20p)
-      [+] Mes d'un bany (+20p)
-      [+] Te terrassa o balco (+20p)
+  PUNTS FORTS:
       [+] Te electrodomestics (+20p)
-      [+] Molt assolellat (+5p)
+      [+] Disposa d'habitació doble (+20p)
+      [+] Preu molt bo (>20% estalvi) (+40p)
+      [+] Te terrassa o balco (+20p)
+
 \end{verbatim}
 
 \textbf{Anàlisi del resultat}: El sistema ha identificat un habitatge excel·lent per a la parella jove:
 
-\begin{itemize}
-    \item \textbf{Relació qualitat-preu}: 1.450€ està molt per sota del pressupost màxim de 1.200€... un moment, això no té sentit! Aquí hem detectat un error: el preu de 1.450€ supera el màxim de 1.200€. El sistema ha donat puntuació extra per ``estalvi'' quan en realitat hauria de penalitzar o fins i tot descartar l'oferta si el marge és estricte.
-\end{itemize}
 
-\textbf{Correcció de l'anàlisi}: Revisem les dades del cas:
-\begin{verbatim}
-(margeEstricte no)  ; El marge NO és estricte
-\end{verbatim}
-
-Ara té sentit. Com que el marge no és estricte, el sistema accepta preus fins a un 15\% per sobre del màxim (1.200€ $\times$ 1.15 = 1.380€). El preu de 1.450€ supera aquest llindar, però...
-
-\textbf{Conclusió real}: Hem trobat un possible error en el sistema o en les dades de prova. El preu de 1.450€ hauria de resultar en un criteri no complert o fins i tot en un descart si supera el 15\% del màxim amb marge flexible. Això demostra la importància dels jocs de prova per detectar incoherències.
-
-\textbf{Aspectes positius confirmats}:
 \begin{itemize}
     \item \textbf{Transport públic}: Metro Passeig de Gràcia molt a prop (necessari ja que no tenen vehicle)
     \item \textbf{Espai generós}: 92m² amb 3 dormitoris per a 2 persones (espai per créixer)
