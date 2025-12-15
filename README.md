@@ -4,17 +4,6 @@ Aquest projecte implementa un Sistema Basat en el Coneixement (SBC) utilitzant C
 
 ---
 
-## Components del Sistema
-
-El sistema està dividit en els següents fitxers CLIPS:
-
-* **`main.clp`**: Fitxer de càrrega principal. Conté la seqüència d'instruccions per carregar tots els mòduls.
-* **`ontologiaSBC.clp`**: Defineix les classes (`defclass`) i la jerarquia de conceptes (Habitatge, Sollicitant, Servei, etc.).
-* **`instancies.clp`**: Conté les dades de prova inicials (`definstances`).
-* **`regles.clp`**: Conté la lògica del sistema (`defmodule` i `defrule`) organitzada en les fases d'Abstracció, Resolució i Refinament.
-
----
-
 ## Instruccions d'Ús
 
 Per executar el sistema expert i veure les recomanacions generades, segueix els següents passos:
